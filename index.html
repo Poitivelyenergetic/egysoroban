@@ -1,0 +1,813 @@
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Egysoroban</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&amp;family=Manrope:wght@400;500;600;700;800&amp;family=Cairo:wght@400;500;600;700;800&amp;family=IBM+Plex+Mono:wght@400;500;600&amp;display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <a class="skip-link" href="#main" data-i18n="a11y.skip">Skip to content</a>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a class="brand" href="#top">
+                <svg class="brand-mark" width="26" height="26" viewBox="0 0 26 26" fill="none" aria-hidden="true">
+                    <rect x="2" y="3" width="22" height="20" rx="3" stroke="currentColor" stroke-width="1.6"></rect>
+                    <line x1="2" y1="10" x2="24" y2="10" stroke="currentColor" stroke-width="1.6"></line>
+                    <circle cx="8" cy="6.5" r="2" fill="currentColor"></circle>
+                    <circle cx="16" cy="6.5" r="2" fill="currentColor"></circle>
+                    <circle cx="8" cy="16" r="2" fill="currentColor"></circle>
+                    <circle cx="13" cy="16" r="2" fill="currentColor"></circle>
+                    <circle cx="18" cy="16" r="2" fill="currentColor"></circle>
+                </svg>
+                <span class="brand-name">Egysoroban</span>
+            </a>
+            <nav class="main-nav" id="main-nav">
+                <a href="#about" data-i18n="nav.about">About</a>
+                <a href="#programs" data-i18n="nav.programs">Programs</a>
+                <a href="#journey" data-i18n="nav.journey">How it works</a>
+                <a href="#testimonials" data-i18n="nav.stories">Stories</a>
+                <a href="#faq" data-i18n="nav.faq">FAQ</a>
+                <a href="#contact" data-i18n="nav.contact">Contact</a>
+            </nav>
+            <div class="header-actions">
+                <button class="lang-toggle" id="lang-toggle" type="button">عربي / EN</button>
+                <a href="#apply" class="btn btn-primary btn-sm" data-i18n="nav.apply">Apply now</a>
+                <button class="nav-toggle" id="nav-toggle" aria-label="Menu"
+                    aria-expanded="false"><span></span></button>
+            </div>
+        </div>
+    </header>
+
+    <main id="main">
+
+        <!-- ============ HERO ============ -->
+        <section class="hero" id="top">
+            <div class="hero-grid">
+                <div>
+                    <p class="eyebrow" data-i18n="hero.eyebrow">Soroban mental-math academy · Cairo</p>
+                    <h1 class="hero-title">
+                        <span data-i18n="hero.titleA">Give your child a</span>
+                        <span class="accent" data-i18n="hero.titleAccent">calculator in their mind</span>
+                    </h1>
+                    <p class="hero-sub" data-i18n="hero.sub">Egysoroban trains children ages 4–14 to add, subtract,
+                        multiply and divide by visualizing a Japanese abacus — building focus, memory and confidence one
+                        bead at a time.</p>
+                    <div class="hero-ctas">
+                        <a href="#apply" class="btn btn-primary" data-i18n="hero.ctaApply">Apply for a free trial
+                            class</a>
+                        <a href="#programs" class="btn btn-secondary" data-i18n="hero.ctaPrograms">See programs</a>
+                    </div>
+                    <div class="hero-meta">
+                        <div>
+                            <div class="num">4–14</div>
+                            <div class="lbl" data-i18n="hero.meta1">Age range</div>
+                        </div>
+                        <div>
+                            <div class="num">8</div>
+                            <div class="lbl" data-i18n="hero.meta2">Levels to master</div>
+                        </div>
+                        <div>
+                            <div class="num">3</div>
+                            <div class="lbl" data-i18n="hero.meta3">Cairo branches + online</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="soroban-art" aria-hidden="true">
+                    <div class="soroban-frame">
+                        <div class="soroban-cols">
+                            <div class="soroban-col">
+                                <div class="soroban-bead"></div>
+                                <div class="soroban-bead dim"></div>
+                            </div>
+                            <div class="soroban-col">
+                                <div class="soroban-bead dim"></div>
+                                <div class="soroban-bead"></div>
+                            </div>
+                            <div class="soroban-col">
+                                <div class="soroban-bead"></div>
+                                <div class="soroban-bead"></div>
+                            </div>
+                            <div class="soroban-col">
+                                <div class="soroban-bead dim"></div>
+                                <div class="soroban-bead dim"></div>
+                            </div>
+                            <div class="soroban-col">
+                                <div class="soroban-bead"></div>
+                                <div class="soroban-bead dim"></div>
+                            </div>
+                        </div>
+                        <div class="beam"></div>
+                        <div class="soroban-cols">
+                            <div class="soroban-col">
+                                <div class="soroban-bead dim"></div>
+                                <div class="soroban-bead dim"></div>
+                                <div class="soroban-bead"></div>
+                                <div class="soroban-bead dim"></div>
+                            </div>
+                            <div class="soroban-col">
+                                <div class="soroban-bead"></div>
+                                <div class="soroban-bead"></div>
+                                <div class="soroban-bead dim"></div>
+                                <div class="soroban-bead dim"></div>
+                            </div>
+                            <div class="soroban-col">
+                                <div class="soroban-bead dim"></div>
+                                <div class="soroban-bead"></div>
+                                <div class="soroban-bead"></div>
+                                <div class="soroban-bead dim"></div>
+                            </div>
+                            <div class="soroban-col">
+                                <div class="soroban-bead"></div>
+                                <div class="soroban-bead dim"></div>
+                                <div class="soroban-bead dim"></div>
+                                <div class="soroban-bead dim"></div>
+                            </div>
+                            <div class="soroban-col">
+                                <div class="soroban-bead dim"></div>
+                                <div class="soroban-bead dim"></div>
+                                <div class="soroban-bead"></div>
+                                <div class="soroban-bead"></div>
+                            </div>
+                        </div>
+                        <p class="soroban-caption">十 五 三 一 八 — 15,318</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============ ABOUT ============ -->
+        <section id="about">
+            <div class="container about-grid">
+                <div>
+                    <p class="eyebrow" data-i18n="about.eyebrow">About the academy</p>
+                    <h2 class="section-title" data-i18n="about.title">A calm, structured way into serious mental math
+                    </h2>
+                </div>
+                <div class="about-copy">
+                    <p data-i18n="about.p1">Egysoroban is an example soroban academy built to show what Egysoroban's
+                        real site could look like — swap this copy for your own. In this sample, Egysoroban teaches
+                        children to calculate on a real wooden soroban first, then to picture that same abacus in their
+                        mind — a technique called Anzan. The physical tool disappears; the skill stays.</p>
+                    <p data-i18n="about.p2">Classes run in small groups of up to eight children, once a week, with short
+                        daily practice at home. Every student moves through eight structured levels at their own pace,
+                        from first counting beads to multiplying four-digit numbers entirely in their head.</p>
+                    <div class="about-stats">
+                        <div class="stat-card">
+                            <div class="num">120+</div>
+                            <div class="lbl" data-i18n="about.stat1">Students currently enrolled</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="num">9</div>
+                            <div class="lbl" data-i18n="about.stat2">Years running in Cairo</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="num">92%</div>
+                            <div class="lbl" data-i18n="about.stat3">Parents who renew each year</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="num">6</div>
+                            <div class="lbl" data-i18n="about.stat4">Certified instructors</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============ WHY SOROBAN ============ -->
+        <section class="why">
+            <div class="container">
+                <p class="eyebrow" data-i18n="why.eyebrow">Why soroban</p>
+                <h2 class="section-title" data-i18n="why.title">What changes when a child trains this way</h2>
+                <p class="section-lede" data-i18n="why.lede">Soroban training is a physical, visual and mental exercise
+                    at once — that combination is what shows up in the classroom, not just on a math test.</p>
+                <div class="why-grid">
+                    <div class="benefit-card">
+                        <div class="glyph" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24"
+                                fill="none">
+                                <path
+                                    d="M12 2v4M12 18v4M4.9 4.9l2.8 2.8M16.3 16.3l2.8 2.8M2 12h4M18 12h4M4.9 19.1l2.8-2.8M16.3 7.7l2.8-2.8"
+                                    stroke="currentColor" stroke-width="1.6" stroke-linecap="round"></path>
+                            </svg></div>
+                        <h3 data-i18n="why.c1t">Sharper focus</h3>
+                        <p data-i18n="why.c1p">Tracking beads across ten columns trains sustained attention — children
+                            carry that focus into homework and exams.</p>
+                    </div>
+                    <div class="benefit-card">
+                        <div class="glyph" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24"
+                                fill="none">
+                                <path d="M4 19V9M10 19V5M16 19v-7M22 19V3" stroke="currentColor" stroke-width="1.6"
+                                    stroke-linecap="round"></path>
+                            </svg></div>
+                        <h3 data-i18n="why.c2t">Stronger working memory</h3>
+                        <p data-i18n="why.c2p">Visualizing the abacus (Anzan) exercises the same memory muscles used for
+                            reading comprehension and multi-step problems.</p>
+                    </div>
+                    <div class="benefit-card">
+                        <div class="glyph" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24"
+                                fill="none">
+                                <path d="M13 2 3 14h7l-1 8 11-14h-8l1-6z" stroke="currentColor" stroke-width="1.6"
+                                    stroke-linejoin="round"></path>
+                            </svg></div>
+                        <h3 data-i18n="why.c3t">Real calculation speed</h3>
+                        <p data-i18n="why.c3p">By Level 5, most students add and subtract multi-digit numbers faster
+                            mentally than on a phone calculator.</p>
+                    </div>
+                    <div class="benefit-card">
+                        <div class="glyph" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24"
+                                fill="none">
+                                <path
+                                    d="M12 21s-7-4.5-9.5-9A5.5 5.5 0 0 1 12 6a5.5 5.5 0 0 1 9.5 6c-2.5 4.5-9.5 9-9.5 9Z"
+                                    stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"></path>
+                            </svg></div>
+                        <h3 data-i18n="why.c4t">Visible confidence</h3>
+                        <p data-i18n="why.c4p">Levels and belt-style exams give children frequent, concrete proof that
+                            practice is paying off.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============ PROGRAMS ============ -->
+        <section id="programs">
+            <div class="container">
+                <p class="eyebrow" data-i18n="programs.eyebrow">Programs</p>
+                <h2 class="section-title" data-i18n="programs.title">Eight levels, one path</h2>
+                <p class="section-lede" data-i18n="programs.lede">Every student is placed by a short free assessment,
+                    then moves level by level — each one built on the last, like place value on a soroban itself.</p>
+                <div class="programs-grid">
+
+                    <div class="level-card">
+                        <span class="age" data-i18n="programs.l1age">Ages 4–6</span>
+                        <h3 data-i18n="programs.l1title">Little Sparks</h3>
+                        <p data-i18n="programs.l1desc">First contact with numbers and the soroban: counting, number
+                            sense, and comfort holding the tool.</p>
+                        <div class="level-beads" aria-hidden="true"><span class="bead"></span><span
+                                class="bead is-off"></span><span class="bead is-off"></span><span
+                                class="bead is-off"></span></div>
+                        <div class="level-foot"><span data-i18n="programs.duration">~3 months</span><span
+                                data-i18n="programs.format1">In-person</span></div>
+                    </div>
+
+                    <div class="level-card">
+                        <span class="age" data-i18n="programs.l2age">Ages 7–9</span>
+                        <h3 data-i18n="programs.l2title">Foundation I–IV</h3>
+                        <p data-i18n="programs.l2desc">Addition and subtraction mastery on the physical soroban, from
+                            single digits to large carries.</p>
+                        <div class="level-beads" aria-hidden="true"><span class="bead"></span><span
+                                class="bead"></span><span class="bead is-off"></span><span class="bead is-off"></span>
+                        </div>
+                        <div class="level-foot"><span data-i18n="programs.durationLong">~12 months</span><span
+                                data-i18n="programs.format2">In-person / online</span></div>
+                    </div>
+
+                    <div class="level-card">
+                        <span class="age" data-i18n="programs.l3age">Ages 9–12</span>
+                        <h3 data-i18n="programs.l3title">Advanced V–VIII</h3>
+                        <p data-i18n="programs.l3desc">Multiplication, division, and the shift to Anzan — calculating on
+                            a soroban that only exists in the mind.</p>
+                        <div class="level-beads" aria-hidden="true"><span class="bead"></span><span
+                                class="bead"></span><span class="bead"></span><span class="bead is-off"></span></div>
+                        <div class="level-foot"><span data-i18n="programs.durationLong">~12 months</span><span
+                                data-i18n="programs.format2">In-person / online</span></div>
+                    </div>
+
+                    <div class="level-card">
+                        <span class="age" data-i18n="programs.l4age">Ages 10+</span>
+                        <h3 data-i18n="programs.l4title">Competition Track</h3>
+                        <p data-i18n="programs.l4desc">Optional, by invitation once Level VI is complete — speed drills
+                            and entry to regional soroban competitions.</p>
+                        <div class="level-beads" aria-hidden="true"><span class="bead"></span><span
+                                class="bead"></span><span class="bead"></span><span class="bead"></span></div>
+                        <div class="level-foot"><span data-i18n="programs.ongoing">Ongoing</span><span
+                                data-i18n="programs.format1">In-person</span></div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- ============ JOURNEY ============ -->
+        <section id="journey">
+            <div class="container">
+                <p class="eyebrow" data-i18n="journey.eyebrow">How it works</p>
+                <h2 class="section-title" data-i18n="journey.title">From application to first level exam</h2>
+                <div class="journey-list">
+                    <div class="journey-step"><span class="n">01</span>
+                        <h3 data-i18n="journey.s1t">Apply online</h3>
+                        <p data-i18n="journey.s1p">Send your child's details through the form below — takes about two
+                            minutes.</p>
+                    </div>
+                    <div class="journey-step"><span class="n">02</span>
+                        <h3 data-i18n="journey.s2t">Free trial &amp; assessment</h3>
+                        <p data-i18n="journey.s2p">We call within 48 hours to book a free trial class and a short
+                            placement chat.</p>
+                    </div>
+                    <div class="journey-step"><span class="n">03</span>
+                        <h3 data-i18n="journey.s3t">Placed in a level</h3>
+                        <p data-i18n="journey.s3p">Your child joins a small group matched to their age and starting
+                            point.</p>
+                    </div>
+                    <div class="journey-step"><span class="n">04</span>
+                        <h3 data-i18n="journey.s4t">Weekly class &amp; practice</h3>
+                        <p data-i18n="journey.s4p">One weekly session plus 10–15 minutes of guided practice at home.</p>
+                    </div>
+                    <div class="journey-step"><span class="n">05</span>
+                        <h3 data-i18n="journey.s5t">Level exam</h3>
+                        <p data-i18n="journey.s5p">A short exam and certificate close each level before moving to the
+                            next.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============ INSTRUCTORS ============ -->
+        <section id="instructors">
+            <div class="container">
+                <p class="eyebrow" data-i18n="instructors.eyebrow">Instructors</p>
+                <h2 class="section-title" data-i18n="instructors.title">Example teaching team</h2>
+                <p class="section-lede" data-i18n="instructors.lede">Sample profiles — replace with your real
+                    instructors' names, photos and credentials.</p>
+                <div class="instructors-grid">
+                    <div class="instructor-card">
+                        <div class="instructor-avatar" aria-hidden="true">N</div>
+                        <div>
+                            <h3>Nourhan Adel</h3>
+                            <div class="role" data-i18n="instructors.role1">Lead Instructor</div>
+                            <p data-i18n="instructors.bio1">Certified soroban trainer, 8 years teaching ages 4–12 across
+                                Maadi and Heliopolis branches.</p>
+                        </div>
+                    </div>
+                    <div class="instructor-card">
+                        <div class="instructor-avatar" aria-hidden="true">Y</div>
+                        <div>
+                            <h3>Youssef Farid</h3>
+                            <div class="role" data-i18n="instructors.role2">Advanced &amp; Competition Coach</div>
+                            <p data-i18n="instructors.bio2">Runs the Competition Track; former national-level soroban
+                                competitor and Anzan specialist.</p>
+                        </div>
+                    </div>
+                    <div class="instructor-card">
+                        <div class="instructor-avatar" aria-hidden="true">R</div>
+                        <div>
+                            <h3>Rana Samir</h3>
+                            <div class="role" data-i18n="instructors.role3">Online Program Lead</div>
+                            <p data-i18n="instructors.bio3">Designs the online curriculum and leads live sessions for
+                                students outside Cairo.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============ TESTIMONIALS ============ -->
+        <section class="testimonials" id="testimonials">
+            <div class="container">
+                <p class="eyebrow" data-i18n="testimonials.eyebrow">Parent stories</p>
+                <h2 class="section-title" data-i18n="testimonials.title">Example testimonials</h2>
+                <div class="testimonials-grid">
+                    <div class="quote-card">
+                        <p class="quote" data-i18n="testimonials.q1">"My daughter used to freeze up at math homework.
+                            Eight months in, she does two-digit multiplication in her head before I finish reading the
+                            question."</p>
+                        <p class="who" data-i18n="testimonials.a1">Mona K. — parent, Maadi branch</p>
+                    </div>
+                    <div class="quote-card">
+                        <p class="quote" data-i18n="testimonials.q2">"The weekly rhythm is what made it stick for us —
+                            same day, same time, ten minutes of practice after dinner. No arguments."</p>
+                        <p class="who" data-i18n="testimonials.a2">Ahmed S. — parent, Online program</p>
+                    </div>
+                    <div class="quote-card">
+                        <p class="quote" data-i18n="testimonials.q3">"He's always been the quiet kid in class. The level
+                            exams gave him something to be visibly proud of."</p>
+                        <p class="who" data-i18n="testimonials.a3">Heba M. — parent, Heliopolis branch</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============ FAQ ============ -->
+        <section id="faq">
+            <div class="container">
+                <p class="eyebrow" data-i18n="faq.eyebrow">Questions</p>
+                <h2 class="section-title" data-i18n="faq.title">Frequently asked</h2>
+                <div class="faq-list" id="faq-list">
+                    <div class="faq-item" data-open="false">
+                        <button class="faq-q"><span data-i18n="faq.q1">What age can my child start?</span><span
+                                class="plus" aria-hidden="true">+</span></button>
+                        <div class="faq-a">
+                            <p data-i18n="faq.a1">We accept children from age 4 into Little Sparks. Most students who
+                                start soroban from scratch begin between ages 5 and 9.</p>
+                        </div>
+                    </div>
+                    <div class="faq-item" data-open="false">
+                        <button class="faq-q"><span data-i18n="faq.q2">Do you offer online classes?</span><span
+                                class="plus" aria-hidden="true">+</span></button>
+                        <div class="faq-a">
+                            <p data-i18n="faq.a2">Yes — Foundation and Advanced levels run live online in small groups,
+                                with the same curriculum and level exams as in-person branches.</p>
+                        </div>
+                    </div>
+                    <div class="faq-item" data-open="false">
+                        <button class="faq-q"><span data-i18n="faq.q3">How long until I see results?</span><span
+                                class="plus" aria-hidden="true">+</span></button>
+                        <div class="faq-a">
+                            <p data-i18n="faq.a3">Most parents notice a change in focus and speed within the first two
+                                levels — typically 4 to 6 months of steady weekly classes.</p>
+                        </div>
+                    </div>
+                    <div class="faq-item" data-open="false">
+                        <button class="faq-q"><span data-i18n="faq.q4">How big are the classes?</span><span class="plus"
+                                aria-hidden="true">+</span></button>
+                        <div class="faq-a">
+                            <p data-i18n="faq.a4">Up to eight students per group, or one-on-one for the online program
+                                on request.</p>
+                        </div>
+                    </div>
+                    <div class="faq-item" data-open="false">
+                        <button class="faq-q"><span data-i18n="faq.q5">Is there a free trial?</span><span class="plus"
+                                aria-hidden="true">+</span></button>
+                        <div class="faq-a">
+                            <p data-i18n="faq.a5">Yes — every application includes one free trial class and a placement
+                                chat before you commit to a level.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============ APPLY ============ -->
+        <section class="apply" id="apply">
+            <div class="container apply-wrap">
+                <div class="apply-side">
+                    <p class="eyebrow" data-i18n="apply.eyebrow">Apply to join</p>
+                    <h2 class="section-title" data-i18n="apply.title">Start with a free trial class</h2>
+                    <p class="section-lede" data-i18n="apply.lede">Tell us about your child below. We reply within 48
+                        hours to book a free trial and placement chat — no payment needed to apply.</p>
+                    <div class="bead-row" aria-hidden="true"><span class="bead"></span><span class="rod-line"></span>
+                    </div>
+                    <ul>
+                        <li><span class="tick" aria-hidden="true">✓</span><span data-i18n="apply.b1">Takes about two
+                                minutes to fill in</span></li>
+                        <li><span class="tick" aria-hidden="true">✓</span><span data-i18n="apply.b2">We call or email
+                                within 48 hours</span></li>
+                        <li><span class="tick" aria-hidden="true">✓</span><span data-i18n="apply.b3">Free trial class
+                                before any commitment</span></li>
+                    </ul>
+                </div>
+
+                <form class="app-form" id="apply-form" novalidate="">
+                    <div class="form-grid">
+                        <div class="field full">
+                            <label for="f-student-name" data-i18n="apply.fStudentName">Student's full name</label>
+                            <input id="f-student-name" name="studentName" type="text" required="" autocomplete="off">
+                            <span class="field-error" data-i18n="apply.errRequired">This field is required.</span>
+                        </div>
+                        <div class="field">
+                            <label for="f-age" data-i18n="apply.fAge">Student's age</label>
+                            <input id="f-age" name="age" type="number" min="3" max="18" required="" autocomplete="off">
+                            <span class="field-error" data-i18n="apply.errRequired">This field is required.</span>
+                        </div>
+                        <div class="field">
+                            <label for="f-grade" data-i18n="apply.fGrade">Grade / school year <span class="opt"
+                                    data-i18n="apply.optional">(optional)</span></label>
+                            <input id="f-grade" name="grade" type="text" autocomplete="off">
+                        </div>
+                        <div class="field">
+                            <label for="f-parent-name" data-i18n="apply.fParentName">Parent / guardian name</label>
+                            <input id="f-parent-name" name="parentName" type="text" required="" autocomplete="off">
+                            <span class="field-error" data-i18n="apply.errRequired">This field is required.</span>
+                        </div>
+                        <div class="field">
+                            <label for="f-phone" data-i18n="apply.fPhone">Phone number</label>
+                            <input id="f-phone" name="phone" type="tel" required="" autocomplete="off">
+                            <span class="field-error" data-i18n="apply.errRequired">This field is required.</span>
+                        </div>
+                        <div class="field full">
+                            <label for="f-email" data-i18n="apply.fEmail">Email address</label>
+                            <input id="f-email" name="email" type="email" required="" autocomplete="off">
+                            <span class="field-error" data-i18n="apply.errEmail">Enter a valid email address.</span>
+                        </div>
+                        <div class="field">
+                            <label for="f-program" data-i18n="apply.fProgram">Preferred program</label>
+                            <select id="f-program" name="program">
+                                <option value="little-sparks" data-i18n="programs.l1title">Little Sparks (4–6)</option>
+                                <option value="foundation" data-i18n="programs.l2title">Foundation I–IV (7–9)</option>
+                                <option value="advanced" data-i18n="programs.l3title">Advanced V–VIII (9–12)</option>
+                                <option value="unsure" selected="" data-i18n="apply.optNotSure">Not sure — need
+                                    assessment</option>
+                            </select>
+                        </div>
+                        <div class="field">
+                            <label for="f-format" data-i18n="apply.fFormat">Preferred format</label>
+                            <select id="f-format" name="format">
+                                <option value="in-person" data-i18n="apply.optInPerson">In-person branch</option>
+                                <option value="online" data-i18n="apply.optOnline">Online</option>
+                            </select>
+                        </div>
+                        <div class="field">
+                            <label for="f-branch" data-i18n="apply.fBranch">Preferred branch <span class="opt"
+                                    data-i18n="apply.optional">(optional)</span></label>
+                            <select id="f-branch" name="branch">
+                                <option value="maadi">Maadi</option>
+                                <option value="heliopolis">Heliopolis</option>
+                                <option value="new-cairo">New Cairo</option>
+                                <option value="any" data-i18n="apply.optAny" selected="">Any / not sure</option>
+                            </select>
+                        </div>
+                        <div class="field">
+                            <label for="f-experience" data-i18n="apply.fExperience">Prior soroban / math
+                                experience</label>
+                            <select id="f-experience" name="experience">
+                                <option value="none" data-i18n="apply.optExpNone">None</option>
+                                <option value="some" data-i18n="apply.optExpSome">Some, self-taught</option>
+                                <option value="switching" data-i18n="apply.optExpSwitch">Switching from another academy
+                                </option>
+                            </select>
+                        </div>
+                        <div class="field">
+                            <label for="f-heard" data-i18n="apply.fHeard">How did you hear about us? <span class="opt"
+                                    data-i18n="apply.optional">(optional)</span></label>
+                            <select id="f-heard" name="heard">
+                                <option value="" data-i18n="apply.optSelect">Select one</option>
+                                <option value="social" data-i18n="apply.optSocial">Social media</option>
+                                <option value="friend" data-i18n="apply.optFriend">Friend or family</option>
+                                <option value="search" data-i18n="apply.optSearch">Online search</option>
+                                <option value="school" data-i18n="apply.optSchool">School</option>
+                                <option value="other" data-i18n="apply.optOther">Other</option>
+                            </select>
+                        </div>
+                        <div class="field full">
+                            <label for="f-goals" data-i18n="apply.fGoals">Goals or notes for us <span class="opt"
+                                    data-i18n="apply.optional">(optional)</span></label>
+                            <textarea id="f-goals" name="goals" placeholder=""></textarea>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block" id="apply-submit"
+                        data-i18n="apply.submit">Submit application</button>
+                    <p class="form-note" data-i18n="apply.privacyNote">Your details are only used to contact you about
+                        joining Egysoroban.</p>
+                    <div class="form-status" id="form-status"></div>
+                </form>
+            </div>
+        </section>
+
+        <!-- ============ CONTACT ============ -->
+        <section id="contact">
+            <div class="container contact-grid">
+                <div>
+                    <p class="eyebrow" data-i18n="contact.eyebrow">Get in touch</p>
+                    <h2 class="section-title" data-i18n="contact.title">Questions before you apply?</h2>
+                    <div class="contact-list">
+                        <div class="contact-item">
+                            <div class="glyph" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24"
+                                    fill="none">
+                                    <path
+                                        d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3.1-8.7A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.3 1.9.6 2.7a2 2 0 0 1-.5 2.1L8 9.7a16 16 0 0 0 6 6l1.2-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.5 2.7.6a2 2 0 0 1 1.7 2Z"
+                                        stroke="currentColor" stroke-width="1.5"></path>
+                                </svg></div>
+                            <div>
+                                <h3 data-i18n="contact.phoneLabel">Phone / WhatsApp</h3>
+                                <p>+20 10 1234 5678</p>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <div class="glyph" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24"
+                                    fill="none">
+                                    <path d="M3 6h18v12H3z" stroke="currentColor" stroke-width="1.5"></path>
+                                    <path d="m3 7 9 6 9-6" stroke="currentColor" stroke-width="1.5"></path>
+                                </svg></div>
+                            <div>
+                                <h3 data-i18n="contact.emailLabel">Email</h3>
+                                <p>hello@egysoroban.example</p>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <div class="glyph" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24"
+                                    fill="none">
+                                    <path d="M12 22s7-6.6 7-12a7 7 0 1 0-14 0c0 5.4 7 12 7 12Z" stroke="currentColor"
+                                        stroke-width="1.5"></path>
+                                    <circle cx="12" cy="10" r="2.5" stroke="currentColor" stroke-width="1.5"></circle>
+                                </svg></div>
+                            <div>
+                                <h3 data-i18n="contact.branchesLabel">Branches</h3>
+                                <p data-i18n="contact.branchesValue">Maadi · Heliopolis · New Cairo — plus online
+                                    classes</p>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <div class="glyph" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24"
+                                    fill="none">
+                                    <path d="M12 8v4l3 2" stroke="currentColor" stroke-width="1.5"></path>
+                                    <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.5"></circle>
+                                </svg></div>
+                            <div>
+                                <h3 data-i18n="contact.hoursLabel">Office hours</h3>
+                                <p data-i18n="contact.hoursValue">Saturday–Thursday, 10:00–18:00</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="contact-map" aria-hidden="true">
+                    <div>
+                        <svg class="glyph2" width="30" height="30" viewBox="0 0 24 24" fill="none"
+                            style="margin-inline:auto;">
+                            <path d="M12 22s7-6.6 7-12a7 7 0 1 0-14 0c0 5.4 7 12 7 12Z" stroke="currentColor"
+                                stroke-width="1.5"></path>
+                            <circle cx="12" cy="10" r="2.5" stroke="currentColor" stroke-width="1.5"></circle>
+                        </svg>
+                        <p data-i18n="contact.mapNote">14 Nour Street, Maadi, Cairo — map preview placeholder</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="site-footer">
+        <div class="container footer-grid">
+            <div>
+                <div class="footer-brand">Egysoroban</div>
+                <p data-i18n="footer.blurb">An example soroban mental-arithmetic academy site — swap this text, the
+                    programs and the contact details for your own before publishing to families.</p>
+            </div>
+            <div class="footer-col">
+                <h4 data-i18n="footer.explore">Explore</h4>
+                <ul>
+                    <li><a href="#about" data-i18n="nav.about">About</a></li>
+                    <li><a href="#programs" data-i18n="nav.programs">Programs</a></li>
+                    <li><a href="#faq" data-i18n="nav.faq">FAQ</a></li>
+                    <li><a href="#apply" data-i18n="nav.apply">Apply now</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4 data-i18n="footer.contact">Contact</h4>
+                <ul>
+                    <li>+20 10 1234 5678</li>
+                    <li>hello@egysoroban.example</li>
+                    <li data-i18n="contact.branchesValue">Maadi · Heliopolis · New Cairo — plus online classes</li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <span data-i18n="footer.copy">© 2026 Egysoroban — example academy site</span>
+            <button type="button" id="open-admin" data-i18n="footer.staffLogin">Staff login</button>
+        </div>
+    </footer>
+
+    <!-- ============ ADMIN ============ -->
+    <div class="admin-overlay" id="admin-overlay" hidden="">
+
+        <div class="admin-card" id="admin-gate">
+            <div class="admin-close-row">
+                <button class="icon-btn" id="admin-gate-close" aria-label="Close" type="button">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                        <path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="1.7" stroke-linecap="round">
+                        </path>
+                    </svg>
+                </button>
+            </div>
+            <h2 data-i18n="admin.gateTitle">Staff login</h2>
+            <p class="section-lede" data-i18n="admin.gateLede" style="margin-bottom:20px;">Enter the admin password to
+                view submitted applications.</p>
+            <form id="admin-login-form">
+                <div class="field">
+                    <label for="admin-password" data-i18n="admin.passwordLabel">Password</label>
+                    <input id="admin-password" type="password" autocomplete="off" required="">
+                </div>
+                <button type="submit" class="btn btn-jade btn-block" data-i18n="admin.loginBtn">View
+                    applications</button>
+                <p class="admin-error" id="admin-login-error" data-i18n="admin.wrongPassword">That password isn't right.
+                    Try again.</p>
+            </form>
+            <p class="admin-hint" data-i18n="admin.gateHint">This is a light front-door lock for staff convenience, not
+                full security — anyone with real edit access to this page can still change its data regardless of this
+                password.</p>
+        </div>
+
+        <div class="admin-dash" id="admin-dashboard" hidden="">
+            <div class="admin-topbar">
+                <div class="title">
+                    <svg width="20" height="20" viewBox="0 0 26 26" fill="none" aria-hidden="true">
+                        <rect x="2" y="3" width="22" height="20" rx="3" stroke="currentColor" stroke-width="1.6"></rect>
+                        <line x1="2" y1="10" x2="24" y2="10" stroke="currentColor" stroke-width="1.6"></line>
+                        <circle cx="8" cy="6.5" r="2" fill="currentColor"></circle>
+                        <circle cx="16" cy="6.5" r="2" fill="currentColor"></circle>
+                    </svg>
+                    <span data-i18n="admin.dashTitle">Egysoroban admin</span>
+                </div>
+                <div class="actions">
+                    <button class="btn btn-secondary btn-sm" id="admin-refresh" type="button" data-i18n="admin.refresh"
+                        style="color:#fff;border-color:rgba(255,255,255,0.3);">Refresh</button>
+                    <button class="btn btn-secondary btn-sm" id="admin-logout" type="button" data-i18n="admin.logout"
+                        style="color:#fff;border-color:rgba(255,255,255,0.3);">Log out</button>
+                    <button class="icon-btn" id="admin-dash-close" aria-label="Close" type="button" style="color:#fff;">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                            <path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="1.7"
+                                stroke-linecap="round"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <div class="admin-body">
+                <div class="admin-summary">
+                    <div class="summary-card">
+                        <div class="num" id="sum-total">0</div>
+                        <div class="lbl" data-i18n="admin.sumTotal">Total applications</div>
+                    </div>
+                    <div class="summary-card new">
+                        <div class="num" id="sum-new">0</div>
+                        <div class="lbl" data-i18n="admin.sumNew">New</div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="num" id="sum-contacted">0</div>
+                        <div class="lbl" data-i18n="admin.sumContacted">Contacted</div>
+                    </div>
+                    <div class="summary-card enrolled">
+                        <div class="num" id="sum-enrolled">0</div>
+                        <div class="lbl" data-i18n="admin.sumEnrolled">Enrolled</div>
+                    </div>
+                </div>
+
+                <details class="manual-add" id="manual-add">
+                    <summary data-i18n="admin.manualAddTitle">+ Log an application received by phone or email</summary>
+                    <form id="manual-add-form" class="form-grid">
+                        <div class="field"><label data-i18n="apply.fStudentName">Student's full name</label><input
+                                name="studentName" type="text" required=""></div>
+                        <div class="field"><label data-i18n="apply.fAge">Student's age</label><input name="age"
+                                type="number" min="3" max="18"></div>
+                        <div class="field"><label data-i18n="apply.fParentName">Parent / guardian name</label><input
+                                name="parentName" type="text" required=""></div>
+                        <div class="field"><label data-i18n="apply.fPhone">Phone number</label><input name="phone"
+                                type="tel"></div>
+                        <div class="field full"><label data-i18n="apply.fEmail">Email address</label><input name="email"
+                                type="email"></div>
+                        <div class="field">
+                            <label data-i18n="apply.fProgram">Preferred program</label>
+                            <select name="program">
+                                <option value="little-sparks" data-i18n="programs.l1title">Little Sparks (4–6)</option>
+                                <option value="foundation" data-i18n="programs.l2title">Foundation I–IV (7–9)</option>
+                                <option value="advanced" data-i18n="programs.l3title">Advanced V–VIII (9–12)</option>
+                                <option value="unsure" selected="" data-i18n="apply.optNotSure">Not sure — need
+                                    assessment</option>
+                            </select>
+                        </div>
+                        <div class="field full"><label data-i18n="apply.fGoals">Goals or notes</label><textarea
+                                name="goals"></textarea></div>
+                        <div class="field full"><button type="submit" class="btn btn-jade"
+                                data-i18n="admin.manualAddSubmit">Add to list</button></div>
+                    </form>
+                </details>
+
+                <div class="admin-toolbar">
+                    <input type="search" id="admin-search" data-i18n-placeholder="admin.searchPlaceholder"
+                        placeholder="Search by name, parent or phone">
+                    <select id="admin-filter-status">
+                        <option value="" data-i18n="admin.filterAll">All statuses</option>
+                        <option value="new" data-i18n="admin.statusNew">New</option>
+                        <option value="contacted" data-i18n="admin.statusContacted">Contacted</option>
+                        <option value="enrolled" data-i18n="admin.statusEnrolled">Enrolled</option>
+                        <option value="declined" data-i18n="admin.statusDeclined">Declined</option>
+                    </select>
+                </div>
+
+                <div class="app-table-wrap">
+                    <table class="app-table">
+                        <thead>
+                            <tr>
+                                <th data-i18n="admin.colStudent">Student</th>
+                                <th data-i18n="admin.colParent">Parent</th>
+                                <th data-i18n="admin.colProgram">Program</th>
+                                <th data-i18n="admin.colSubmitted">Submitted</th>
+                                <th data-i18n="admin.colStatus">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-table-body"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="detail-overlay" id="detail-overlay" hidden="">
+        <div class="detail-card" id="detail-card"></div>
+    </div>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+    <script src="script.js"></script>
+
+
+
+</body>
+
+</html>
