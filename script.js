@@ -1,3 +1,23 @@
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
+import {
+    getFirestore, collection, getDocs, addDoc, updateDoc, deleteDoc, doc,
+} from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
+import {
+    getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged,
+} from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
+
+var firebaseConfig = {
+    apiKey: "AIzaSyBO1uz4RGxrE5abjtdvoECvXmfx-CYEVBE",
+    authDomain: "egysoroban-731cd.firebaseapp.com",
+    projectId: "egysoroban-731cd",
+    storageBucket: "egysoroban-731cd.firebasestorage.app",
+    messagingSenderId: "474236789906",
+    appId: "1:474236789906:web:d1abb574e3dbb9a5c7724b",
+    measurementId: "G-3SQ5EWVVG1",
+};
+var firebaseApp = initializeApp(firebaseConfig);
+var db = getFirestore(firebaseApp);
+var auth = getAuth(firebaseApp);
 
 (function () {
     "use strict";
@@ -215,14 +235,19 @@
     /* ============================================================
        STATE
        ============================================================ */
-    var ADMIN_PASSWORD = "Egysoroban2026"; // change this, then ask Claude to update it if you'd like a different one
+    var ADMIN_LOGIN_EMAIL = "admin@egysoroban.app"; // the Firebase Auth user you create in the Firebase console for staff login
     var ADMIN_EMAIL = "hello@egysoroban.example"; // replace with the real inbox that should receive applications
 
     var state = {
         lang: "en",
         applications: [],
         adminOpen: false,
+        isAdmin: false,
     };
+
+    onAuthStateChanged(auth, function (user) {
+        state.isAdmin = !!user;
+    });
 
     try {
         var savedLang = localStorage.getItem("egysoroban_lang");
@@ -323,66 +348,55 @@
     });
 
     /* ============================================================
-       ARTIFACT CAPABILITY — shared applications data
-       Applications live in a separate file (data/applications.json) so the
-       marketing page itself never needs to be republished when someone
-       applies. See the "files" form of artifact.publish().
+       FIRESTORE — shared applications data
+       Public visitors may only create applications (the apply form).
+       Reading, updating and deleting requires a signed-in admin — see
+       Firestore security rules in the Firebase console.
        ============================================================ */
-    var artifactCap = null;
-    var capReady = (function () {
-        try {
-            if (window.claude && typeof window.claude.use === "function") {
-                return window.claude.use("artifact").then(function (cap) { artifactCap = cap; return cap; }).catch(function () { return null; });
-            }
-        } catch (e) { }
-        return Promise.resolve(null);
-    })();
-
-    function genId() {
-        return "app_" + Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
-    }
+    var applicationsCol = collection(db, "applications");
 
     async function loadApplications() {
+        if (!state.isAdmin) return;
         try {
-            var res = await fetch("data/applications.json", { cache: "no-store" });
-            if (res.ok) {
-                var data = await res.json();
-                if (Array.isArray(data)) state.applications = data;
-            }
+            var snap = await getDocs(applicationsCol);
+            var list = [];
+            snap.forEach(function (d) { list.push(Object.assign({ id: d.id }, d.data())); });
+            state.applications = list;
         } catch (e) {
-            /* first run — file doesn't exist yet, that's fine */
+            /* likely a permissions error if not signed in yet — leave state as-is */
         }
     }
 
-    /**
-     * Publish the given applications list as the new data/applications.json.
-     * Handles the routine conflict case by refetching and merging once.
-     */
-    async function persistApplications(newList, allowRetry) {
-        if (allowRetry === undefined) allowRetry = true;
-        await capReady;
-        if (!artifactCap) return { ok: false, code: "not_granted" };
+    async function addApplicationDoc(app) {
         try {
-            await artifactCap.publish({ "data/applications.json": JSON.stringify(newList, null, 2) });
-            state.applications = newList;
+            var docRef = await addDoc(applicationsCol, app);
+            var withId = Object.assign({ id: docRef.id }, app);
+            state.applications = state.applications.concat([withId]);
+            return { ok: true, app: withId };
+        } catch (err) {
+            return { ok: false, code: (err && err.code) || "upstream_error" };
+        }
+    }
+
+    async function updateApplicationDoc(id, fields) {
+        try {
+            await updateDoc(doc(db, "applications", id), fields);
+            state.applications = state.applications.map(function (a) {
+                return a.id === id ? Object.assign({}, a, fields) : a;
+            });
             return { ok: true };
         } catch (err) {
-            var code = (err && err.code) || "upstream_error";
-            if (code === "conflict" && allowRetry) {
-                try {
-                    var res = await fetch("data/applications.json", { cache: "no-store" });
-                    var latest = res.ok ? await res.json() : [];
-                    if (!Array.isArray(latest)) latest = [];
-                    var existingIds = {};
-                    latest.forEach(function (a) { existingIds[a.id] = true; });
-                    var toAdd = newList.filter(function (a) { return !existingIds[a.id]; });
-                    var merged = latest.concat(toAdd);
-                    return await persistApplications(merged, false);
-                } catch (e2) {
-                    return { ok: false, code: "conflict" };
-                }
-            }
-            return { ok: false, code: code };
+            return { ok: false, code: (err && err.code) || "upstream_error" };
+        }
+    }
+
+    async function deleteApplicationDoc(id) {
+        try {
+            await deleteDoc(doc(db, "applications", id));
+            state.applications = state.applications.filter(function (a) { return a.id !== id; });
+            return { ok: true };
+        } catch (err) {
+            return { ok: false, code: (err && err.code) || "upstream_error" };
         }
     }
 
@@ -447,7 +461,6 @@
             if (invalid) { invalid.focus(); return; }
 
             var app = {
-                id: genId(),
                 studentName: (fd.get("studentName") || "").toString().trim(),
                 age: (fd.get("age") || "").toString().trim(),
                 grade: (fd.get("grade") || "").toString().trim(),
@@ -471,7 +484,7 @@
             submitBtn.disabled = true;
             submitBtn.textContent = t("apply.submitting");
 
-            var result = await persistApplications(state.applications.concat([app]));
+            var result = await addApplicationDoc(app);
 
             submitBtn.disabled = false;
             submitBtn.textContent = originalLabel;
@@ -512,9 +525,7 @@
 
     function openAdminOverlay() {
         adminOverlay.hidden = false;
-        var isAuthed = false;
-        try { isAuthed = sessionStorage.getItem("egysoroban_admin") === "1"; } catch (e) { }
-        if (isAuthed) {
+        if (state.isAdmin) {
             showAdminDashboard();
         } else {
             adminGate.hidden = false;
@@ -548,21 +559,24 @@
         }
     });
 
-    document.getElementById("admin-login-form").addEventListener("submit", function (e) {
+    document.getElementById("admin-login-form").addEventListener("submit", async function (e) {
         e.preventDefault();
-        if (adminPasswordInput.value === ADMIN_PASSWORD) {
-            try { sessionStorage.setItem("egysoroban_admin", "1"); } catch (err) { }
+        var loginBtn = document.querySelector('#admin-login-form button[type="submit"]');
+        if (loginBtn) loginBtn.disabled = true;
+        try {
+            await signInWithEmailAndPassword(auth, ADMIN_LOGIN_EMAIL, adminPasswordInput.value);
             adminLoginError.classList.remove("show");
             showAdminDashboard();
-        } else {
+        } catch (err) {
             adminLoginError.classList.add("show");
             adminPasswordInput.value = "";
             adminPasswordInput.focus();
         }
+        if (loginBtn) loginBtn.disabled = false;
     });
 
-    document.getElementById("admin-logout").addEventListener("click", function () {
-        try { sessionStorage.removeItem("egysoroban_admin"); } catch (e) { }
+    document.getElementById("admin-logout").addEventListener("click", async function () {
+        try { await signOut(auth); } catch (e) { }
         state.adminOpen = false;
         closeAdminOverlay();
     });
@@ -756,14 +770,7 @@
         saveBtn.textContent = t("detail.save");
         saveBtn.addEventListener("click", async function () {
             saveBtn.disabled = true;
-            var updated = state.applications.map(function (a) {
-                if (a.id !== app.id) return a;
-                var copy = Object.assign({}, a);
-                copy.status = statusSelect.value;
-                copy.notes = notesArea.value;
-                return copy;
-            });
-            var result = await persistApplications(updated);
+            var result = await updateApplicationDoc(app.id, { status: statusSelect.value, notes: notesArea.value });
             saveBtn.disabled = false;
             if (result.ok) {
                 toast(t("admin.savedToast"));
@@ -785,8 +792,7 @@
                 return;
             }
             deleteBtn.disabled = true;
-            var updated = state.applications.filter(function (a) { return a.id !== app.id; });
-            var result = await persistApplications(updated);
+            var result = await deleteApplicationDoc(app.id);
             deleteBtn.disabled = false;
             if (result.ok) {
                 toast(t("admin.deletedToast"));
@@ -813,7 +819,6 @@
         var studentName = (fd.get("studentName") || "").toString().trim();
         if (!studentName) { manualAddForm.querySelector('[name="studentName"]').focus(); return; }
         var app = {
-            id: genId(),
             studentName: studentName,
             age: (fd.get("age") || "").toString().trim(),
             grade: "",
@@ -831,7 +836,7 @@
             source: "manual",
             submittedAt: new Date().toISOString(),
         };
-        var result = await persistApplications(state.applications.concat([app]));
+        var result = await addApplicationDoc(app);
         if (result.ok) {
             toast(t("admin.addedToast"));
             manualAddForm.reset();
@@ -842,8 +847,4 @@
         }
     });
 
-    /* ============================================================
-       INIT
-       ============================================================ */
-    loadApplications();
 })();
