@@ -50,7 +50,7 @@ function validateForm(fd) {
     var required = [
         "branch", "studentNameAr", "studentNameEn", "dob", "gender", "religion",
         "parentName", "relationship", "phone", "email",
-        "address", "governorate", "city", "schoolName", "schoolType", "grade", "hobbies",
+        "address", "governorate", "city", "schoolName", "schoolType", "grade",
     ];
     var firstInvalid = null;
     required.forEach(function (name) {
