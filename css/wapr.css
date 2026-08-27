@@ -1,5 +1,6 @@
 /* ============ WAPR 2026 ============ */
 .wapr { background: var(--rod); color: var(--rod-tint); }
+.wapr .container { max-width: 1320px; }
 .wapr .eyebrow { color: var(--brass); }
 .wapr h2 { color: #fff; }
 .wapr .section-lede { color: var(--rod-tint); opacity: 0.85; }
