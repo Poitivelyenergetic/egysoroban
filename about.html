@@ -2,7 +2,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Teach — Egysoroban</title>
+    <title>About — Egysoroban</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
@@ -12,7 +12,10 @@
     <link rel="stylesheet" href="css/tokens.css?v=1787851120">
     <link rel="stylesheet" href="css/base.css?v=1787851120">
     <link rel="stylesheet" href="css/header.css?v=1787851120">
-    <link rel="stylesheet" href="css/apply-form.css?v=1787851120">
+    <link rel="stylesheet" href="css/hero.css?v=1787851120">
+    <link rel="stylesheet" href="css/about.css?v=1787851120">
+    <link rel="stylesheet" href="css/instructors.css?v=1787851120">
+    <link rel="stylesheet" href="css/lightbox.css?v=1787851120">
     <link rel="stylesheet" href="css/footer.css?v=1787851120">
     <link rel="icon" type="image/png" href="assets/favicon.png?v=1787851120">
 </head>
@@ -52,50 +55,83 @@
 
     <main id="main">
 
-        <!-- ============ TEACHER APPLY ============ -->
-        <section class="apply" id="teach">
-            <div class="container apply-wrap">
-                <div class="apply-side">
-                    <p class="eyebrow" data-i18n="teacher.eyebrow">Join our team</p>
-                    <h2 class="section-title" data-i18n="teacher.title">Teach at EGY Soroban</h2>
-                    <p class="section-lede" data-i18n="teacher.lede">Certified instructors, apply below. Our team
-                        reviews every application.</p>
+        <!-- ============ ABOUT ============ -->
+        <section id="about">
+            <div class="container about-grid">
+                <div>
+                    <p class="eyebrow" data-i18n="about.eyebrow">About the academy</p>
+                    <h2 class="section-title" data-i18n="about.title">18 years turning children into abacus champions
+                    </h2>
+                    <div class="carousel about-carousel">
+                        <div class="carousel-track">
+                            <figure class="carousel-slide active">
+                                <img src="assets/family/family-01-mascot-party.jpg" alt="EGY Soroban Academy students at a school event">
+                            </figure>
+                            <figure class="carousel-slide">
+                                <img src="assets/family/family-02-ceremony-team.jpg" alt="EGY Soroban Academy team at an AIAMA award ceremony">
+                            </figure>
+                            <figure class="carousel-slide">
+                                <img src="assets/family/family-03-studio-medals.jpg" alt="EGY Soroban Academy team with championship medals">
+                            </figure>
+                        </div>
+                        <div class="carousel-dots"></div>
+                        <button type="button" class="carousel-arrow prev" aria-label="Previous photo">‹</button>
+                        <button type="button" class="carousel-arrow next" aria-label="Next photo">›</button>
+                    </div>
                 </div>
-                <form class="app-form" id="teacher-apply-form" novalidate="">
-                    <div class="form-grid">
-                        <div class="field full">
-                            <label for="t-name" data-i18n="teacher.fName">Full name</label>
-                            <input id="t-name" name="name" type="text" required="" autocomplete="off">
-                            <span class="field-error" data-i18n="apply.errRequired">This field is required.</span>
+                <div class="about-copy">
+                    <p data-i18n="about.p1">Founded in 2013 by Dr. Rania Suleiman, EGY Soroban is Egypt's official
+                        representative in AIAMA — training champions from their first bead to full mental math
+                        (Anzan).</p>
+                    <div class="about-stats">
+                        <div class="stat-card">
+                            <div class="num" data-count="100">0</div>
+                            <div class="lbl" data-i18n="about.stat1">First-place championship wins</div>
                         </div>
-                        <div class="field">
-                            <label for="t-email" data-i18n="teacher.fEmail">Email address</label>
-                            <input id="t-email" name="email" type="email" required="" autocomplete="off">
-                            <span class="field-error" data-i18n="apply.errEmail">Enter a valid email address.</span>
+                        <div class="stat-card">
+                            <div class="num" data-count="18">0</div>
+                            <div class="lbl" data-i18n="about.stat2">Years of experience</div>
                         </div>
-                        <div class="field">
-                            <label for="t-phone" data-i18n="teacher.fPhone">Phone number</label>
-                            <input id="t-phone" name="phone" type="tel" placeholder="01xxxxxxxxx" required=""
-                                autocomplete="off">
-                            <span class="field-error" data-i18n="apply.errRequired">This field is required.</span>
+                        <div class="stat-card">
+                            <div class="num" data-count="11" data-suffix="">0</div>
+                            <div class="lbl" data-i18n="about.stat3">Structured training levels</div>
                         </div>
-                        <div class="field full">
-                            <label for="t-experience" data-i18n="teacher.fExperience">Teaching / soroban
-                                experience</label>
-                            <textarea id="t-experience" name="experience" required=""
-                                data-i18n-placeholder="teacher.experiencePlaceholder"></textarea>
-                            <span class="field-error" data-i18n="apply.errRequired">This field is required.</span>
-                        </div>
-                        <div class="field full">
-                            <label for="t-notes" data-i18n="teacher.fNotes">Anything else we should know? <span
-                                    class="opt" data-i18n="apply.optional">(optional)</span></label>
-                            <textarea id="t-notes" name="notes"></textarea>
+                        <div class="stat-card">
+                            <div class="num" data-count="4" data-suffix="">0</div>
+                            <div class="lbl" data-i18n="about.stat4">World championship titles</div>
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-primary btn-block" id="teacher-apply-submit"
-                        data-i18n="teacher.submit">Submit application</button>
-                    <div class="form-status" id="teacher-form-status"></div>
-                </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============ INSTRUCTORS ============ -->
+        <section id="instructors">
+            <div class="container">
+                <p class="eyebrow" data-i18n="instructors.eyebrow">Leadership &amp; team</p>
+                <h2 class="section-title" data-i18n="instructors.title">Founded by an academic, run by a team</h2>
+                <p class="section-lede" data-i18n="instructors.lede">EGY Soroban's program is accredited and led by
+                    certified trainers under AIAMA international standards.</p>
+                <div class="instructors-grid">
+                    <div class="instructor-card">
+                        <div class="instructor-avatar" aria-hidden="true">R</div>
+                        <h3 data-i18n="instructors.name1">Dr. Rania Suleiman</h3>
+                        <div class="role" data-i18n="instructors.role1">Founder &amp; Academic Director</div>
+                        <p data-i18n="instructors.bio1">Built the program first taught at Mansoura University, 2013.</p>
+                    </div>
+                    <div class="instructor-card">
+                        <div class="instructor-avatar" aria-hidden="true">T</div>
+                        <h3 data-i18n="instructors.name2">Training Team</h3>
+                        <div class="role" data-i18n="instructors.role2">Certified Instructors</div>
+                        <p data-i18n="instructors.bio2">All 11 levels, first bead to full mental math.</p>
+                    </div>
+                    <div class="instructor-card">
+                        <div class="instructor-avatar" aria-hidden="true">C</div>
+                        <h3 data-i18n="instructors.name3">Competition Team</h3>
+                        <div class="role" data-i18n="instructors.role3">Championship Coaching Staff</div>
+                        <p data-i18n="instructors.bio3">Preps Egypt's reps for AIAMA &amp; Arab championships.</p>
+                    </div>
+                </div>
             </div>
         </section>
 
@@ -138,9 +174,22 @@
         <div class="footer-bottom">
             <span data-i18n="footer.copy">© 2026 Egysoroban — EGY Soroban Academy, Al-Mansoura, Egypt</span>
         </div>
+        <div class="footer-credit">
+            <a href="https://wa.me/966549985189" target="_blank" rel="noopener">Made by Mustafa Mohammed</a>
+        </div>
     </footer>
 
-    <script type="module" src="js/teach-page.js?v=1787851120"></script>
+    <div class="lightbox" id="moments-lightbox" hidden="">
+        <button type="button" class="lightbox-close" id="lightbox-close" aria-label="Close">✕</button>
+        <button type="button" class="lightbox-arrow prev" id="lightbox-prev" aria-label="Previous photo">‹</button>
+        <figure class="lightbox-figure">
+            <img id="lightbox-img" src="" alt="">
+            <figcaption id="lightbox-caption"></figcaption>
+        </figure>
+        <button type="button" class="lightbox-arrow next" id="lightbox-next" aria-label="Next photo">›</button>
+    </div>
+
+    <script type="module" src="js/about-page.js?v=1787851120"></script>
 
 </body>
 

@@ -2,7 +2,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Teach — Egysoroban</title>
+    <title>Journey — Egysoroban</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="css/tokens.css?v=1787851120">
     <link rel="stylesheet" href="css/base.css?v=1787851120">
     <link rel="stylesheet" href="css/header.css?v=1787851120">
-    <link rel="stylesheet" href="css/apply-form.css?v=1787851120">
+    <link rel="stylesheet" href="css/journey.css?v=1787851120">
     <link rel="stylesheet" href="css/footer.css?v=1787851120">
     <link rel="icon" type="image/png" href="assets/favicon.png?v=1787851120">
 </head>
@@ -52,50 +52,38 @@
 
     <main id="main">
 
-        <!-- ============ TEACHER APPLY ============ -->
-        <section class="apply" id="teach">
-            <div class="container apply-wrap">
-                <div class="apply-side">
-                    <p class="eyebrow" data-i18n="teacher.eyebrow">Join our team</p>
-                    <h2 class="section-title" data-i18n="teacher.title">Teach at EGY Soroban</h2>
-                    <p class="section-lede" data-i18n="teacher.lede">Certified instructors, apply below. Our team
-                        reviews every application.</p>
-                </div>
-                <form class="app-form" id="teacher-apply-form" novalidate="">
-                    <div class="form-grid">
-                        <div class="field full">
-                            <label for="t-name" data-i18n="teacher.fName">Full name</label>
-                            <input id="t-name" name="name" type="text" required="" autocomplete="off">
-                            <span class="field-error" data-i18n="apply.errRequired">This field is required.</span>
-                        </div>
-                        <div class="field">
-                            <label for="t-email" data-i18n="teacher.fEmail">Email address</label>
-                            <input id="t-email" name="email" type="email" required="" autocomplete="off">
-                            <span class="field-error" data-i18n="apply.errEmail">Enter a valid email address.</span>
-                        </div>
-                        <div class="field">
-                            <label for="t-phone" data-i18n="teacher.fPhone">Phone number</label>
-                            <input id="t-phone" name="phone" type="tel" placeholder="01xxxxxxxxx" required=""
-                                autocomplete="off">
-                            <span class="field-error" data-i18n="apply.errRequired">This field is required.</span>
-                        </div>
-                        <div class="field full">
-                            <label for="t-experience" data-i18n="teacher.fExperience">Teaching / soroban
-                                experience</label>
-                            <textarea id="t-experience" name="experience" required=""
-                                data-i18n-placeholder="teacher.experiencePlaceholder"></textarea>
-                            <span class="field-error" data-i18n="apply.errRequired">This field is required.</span>
-                        </div>
-                        <div class="field full">
-                            <label for="t-notes" data-i18n="teacher.fNotes">Anything else we should know? <span
-                                    class="opt" data-i18n="apply.optional">(optional)</span></label>
-                            <textarea id="t-notes" name="notes"></textarea>
-                        </div>
+        <!-- ============ JOURNEY ============ -->
+        <section id="journey">
+            <div class="container">
+                <p class="eyebrow" data-i18n="journey.eyebrow">How it works</p>
+                <h2 class="section-title" data-i18n="journey.title">From application to first level exam</h2>
+                <div class="journey-list">
+                    <div class="journey-step"><span class="n">01</span>
+                        <h3 data-i18n="journey.s1t">Apply online</h3>
+                        <p data-i18n="journey.s1p">Send your child's details through the form below — takes about two
+                            minutes.</p>
                     </div>
-                    <button type="submit" class="btn btn-primary btn-block" id="teacher-apply-submit"
-                        data-i18n="teacher.submit">Submit application</button>
-                    <div class="form-status" id="teacher-form-status"></div>
-                </form>
+                    <div class="journey-step"><span class="n">02</span>
+                        <h3 data-i18n="journey.s2t">Assessment</h3>
+                        <p data-i18n="journey.s2p">Our team contacts you to arrange a placement assessment at the
+                            academy.</p>
+                    </div>
+                    <div class="journey-step"><span class="n">03</span>
+                        <h3 data-i18n="journey.s3t">Placed in a level</h3>
+                        <p data-i18n="journey.s3p">Your child is placed at their KYU level based on age and starting
+                            point.</p>
+                    </div>
+                    <div class="journey-step"><span class="n">04</span>
+                        <h3 data-i18n="journey.s4t">Weekly class &amp; practice</h3>
+                        <p data-i18n="journey.s4p">One weekly 2-hour session, moving through 11 levels from Beginner to
+                            Expert.</p>
+                    </div>
+                    <div class="journey-step"><span class="n">05</span>
+                        <h3 data-i18n="journey.s5t">Certified exam</h3>
+                        <p data-i18n="journey.s5p">An AIAMA-certified exam closes each level before moving to the
+                            next.</p>
+                    </div>
+                </div>
             </div>
         </section>
 
@@ -138,9 +126,12 @@
         <div class="footer-bottom">
             <span data-i18n="footer.copy">© 2026 Egysoroban — EGY Soroban Academy, Al-Mansoura, Egypt</span>
         </div>
+        <div class="footer-credit">
+            <a href="https://wa.me/966549985189" target="_blank" rel="noopener">Made by Mustafa Mohammed</a>
+        </div>
     </footer>
 
-    <script type="module" src="js/teach-page.js?v=1787851120"></script>
+    <script type="module" src="js/journey-page.js?v=1787851120"></script>
 
 </body>
 

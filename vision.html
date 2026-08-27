@@ -2,7 +2,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Teach — Egysoroban</title>
+    <title>Vision — Egysoroban</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
@@ -12,7 +12,8 @@
     <link rel="stylesheet" href="css/tokens.css?v=1787851120">
     <link rel="stylesheet" href="css/base.css?v=1787851120">
     <link rel="stylesheet" href="css/header.css?v=1787851120">
-    <link rel="stylesheet" href="css/apply-form.css?v=1787851120">
+    <link rel="stylesheet" href="css/mv.css?v=1787851120">
+    <link rel="stylesheet" href="css/why.css?v=1787851120">
     <link rel="stylesheet" href="css/footer.css?v=1787851120">
     <link rel="icon" type="image/png" href="assets/favicon.png?v=1787851120">
 </head>
@@ -52,50 +53,71 @@
 
     <main id="main">
 
-        <!-- ============ TEACHER APPLY ============ -->
-        <section class="apply" id="teach">
-            <div class="container apply-wrap">
-                <div class="apply-side">
-                    <p class="eyebrow" data-i18n="teacher.eyebrow">Join our team</p>
-                    <h2 class="section-title" data-i18n="teacher.title">Teach at EGY Soroban</h2>
-                    <p class="section-lede" data-i18n="teacher.lede">Certified instructors, apply below. Our team
-                        reviews every application.</p>
-                </div>
-                <form class="app-form" id="teacher-apply-form" novalidate="">
-                    <div class="form-grid">
-                        <div class="field full">
-                            <label for="t-name" data-i18n="teacher.fName">Full name</label>
-                            <input id="t-name" name="name" type="text" required="" autocomplete="off">
-                            <span class="field-error" data-i18n="apply.errRequired">This field is required.</span>
-                        </div>
-                        <div class="field">
-                            <label for="t-email" data-i18n="teacher.fEmail">Email address</label>
-                            <input id="t-email" name="email" type="email" required="" autocomplete="off">
-                            <span class="field-error" data-i18n="apply.errEmail">Enter a valid email address.</span>
-                        </div>
-                        <div class="field">
-                            <label for="t-phone" data-i18n="teacher.fPhone">Phone number</label>
-                            <input id="t-phone" name="phone" type="tel" placeholder="01xxxxxxxxx" required=""
-                                autocomplete="off">
-                            <span class="field-error" data-i18n="apply.errRequired">This field is required.</span>
-                        </div>
-                        <div class="field full">
-                            <label for="t-experience" data-i18n="teacher.fExperience">Teaching / soroban
-                                experience</label>
-                            <textarea id="t-experience" name="experience" required=""
-                                data-i18n-placeholder="teacher.experiencePlaceholder"></textarea>
-                            <span class="field-error" data-i18n="apply.errRequired">This field is required.</span>
-                        </div>
-                        <div class="field full">
-                            <label for="t-notes" data-i18n="teacher.fNotes">Anything else we should know? <span
-                                    class="opt" data-i18n="apply.optional">(optional)</span></label>
-                            <textarea id="t-notes" name="notes"></textarea>
-                        </div>
+        <!-- ============ MISSION & VISION ============ -->
+        <section class="mv" id="mv">
+            <div class="container">
+                <p class="eyebrow" data-i18n="mv.eyebrow">Mission &amp; vision</p>
+                <div class="mv-grid">
+                    <div class="mv-card">
+                        <h3 data-i18n="mv.messageTitle">Our message</h3>
+                        <p data-i18n="mv.message1">Our mission is to provide an integrated program for developing children's mental abilities that goes beyond simply performing mental arithmetic operations, to become an effective means of discovering and developing a child's potential, and stimulating their mind daily in a way that positively impacts their academic level and life skills.</p>
+                        <p data-i18n="mv.message2">We work to build the child's confidence in himself and his mental abilities, and enhance his ability to think, concentrate and face challenges, while establishing the concept that the mind can be continuously developed through proper practice and training.</p>
                     </div>
-                    <button type="submit" class="btn btn-primary btn-block" id="teacher-apply-submit"
-                        data-i18n="teacher.submit">Submit application</button>
-                    <div class="form-status" id="teacher-form-status"></div>
-                </form>
+                    <div class="mv-card">
+                        <h3 data-i18n="mv.visionTitle">Our vision</h3>
+                        <p data-i18n="mv.vision1">At EGY Soroban Academy, we strive to build a generation with exceptional mental abilities by bringing the child to the highest levels of speed, accuracy, and focus in mental arithmetic, while achieving a balance between logical thinking and mental imagination at the same time.</p>
+                        <p data-i18n="mv.vision2">We believe that the Japanese abacus is not just a means of learning arithmetic operations, but rather an integrated mental training similar to learning arts and professional skills.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============ WHY SOROBAN ============ -->
+        <section class="why">
+            <div class="container">
+                <p class="eyebrow" data-i18n="why.eyebrow">Why soroban</p>
+                <h2 class="section-title" data-i18n="why.title">What changes when a child trains this way</h2>
+                <p class="section-lede" data-i18n="why.lede">One skill. Whole-brain benefits.</p>
+                <div class="why-grid">
+                    <div class="benefit-card">
+                        <div class="glyph" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24"
+                                fill="none">
+                                <path
+                                    d="M12 2v4M12 18v4M4.9 4.9l2.8 2.8M16.3 16.3l2.8 2.8M2 12h4M18 12h4M4.9 19.1l2.8-2.8M16.3 7.7l2.8-2.8"
+                                    stroke="currentColor" stroke-width="1.6" stroke-linecap="round"></path>
+                            </svg></div>
+                        <h3 data-i18n="why.c1t">Sharper focus</h3>
+                        <p data-i18n="why.c1p">Beads train attention that carries into homework.</p>
+                    </div>
+                    <div class="benefit-card">
+                        <div class="glyph" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24"
+                                fill="none">
+                                <path d="M4 19V9M10 19V5M16 19v-7M22 19V3" stroke="currentColor" stroke-width="1.6"
+                                    stroke-linecap="round"></path>
+                            </svg></div>
+                        <h3 data-i18n="why.c2t">Stronger working memory</h3>
+                        <p data-i18n="why.c2p">Anzan trains the same memory used for reading and problem-solving.</p>
+                    </div>
+                    <div class="benefit-card">
+                        <div class="glyph" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24"
+                                fill="none">
+                                <path d="M13 2 3 14h7l-1 8 11-14h-8l1-6z" stroke="currentColor" stroke-width="1.6"
+                                    stroke-linejoin="round"></path>
+                            </svg></div>
+                        <h3 data-i18n="why.c3t">Real calculation speed</h3>
+                        <p data-i18n="why.c3p">Built for speed — tested at real championships.</p>
+                    </div>
+                    <div class="benefit-card">
+                        <div class="glyph" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24"
+                                fill="none">
+                                <path
+                                    d="M12 21s-7-4.5-9.5-9A5.5 5.5 0 0 1 12 6a5.5 5.5 0 0 1 9.5 6c-2.5 4.5-9.5 9-9.5 9Z"
+                                    stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"></path>
+                            </svg></div>
+                        <h3 data-i18n="why.c4t">Visible confidence</h3>
+                        <p data-i18n="why.c4p">11 certified exams. 11 wins to be proud of.</p>
+                    </div>
+                </div>
             </div>
         </section>
 
@@ -138,9 +160,12 @@
         <div class="footer-bottom">
             <span data-i18n="footer.copy">© 2026 Egysoroban — EGY Soroban Academy, Al-Mansoura, Egypt</span>
         </div>
+        <div class="footer-credit">
+            <a href="https://wa.me/966549985189" target="_blank" rel="noopener">Made by Mustafa Mohammed</a>
+        </div>
     </footer>
 
-    <script type="module" src="js/teach-page.js?v=1787851120"></script>
+    <script type="module" src="js/vision-page.js?v=1787851120"></script>
 
 </body>
 
