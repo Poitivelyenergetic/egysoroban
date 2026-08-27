@@ -1,23 +1,33 @@
 import {
     signInWithEmailAndPassword, signOut, sendEmailVerification, sendPasswordResetEmail,
+    createUserWithEmailAndPassword, updateProfile,
 } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
-import { auth } from "./firebase-init.js";
+import { doc, setDoc } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
+import { auth, db } from "./firebase-init.js";
 import { state } from "./state.js";
 import { t, fmtDate, onLanguageChangeCallbacks } from "./i18n.js";
 import { toast } from "./toast.js";
 import { loadApplications, addApplicationDoc, updateApplicationDoc, deleteApplicationDoc } from "./applications.js";
-import { ROLE_SUPERADMIN, ROLE_ADMIN, getCurrentRole } from "./roles.js";
+import { ROLE_SUPERADMIN, ROLE_ADMIN, ROLE_TEACHER, getCurrentRole } from "./roles.js";
 import { renderTeachersPanel } from "./admin-teachers-panel.js";
 import { renderManagePanel } from "./admin-manage-panel.js";
 
 var adminOverlay = document.getElementById("admin-overlay");
 var adminGate = document.getElementById("admin-gate");
+var adminGateTitle = document.getElementById("admin-gate-title");
+var adminSignup = document.getElementById("admin-signup");
 var adminVerify = document.getElementById("admin-verify");
 var adminDash = document.getElementById("admin-dashboard");
 var adminEmailInput = document.getElementById("admin-email");
 var adminPasswordInput = document.getElementById("admin-password");
 var adminLoginError = document.getElementById("admin-login-error");
 var adminUnauthorized = document.getElementById("admin-login-unauthorized");
+var signupUsernameInput = document.getElementById("signup-username");
+var signupEmailInput = document.getElementById("signup-email");
+var signupPhoneInput = document.getElementById("signup-phone");
+var signupPasswordInput = document.getElementById("signup-password");
+var signupPasswordConfirmInput = document.getElementById("signup-password-confirm");
+var signupError = document.getElementById("admin-signup-error");
 var detailOverlay = document.getElementById("detail-overlay");
 var detailCard = document.getElementById("detail-card");
 var adminSearchInput = document.getElementById("admin-search");
@@ -26,22 +36,35 @@ var adminTabs = document.getElementById("admin-tabs");
 var adminTabTeachers = document.getElementById("admin-tab-teachers");
 var adminTabManageAdmins = document.getElementById("admin-tab-manage-admins");
 var deletePending = null;
+var loginMode = null; // "teacher" | "admin"
 
 function showGate() {
     adminGate.hidden = false;
+    adminSignup.hidden = true;
     adminVerify.hidden = true;
     adminDash.hidden = true;
     adminPasswordInput.value = "";
     adminLoginError.classList.remove("show");
     adminUnauthorized.classList.remove("show");
+    adminGateTitle.textContent = t(loginMode === "admin" ? "admin.gateTitleAdmin" : "admin.gateTitleTeacher");
     setTimeout(function () { adminEmailInput.focus(); }, 50);
+}
+function showSignup() {
+    adminGate.hidden = true;
+    adminSignup.hidden = false;
+    adminVerify.hidden = true;
+    adminDash.hidden = true;
+    signupError.classList.remove("show");
+    setTimeout(function () { signupUsernameInput.focus(); }, 50);
 }
 function showVerifyScreen() {
     adminGate.hidden = true;
+    adminSignup.hidden = true;
     adminVerify.hidden = false;
     adminDash.hidden = true;
 }
-function openAdminOverlay() {
+function openAdminOverlay(mode) {
+    loginMode = mode === "admin" ? "admin" : "teacher";
     adminOverlay.hidden = false;
     if (state.role) {
         showAdminDashboard();
@@ -90,8 +113,14 @@ async function showAdminDashboard() {
 
 async function afterVerifiedLogin() {
     var role = await getCurrentRole();
-    if (!role) {
-        adminUnauthorized.classList.add("show");
+    var isAdminRole = role === ROLE_SUPERADMIN || role === ROLE_ADMIN;
+    var modeMismatch = role && ((loginMode === "teacher" && isAdminRole) || (loginMode === "admin" && role === ROLE_TEACHER));
+    if (!role || modeMismatch) {
+        if (modeMismatch) {
+            toast(t(loginMode === "teacher" ? "admin.wrongModeTeacher" : "admin.wrongModeAdmin"));
+        } else {
+            adminUnauthorized.classList.add("show");
+        }
         try { await signOut(auth); } catch (e) { }
         state.isAdmin = false;
         state.role = null;
@@ -102,10 +131,14 @@ async function afterVerifiedLogin() {
     showAdminDashboard();
 }
 
-document.getElementById("open-admin").addEventListener("click", openAdminOverlay);
+document.getElementById("open-teacher-login").addEventListener("click", function () { openAdminOverlay("teacher"); });
+document.getElementById("open-admin-login").addEventListener("click", function () { openAdminOverlay("admin"); });
 document.getElementById("admin-gate-close").addEventListener("click", closeAdminOverlay);
+document.getElementById("admin-signup-close").addEventListener("click", closeAdminOverlay);
 document.getElementById("admin-verify-close").addEventListener("click", closeAdminOverlay);
 document.getElementById("admin-dash-close").addEventListener("click", closeAdminOverlay);
+document.getElementById("admin-goto-signup").addEventListener("click", showSignup);
+document.getElementById("admin-goto-gate").addEventListener("click", showGate);
 adminOverlay.addEventListener("click", function (e) {
     if (e.target === adminOverlay) closeAdminOverlay();
 });
@@ -151,6 +184,54 @@ document.getElementById("admin-forgot-btn").addEventListener("click", async func
     } catch (err) {
         toast(t("admin.resetFailed"));
     }
+});
+
+document.getElementById("admin-signup-form").addEventListener("submit", async function (e) {
+    e.preventDefault();
+    var signupBtn = document.querySelector('#admin-signup-form button[type="submit"]');
+    signupError.classList.remove("show");
+    signupError.textContent = "";
+
+    var username = signupUsernameInput.value.trim();
+    var email = signupEmailInput.value.trim();
+    var phone = signupPhoneInput.value.trim();
+    var password = signupPasswordInput.value;
+    var passwordConfirm = signupPasswordConfirmInput.value;
+
+    if (password !== passwordConfirm) {
+        signupError.textContent = t("admin.signupPasswordMismatch");
+        signupError.classList.add("show");
+        return;
+    }
+    if (password.length < 6) {
+        signupError.textContent = t("admin.signupWeakPassword");
+        signupError.classList.add("show");
+        return;
+    }
+
+    if (signupBtn) signupBtn.disabled = true;
+    try {
+        var cred = await createUserWithEmailAndPassword(auth, email, password);
+        try { await updateProfile(cred.user, { displayName: username }); } catch (e) { }
+        try {
+            await setDoc(doc(db, "staffProfiles", email.toLowerCase()), {
+                username: username, phone: phone, email: email.toLowerCase(),
+                createdAt: new Date().toISOString(),
+            });
+        } catch (e) { /* profile collection may not be writable yet — non-fatal */ }
+        try { await sendEmailVerification(cred.user); } catch (e) { }
+        showVerifyScreen();
+    } catch (err) {
+        if (err && err.code === "auth/email-already-in-use") {
+            signupError.textContent = t("admin.signupEmailInUse");
+        } else if (err && err.code === "auth/weak-password") {
+            signupError.textContent = t("admin.signupWeakPassword");
+        } else {
+            signupError.textContent = t("admin.signupFailed");
+        }
+        signupError.classList.add("show");
+    }
+    if (signupBtn) signupBtn.disabled = false;
 });
 
 document.getElementById("admin-verify-check").addEventListener("click", async function () {
@@ -276,6 +357,11 @@ function renderAdminDashboard() {
     });
 }
 onLanguageChangeCallbacks.push(renderAdminDashboard);
+onLanguageChangeCallbacks.push(function () {
+    if (!adminGate.hidden) {
+        adminGateTitle.textContent = t(loginMode === "admin" ? "admin.gateTitleAdmin" : "admin.gateTitleTeacher");
+    }
+});
 
 adminSearchInput.addEventListener("input", renderAdminDashboard);
 adminFilterSelect.addEventListener("change", renderAdminDashboard);
