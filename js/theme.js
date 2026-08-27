@@ -2,7 +2,7 @@ function applyTheme(theme) {
     document.documentElement.setAttribute("data-theme", theme);
     try { localStorage.setItem("egysoroban_theme", theme); } catch (e) { }
     var themeToggleBtn = document.getElementById("theme-toggle");
-    if (themeToggleBtn) themeToggleBtn.textContent = theme === "dark" ? "☀️ Light" : "🌙 Dark";
+    if (themeToggleBtn) themeToggleBtn.textContent = theme === "dark" ? "☀️" : "🌙";
 }
 
 var savedTheme = "dark";

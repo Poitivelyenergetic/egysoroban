@@ -66,6 +66,7 @@ function showVerifyScreen() {
 function openAdminOverlay(mode) {
     loginMode = mode === "admin" ? "admin" : "teacher";
     adminOverlay.hidden = false;
+    document.body.style.overflow = "hidden";
     if (state.role) {
         showAdminDashboard();
     } else if (auth.currentUser && !auth.currentUser.emailVerified) {
@@ -78,6 +79,7 @@ function openAdminOverlay(mode) {
 }
 function closeAdminOverlay() {
     adminOverlay.hidden = true;
+    document.body.style.overflow = "";
 }
 function setPanel(name) {
     document.querySelectorAll(".admin-panel").forEach(function (p) {
