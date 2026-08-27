@@ -35,7 +35,7 @@ function initCountUp() {
                 observer.unobserve(entry.target);
             }
         });
-    }, { threshold: 0.5 });
+    }, { threshold: 0.4, rootMargin: "0px 0px -150px 0px" });
 
     els.forEach(function (el) { observer.observe(el); });
 }

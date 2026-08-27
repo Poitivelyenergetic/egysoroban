@@ -13,6 +13,11 @@
 .admin-close-row { display: flex; justify-content: flex-end; margin-bottom: 8px; }
 .icon-btn { background: transparent; border: none; color: var(--ink-faint); cursor: pointer; padding: 6px; border-radius: 6px; }
 .icon-btn:hover { color: var(--ink); background: var(--paper-sunken); }
+.admin-forgot-link {
+  display: block; margin: 12px auto 0; background: none; border: none; cursor: pointer;
+  color: var(--jade); font-size: 0.84rem; text-decoration: underline;
+}
+.admin-forgot-link:hover { color: var(--jade-strong); }
 .admin-error { color: var(--danger); font-size: 0.86rem; margin-top: 10px; display: none; }
 .admin-error.show { display: block; }
 .admin-hint { font-size: 0.82rem; color: var(--ink-faint); margin-top: 18px; border-top: 1px solid var(--line); padding-top: 16px; }

@@ -1,5 +1,5 @@
 import {
-    signInWithEmailAndPassword, signOut, sendEmailVerification,
+    signInWithEmailAndPassword, signOut, sendEmailVerification, sendPasswordResetEmail,
 } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
 import { auth } from "./firebase-init.js";
 import { state } from "./state.js";
@@ -136,6 +136,21 @@ document.getElementById("admin-login-form").addEventListener("submit", async fun
         adminPasswordInput.focus();
     }
     if (loginBtn) loginBtn.disabled = false;
+});
+
+document.getElementById("admin-forgot-btn").addEventListener("click", async function () {
+    var email = adminEmailInput.value.trim();
+    if (!email) {
+        toast(t("admin.resetNeedEmail"));
+        adminEmailInput.focus();
+        return;
+    }
+    try {
+        await sendPasswordResetEmail(auth, email);
+        toast(t("admin.resetSent"));
+    } catch (err) {
+        toast(t("admin.resetFailed"));
+    }
 });
 
 document.getElementById("admin-verify-check").addEventListener("click", async function () {

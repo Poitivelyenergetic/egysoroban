@@ -6,7 +6,7 @@
 .about-grid { display: grid; grid-template-columns: 0.95fr 1.05fr; gap: 64px; align-items: start; }
 @media (max-width: 860px) { .about-grid { grid-template-columns: 1fr; gap: 32px; } }
 .about-copy p { color: var(--ink-soft); font-size: 1.05rem; }
-.about-stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; margin-top: 8px; }
+.about-stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; margin-top: 36px; }
 .stat-card {
   background: var(--paper-raised); border: 1px solid var(--line); border-radius: var(--radius-md);
   padding: 22px 20px; box-shadow: var(--shadow-1);
