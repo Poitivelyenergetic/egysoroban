@@ -65,3 +65,20 @@
 .quote-card:nth-child(2) .who { color: #a9c2ef; }
 .quote-card:nth-child(3) { background: rgba(74, 222, 128, 0.14); border-color: rgba(74, 222, 128, 0.38); }
 .quote-card:nth-child(3) .who { color: #6ee7a0; }
+
+/* ============ Achievements detail ============ */
+.achv-detail { display: grid; grid-template-columns: 1fr 160px 1fr; gap: 22px; margin-top: 36px; align-items: start; }
+@media (max-width: 900px) { .achv-detail { grid-template-columns: 1fr; } .achv-stats { order: -1; flex-direction: row; } .achv-stat { flex: 1; } }
+@media (max-width: 560px) { .achv-stats { flex-direction: column; } }
+.achv-col h3 { color: var(--ok); font-size: 0.98rem; margin: 0 0 10px; }
+.achv-col ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.achv-col li { display: flex; gap: 8px; align-items: flex-start; font-size: 0.8rem; color: var(--rod-tint); opacity: 0.9; line-height: 1.4; }
+.achv-col li .check { color: var(--ok); flex-shrink: 0; font-weight: 700; margin-top: 1px; }
+.achv-stats { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.achv-trophy { font-size: 2.2rem; line-height: 1; }
+.achv-stat { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.14); border-radius: var(--radius-md); padding: 10px 12px; text-align: center; width: 100%; }
+.achv-stat .num { font-family: var(--font-mono); font-size: 1.3rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+.achv-stat .lbl { font-size: 0.68rem; color: var(--rod-tint); opacity: 0.75; margin-top: 2px; }
+.achv-stat:nth-child(2) .num { color: var(--brass); }
+.achv-stat:nth-child(3) .num { color: #a9c2ef; }
+.achv-stat:nth-child(4) .num { color: #6ee7a0; }

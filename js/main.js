@@ -8,4 +8,5 @@ import "./flash-game.js";
 import "./carousel.js";
 import "./lightbox.js";
 import "./scroll-reveal.js";
+import "./count-up.js";
 import "./admin.js";

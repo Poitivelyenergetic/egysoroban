@@ -1,0 +1,18 @@
+/* ============ News ============ */
+.news-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; margin-top: 36px; }
+@media (max-width: 760px) { .news-grid { grid-template-columns: 1fr; } }
+.news-card {
+  position: relative; background: var(--paper-raised); border: 1px solid var(--line); border-radius: var(--radius-md);
+  padding: 20px 20px 22px;
+}
+.news-badge {
+  display: inline-block; font-family: var(--font-mono); font-size: 0.68rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.05em; padding: 0.3em 0.7em; border-radius: 999px; margin-bottom: 12px;
+}
+.news-card h3 { font-size: 1rem; margin: 0 0 8px; }
+.news-card p { color: var(--ink-soft); font-size: 0.86rem; line-height: 1.5; margin: 0; }
+
+.news-card:nth-child(1) .news-badge { background: var(--brass-tint); color: var(--brass-strong); }
+.news-card:nth-child(2) .news-badge { background: var(--jade-tint); color: var(--jade); }
+.news-card:nth-child(3) .news-badge { background: var(--ok-tint); color: var(--ok); }
+.news-card:nth-child(4) .news-badge { background: var(--warn-tint); color: var(--warn); }

@@ -5,6 +5,7 @@ function initScrollReveal() {
     var selectors = [
         ".about-carousel", ".stat-card", ".benefit-card", ".level-card", ".journey-step",
         ".instructor-card", ".quote-card", ".achievement-photo", ".moments-grid img",
+        ".mv-card", ".news-card", ".achv-col", ".achv-stats",
         ".wapr-carousel", ".faq-item", ".try-card", ".contact-item", ".contact-map",
         ".app-form", ".apply-side", ".section-title", ".section-lede", ".eyebrow"
     ].join(", ");
