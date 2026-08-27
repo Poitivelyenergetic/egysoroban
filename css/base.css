@@ -5,6 +5,9 @@ html { scroll-behavior: smooth; }
   html { scroll-behavior: auto; }
   * { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; }
 }
+.reveal-target { opacity: 0; transform: translateY(26px); transition: opacity 0.65s ease, transform 0.65s ease; }
+.reveal-target.in-view { opacity: 1; transform: none; }
+
 body {
   margin: 0;
   background: var(--paper);

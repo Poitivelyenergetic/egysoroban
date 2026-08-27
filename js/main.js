@@ -7,4 +7,5 @@ import "./soroban-widget.js";
 import "./flash-game.js";
 import "./carousel.js";
 import "./moments-lightbox.js";
+import "./scroll-reveal.js";
 import "./admin.js";
