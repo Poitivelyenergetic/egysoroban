@@ -1,0 +1,59 @@
+/* ============ Try it (interactive abacus + flash challenge) ============ */
+.try-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 40px; }
+@media (max-width: 860px) { .try-grid { grid-template-columns: 1fr; } }
+.try-card {
+  background: var(--paper-raised); border: 1px solid var(--line); border-radius: var(--radius-lg);
+  padding: 28px 24px; text-align: center; box-shadow: var(--shadow-1);
+}
+.try-card h3 { font-size: 1.1rem; margin-bottom: 0.3em; }
+.try-card > p { color: var(--ink-soft); font-size: 0.92rem; margin-bottom: 20px; }
+
+.soroban {
+  display: flex; direction: ltr; justify-content: center; gap: 30px; padding: 16px 20px;
+  background: var(--rod); border-radius: var(--radius-md); width: fit-content; margin: 0 auto;
+}
+.soroban-rod { display: flex; flex-direction: column; align-items: center; position: relative; }
+.soroban-rod::before {
+  content: ""; position: absolute; top: 0; bottom: 0; width: 4px;
+  background: rgba(255,255,255,0.18); border-radius: 2px;
+}
+.soroban-heaven { height: 58px; display: flex; flex-direction: column; justify-content: flex-start; padding-top: 2px; }
+.soroban-bar { width: 44px; height: 5px; background: var(--brass-tint); border-radius: 3px; }
+.soroban-earth { height: 118px; display: flex; flex-direction: column; justify-content: flex-end; gap: 4px; padding-bottom: 2px; }
+.try-bead {
+  width: 32px; height: 21px; border: 0; border-radius: 50%; background: var(--brass);
+  cursor: pointer; position: relative; z-index: 1; transition: transform 0.18s ease, background 0.18s ease;
+}
+.try-bead:hover { background: var(--brass-strong); }
+.try-bead:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+.soroban-heaven .try-bead.active { transform: translateY(26px); }
+.soroban-earth .try-bead.active { transform: translateY(-26px); }
+.soroban-value { margin-top: 18px; font-family: var(--font-mono); font-weight: 700; font-size: 1rem; color: var(--ink); }
+.soroban-value span:last-child { color: var(--brass-strong); font-size: 1.3rem; margin-inline-start: 4px; }
+@media (prefers-reduced-motion: reduce) { .try-bead { transition: none; } }
+
+.soroban-set-form { display: flex; gap: 8px; justify-content: center; margin-top: 14px; }
+.soroban-set-form input {
+  width: 100px; padding: 0.5em 0.7em; border: 1px solid var(--line); border-radius: var(--radius-sm);
+  font: inherit; font-family: var(--font-mono); text-align: center; background: var(--paper); color: var(--ink);
+}
+.soroban-set-form input:focus-visible { outline: 2px solid var(--brass-strong); outline-offset: 2px; }
+
+.flash-game { display: flex; flex-direction: column; align-items: center; gap: 14px; }
+.flash-display {
+  width: 110px; height: 110px; display: grid; place-items: center;
+  background: var(--rod); color: var(--brass); font-family: var(--font-mono); font-weight: 700;
+  font-size: 2.6rem; border-radius: var(--radius-md);
+}
+.flash-form { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.flash-form label { font-weight: 700; color: var(--ink); font-size: 0.9rem; }
+.flash-form input {
+  width: 110px; padding: 0.6em 0.7em; border: 2px solid var(--brass); border-radius: var(--radius-sm);
+  font-size: 1.15rem; font-weight: 700; text-align: center; font-family: var(--font-mono); background: var(--paper); color: var(--ink);
+}
+.flash-form input:focus-visible { outline: 2px solid var(--brass-strong); outline-offset: 2px; }
+.flash-result { min-height: 1.4em; font-weight: 700; margin: 0; }
+.flash-result.ok { color: var(--jade-strong); }
+.flash-result.no { color: var(--danger); }
+.flash-cta { font-size: 0.86rem; }
+.flash-form[hidden], .flash-cta[hidden] { display: none; }

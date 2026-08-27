@@ -1,0 +1,42 @@
+/* ============ Apply form ============ */
+.apply { background: var(--paper-sunken); }
+.apply-wrap { display: grid; grid-template-columns: 0.8fr 1.2fr; gap: 56px; align-items: start; }
+@media (max-width: 900px) { .apply-wrap { grid-template-columns: 1fr; gap: 32px; } }
+.apply-side .bead-row { margin-inline-start: 0; max-width: 220px; }
+.apply-side ul { display: flex; flex-direction: column; gap: 14px; margin-top: 20px; }
+.apply-side li { display: flex; gap: 10px; align-items: flex-start; color: var(--ink-soft); font-size: 0.94rem; }
+.apply-side li .tick { color: var(--jade); flex-shrink: 0; margin-top: 2px; }
+
+.app-form {
+  background: var(--paper-raised); border: 1px solid var(--line); border-radius: var(--radius-lg);
+  padding: 32px; box-shadow: var(--shadow-1);
+}
+.form-section-title {
+  font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-faint);
+  font-family: var(--font-mono); font-weight: 700; margin: 28px 0 14px;
+}
+.form-section-title:first-child { margin-top: 0; }
+.radio-row { display: flex; gap: 16px; flex-wrap: wrap; padding-top: 0.4em; }
+.radio-row label { display: inline-flex; align-items: center; gap: 0.4em; font-weight: 500; cursor: pointer; }
+.radio-row input[type="radio"] { accent-color: var(--brass-strong); width: 16px; height: 16px; margin: 0; }
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+@media (max-width: 560px) { .form-grid { grid-template-columns: 1fr; } }
+.field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 18px; }
+.field.full { grid-column: 1 / -1; }
+.field label { font-size: 0.84rem; font-weight: 700; color: var(--ink); }
+.field .opt { font-weight: 500; color: var(--ink-faint); }
+.field input, .field select, .field textarea {
+  font: inherit; font-family: var(--font-body); padding: 0.75em 0.9em; border-radius: var(--radius-sm);
+  border: 1px solid var(--line); background: var(--paper); color: var(--ink); width: 100%;
+}
+.field input:focus, .field select:focus, .field textarea:focus { border-color: var(--brass-strong); }
+.field textarea { min-height: 96px; resize: vertical; }
+.field-error { color: var(--danger); font-size: 0.8rem; display: none; }
+.field.has-error input, .field.has-error select, .field.has-error textarea { border-color: var(--danger); }
+.field.has-error .field-error { display: block; }
+.form-note { font-size: 0.82rem; color: var(--ink-faint); margin-top: 6px; }
+.form-status { margin-top: 18px; padding: 16px 18px; border-radius: var(--radius-sm); font-size: 0.92rem; display: none; }
+.form-status.show { display: block; }
+.form-status.ok { background: var(--ok-tint); color: var(--jade-strong); }
+.form-status.warn { background: var(--warn-tint); color: var(--warn); }
+.form-status .btn { margin-top: 12px; }

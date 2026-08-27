@@ -1,0 +1,10 @@
+import "./auth-state.js";
+import "./i18n.js";
+import "./theme.js";
+import "./mobile-nav.js";
+import "./faq-accordion.js";
+import "./soroban-widget.js";
+import "./flash-game.js";
+import "./apply-form.js";
+import "./teacher-apply-form.js";
+import "./admin.js";

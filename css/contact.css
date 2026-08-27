@@ -1,0 +1,14 @@
+/* ============ Contact ============ */
+.contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+@media (max-width: 780px) { .contact-grid { grid-template-columns: 1fr; } }
+.contact-list { display: flex; flex-direction: column; gap: 22px; margin-top: 32px; }
+.contact-item { display: flex; gap: 14px; }
+.contact-item .glyph { width: 36px; height: 36px; border-radius: 9px; background: var(--brass-tint); color: var(--brass-strong); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.contact-item h3 { font-size: 0.92rem; margin: 0 0 3px; }
+.contact-item p { margin: 0; color: var(--ink-soft); font-size: 0.92rem; }
+.contact-map {
+  border-radius: var(--radius-lg); border: 1px solid var(--line); background: var(--rod); min-height: 280px;
+  display: flex; align-items: center; justify-content: center; color: var(--rod-tint); text-align: center; padding: 32px;
+}
+.contact-map .glyph2 { color: var(--brass); margin-bottom: 12px; }
+.contact-map p { font-family: var(--font-mono); font-size: 0.82rem; color: var(--rod-tint); opacity: 0.75; max-width: 34ch; margin: 0 auto; }

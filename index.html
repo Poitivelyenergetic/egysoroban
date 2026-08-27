@@ -1,4 +1,4 @@
-<html lang="en">
+<html lang="en" data-theme="dark">
 
 <head>
     <meta charset="utf-8">
@@ -7,9 +7,25 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
     <link
-        href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&amp;family=Manrope:wght@400;500;600;700;800&amp;family=Cairo:wght@400;500;600;700;800&amp;family=IBM+Plex+Mono:wght@400;500;600&amp;display=swap"
+        href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&amp;family=Manrope:wght@400;500;600;700;800&amp;family=Cairo:wght@400;500;600;700;800&amp;family=IBM+Plex+Mono:wght@400;500;600&amp;display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=1787780267">
+    <link rel="stylesheet" href="css/tokens.css?v=1787827300">
+    <link rel="stylesheet" href="css/base.css?v=1787827300">
+    <link rel="stylesheet" href="css/header.css?v=1787827300">
+    <link rel="stylesheet" href="css/hero.css?v=1787827300">
+    <link rel="stylesheet" href="css/about.css?v=1787827300">
+    <link rel="stylesheet" href="css/why.css?v=1787827300">
+    <link rel="stylesheet" href="css/programs.css?v=1787827300">
+    <link rel="stylesheet" href="css/tryit.css?v=1787827300">
+    <link rel="stylesheet" href="css/journey.css?v=1787827300">
+    <link rel="stylesheet" href="css/instructors.css?v=1787827300">
+    <link rel="stylesheet" href="css/testimonials.css?v=1787827300">
+    <link rel="stylesheet" href="css/faq.css?v=1787827300">
+    <link rel="stylesheet" href="css/apply-form.css?v=1787827300">
+    <link rel="stylesheet" href="css/contact.css?v=1787827300">
+    <link rel="stylesheet" href="css/footer.css?v=1787827300">
+    <link rel="stylesheet" href="css/admin.css?v=1787827300">
+    <link rel="stylesheet" href="css/toast.css?v=1787827300">
     <link rel="icon" type="image/png" href="assets/favicon.png">
 </head>
 
@@ -34,6 +50,7 @@
             </nav>
             <div class="header-actions">
                 <button class="lang-toggle" id="lang-toggle" type="button">عربي / EN</button>
+                <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Toggle dark or light theme">☀️ Light</button>
                 <a href="#apply" class="btn btn-primary btn-sm" data-i18n="nav.apply">Apply now</a>
                 <button class="nav-toggle" id="nav-toggle" aria-label="Menu"
                     aria-expanded="false"><span></span></button>
@@ -52,9 +69,8 @@
                         <span data-i18n="hero.titleA">Give your child a</span>
                         <span class="accent" data-i18n="hero.titleAccent">calculator in their mind</span>
                     </h1>
-                    <p class="hero-sub" data-i18n="hero.sub">Egysoroban trains children ages 4–14 to add, subtract,
-                        multiply and divide by visualizing an abacus — building focus, memory and confidence one
-                        bead at a time.</p>
+                    <p class="hero-sub" data-i18n="hero.sub">Turn your child into a mental-math champion — one bead
+                        at a time.</p>
                     <div class="hero-ctas">
                         <a href="#apply" class="btn btn-primary" data-i18n="hero.ctaApply">Apply for a free trial
                             class</a>
@@ -141,14 +157,12 @@
                     <p class="eyebrow" data-i18n="about.eyebrow">About the academy</p>
                     <h2 class="section-title" data-i18n="about.title">18 years turning children into abacus champions
                     </h2>
+                    <img class="about-photo" src="assets/moments/moment-09.jpg"
+                        alt="A student at EGY Soroban Academy holding a certificate">
                 </div>
                 <div class="about-copy">
-                    <p data-i18n="about.p1">EGY Soroban Academy was founded by Dr. Rania Suleiman, who holds a PhD in
-                        Child Education and a Master's in Curricula and Teaching Methods for the abacus. Its program
-                        was the first of its kind accredited and taught at Mansoura University, in 2013.</p>
-                    <p data-i18n="about.p2">EGY Soroban is Egypt's official member and representative in AIAMA, the
-                        international abacus association based in Singapore and Taiwan — training children ages 4 to
-                        12 through 11 structured levels, from first counting beads to full mental calculation
+                    <p data-i18n="about.p1">Founded in 2013 by Dr. Rania Suleiman, EGY Soroban is Egypt's official
+                        representative in AIAMA — training champions from their first bead to full mental math
                         (Anzan).</p>
                     <div class="about-stats">
                         <div class="stat-card">
@@ -177,8 +191,7 @@
             <div class="container">
                 <p class="eyebrow" data-i18n="why.eyebrow">Why soroban</p>
                 <h2 class="section-title" data-i18n="why.title">What changes when a child trains this way</h2>
-                <p class="section-lede" data-i18n="why.lede">Soroban training is a physical, visual and mental exercise
-                    at once — that combination is what shows up in the classroom, not just on a math test.</p>
+                <p class="section-lede" data-i18n="why.lede">One skill. Whole-brain benefits.</p>
                 <div class="why-grid">
                     <div class="benefit-card">
                         <div class="glyph" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24"
@@ -188,8 +201,7 @@
                                     stroke="currentColor" stroke-width="1.6" stroke-linecap="round"></path>
                             </svg></div>
                         <h3 data-i18n="why.c1t">Sharper focus</h3>
-                        <p data-i18n="why.c1p">Tracking beads across ten columns trains sustained attention — children
-                            carry that focus into homework and exams.</p>
+                        <p data-i18n="why.c1p">Beads train attention that carries into homework.</p>
                     </div>
                     <div class="benefit-card">
                         <div class="glyph" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24"
@@ -198,8 +210,7 @@
                                     stroke-linecap="round"></path>
                             </svg></div>
                         <h3 data-i18n="why.c2t">Stronger working memory</h3>
-                        <p data-i18n="why.c2p">Visualizing the abacus (Anzan) exercises the same memory muscles used for
-                            reading comprehension and multi-step problems.</p>
+                        <p data-i18n="why.c2p">Anzan trains the same memory used for reading and problem-solving.</p>
                     </div>
                     <div class="benefit-card">
                         <div class="glyph" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24"
@@ -208,8 +219,7 @@
                                     stroke-linejoin="round"></path>
                             </svg></div>
                         <h3 data-i18n="why.c3t">Real calculation speed</h3>
-                        <p data-i18n="why.c3p">Regular training builds the speed and accuracy tested at national and
-                            international soroban championships.</p>
+                        <p data-i18n="why.c3p">Built for speed — tested at real championships.</p>
                     </div>
                     <div class="benefit-card">
                         <div class="glyph" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24"
@@ -219,8 +229,7 @@
                                     stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"></path>
                             </svg></div>
                         <h3 data-i18n="why.c4t">Visible confidence</h3>
-                        <p data-i18n="why.c4p">Certified exams at each of the 11 levels give children concrete,
-                            official proof that their mental abilities are growing.</p>
+                        <p data-i18n="why.c4p">11 certified exams. 11 wins to be proud of.</p>
                     </div>
                 </div>
             </div>
@@ -231,9 +240,8 @@
             <div class="container">
                 <p class="eyebrow" data-i18n="programs.eyebrow">Programs</p>
                 <h2 class="section-title" data-i18n="programs.title">Eleven levels, one path</h2>
-                <p class="section-lede" data-i18n="programs.lede">Every student is placed by assessment, then moves
-                    level by level through 11 KYU grades — each closed out with a certified AIAMA exam before
-                    advancing.</p>
+                <p class="section-lede" data-i18n="programs.lede">Assessed once. 11 levels. A certified exam every
+                    step.</p>
                 <div class="programs-grid">
 
                     <div class="level-card">
@@ -290,6 +298,14 @@
                         <div class="soroban" data-rods="3" id="try-soroban"></div>
                         <div class="soroban-value"><span data-i18n="tryit.valueLabel">Value:</span> <span
                                 id="soroban-value-num" aria-live="polite">0</span></div>
+                        <form class="soroban-set-form" id="soroban-set-form">
+                            <label for="soroban-set-input" class="visually-hidden"
+                                data-i18n="tryit.setNumberLabel">Type a number</label>
+                            <input id="soroban-set-input" type="number" min="0" max="999" inputmode="numeric"
+                                data-i18n-placeholder="tryit.setNumberPlaceholder" placeholder="Type a number">
+                            <button type="submit" class="btn btn-secondary btn-sm" data-i18n="tryit.setNumberBtn">Show
+                                it</button>
+                        </form>
                     </div>
 
                     <div class="try-card">
@@ -360,31 +376,21 @@
                 <div class="instructors-grid">
                     <div class="instructor-card">
                         <div class="instructor-avatar" aria-hidden="true">R</div>
-                        <div>
-                            <h3 data-i18n="instructors.name1">Dr. Rania Suleiman</h3>
-                            <div class="role" data-i18n="instructors.role1">Founder &amp; Academic Director</div>
-                            <p data-i18n="instructors.bio1">PhD in Child Education, Master's in Curricula and Teaching
-                                Methods for the abacus. Built the program first accredited and taught at Mansoura
-                                University in 2013.</p>
-                        </div>
+                        <h3 data-i18n="instructors.name1">Dr. Rania Suleiman</h3>
+                        <div class="role" data-i18n="instructors.role1">Founder &amp; Academic Director</div>
+                        <p data-i18n="instructors.bio1">Built the program first taught at Mansoura University, 2013.</p>
+                    </div>
+                    <div class="instructor-card">
+                        <div class="instructor-avatar" aria-hidden="true">T</div>
+                        <h3 data-i18n="instructors.name2">Training Team</h3>
+                        <div class="role" data-i18n="instructors.role2">Certified Instructors</div>
+                        <p data-i18n="instructors.bio2">All 11 levels, first bead to full mental math.</p>
                     </div>
                     <div class="instructor-card">
                         <div class="instructor-avatar" aria-hidden="true">C</div>
-                        <div>
-                            <h3 data-i18n="instructors.name2">Training Team</h3>
-                            <div class="role" data-i18n="instructors.role2">Certified Instructors</div>
-                            <p data-i18n="instructors.bio2">Deliver all 11 levels under AIAMA-certified exam standards,
-                                from first beads to full mental (Anzan) calculation.</p>
-                        </div>
-                    </div>
-                    <div class="instructor-card">
-                        <div class="instructor-avatar" aria-hidden="true">A</div>
-                        <div>
-                            <h3 data-i18n="instructors.name3">Competition Team</h3>
-                            <div class="role" data-i18n="instructors.role3">Championship Coaching Staff</div>
-                            <p data-i18n="instructors.bio3">Prepares students who represent Egypt in AIAMA and Arab
-                                Soroban Federation championships.</p>
-                        </div>
+                        <h3 data-i18n="instructors.name3">Competition Team</h3>
+                        <div class="role" data-i18n="instructors.role3">Championship Coaching Staff</div>
+                        <p data-i18n="instructors.bio3">Preps Egypt's reps for AIAMA &amp; Arab championships.</p>
                     </div>
                 </div>
             </div>
@@ -395,6 +401,11 @@
             <div class="container">
                 <p class="eyebrow" data-i18n="testimonials.eyebrow">Achievements</p>
                 <h2 class="section-title" data-i18n="testimonials.title">Real results, not just promises</h2>
+                <figure class="achievement-photo">
+                    <img src="assets/honor-ceremony.jpg" alt="EGY Soroban champion honored on stage with the Egyptian flag">
+                    <figcaption data-i18n="testimonials.photoCaption">An academy champion honored under the patronage
+                        of Egypt's Ministry of Youth &amp; Sports</figcaption>
+                </figure>
                 <div class="testimonials-grid">
                     <div class="quote-card">
                         <p class="quote" data-i18n="testimonials.q1">100+ first-place wins in local and international
@@ -411,6 +422,33 @@
                             Youth &amp; Sports, Dr. Ashraf Sobhy, for their achievements.</p>
                         <p class="who" data-i18n="testimonials.a3">National recognition</p>
                     </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============ MOMENTS GALLERY ============ -->
+        <section id="moments">
+            <div class="container">
+                <p class="eyebrow" data-i18n="moments.eyebrow">Gallery</p>
+                <h2 class="section-title" data-i18n="moments.title">Moments from our championships</h2>
+                <div class="moments-grid">
+                    <img src="assets/moments/moment-01.jpg" alt="EGY Soroban Academy student with a championship award" loading="lazy">
+                    <img src="assets/moments/moment-02.jpg" alt="EGY Soroban Academy student with a championship award" loading="lazy">
+                    <img src="assets/moments/moment-03.jpg" alt="EGY Soroban Academy student with a championship award" loading="lazy">
+                    <img src="assets/moments/moment-04.jpg" alt="EGY Soroban Academy student with a championship award" loading="lazy">
+                    <img src="assets/moments/moment-05.jpg" alt="EGY Soroban Academy student with a championship award" loading="lazy">
+                    <img src="assets/moments/moment-06.jpg" alt="EGY Soroban Academy student with a championship award" loading="lazy">
+                    <img src="assets/moments/moment-07.jpg" alt="EGY Soroban Academy student with a championship award" loading="lazy">
+                    <img src="assets/moments/moment-08.jpg" alt="EGY Soroban Academy student with a championship award" loading="lazy">
+                    <img src="assets/moments/moment-09.jpg" alt="EGY Soroban Academy student with a championship award" loading="lazy">
+                    <img src="assets/moments/moment-10.jpg" alt="EGY Soroban Academy student with a championship award" loading="lazy">
+                    <img src="assets/moments/moment-11.jpg" alt="EGY Soroban Academy student with a championship award" loading="lazy">
+                    <img src="assets/moments/moment-12.jpg" alt="EGY Soroban Academy student with a championship award" loading="lazy">
+                    <img src="assets/moments/moment-13.jpg" alt="EGY Soroban Academy student with a championship award" loading="lazy">
+                    <img src="assets/moments/moment-14.jpg" alt="EGY Soroban Academy student with a championship award" loading="lazy">
+                    <img src="assets/moments/moment-15.jpg" alt="EGY Soroban Academy student with a championship award" loading="lazy">
+                    <img src="assets/moments/moment-16.jpg" alt="EGY Soroban Academy student with a championship award" loading="lazy">
+                    <img src="assets/moments/moment-17.jpg" alt="EGY Soroban Academy student with a championship award" loading="lazy">
                 </div>
             </div>
         </section>
@@ -472,52 +510,177 @@
                 <div class="apply-side">
                     <p class="eyebrow" data-i18n="apply.eyebrow">Apply to join</p>
                     <h2 class="section-title" data-i18n="apply.title">Apply to EGY Soroban Academy</h2>
-                    <p class="section-lede" data-i18n="apply.lede">Tell us about your child below and our team will
-                        contact you to arrange an assessment and placement.</p>
+                    <p class="section-lede" data-i18n="apply.lede">Complete all sections below. A branch
+                        representative will review your application and contact you within 24 hours.</p>
                     <div class="bead-row" aria-hidden="true"><span class="bead"></span><span class="rod-line"></span>
                     </div>
                     <ul>
-                        <li><span class="tick" aria-hidden="true">✓</span><span data-i18n="apply.b1">Takes about two
-                                minutes to fill in</span></li>
-                        <li><span class="tick" aria-hidden="true">✓</span><span data-i18n="apply.b2">Our team will
-                                contact you to schedule an assessment</span></li>
+                        <li><span class="tick" aria-hidden="true">✓</span><span data-i18n="apply.b2">A branch
+                                representative contacts you within 24 hours</span></li>
                         <li><span class="tick" aria-hidden="true">✓</span><span data-i18n="apply.b3">No payment
                                 needed to apply</span></li>
                     </ul>
                 </div>
 
                 <form class="app-form" id="apply-form" novalidate="">
+                    <h3 class="form-section-title" data-i18n="apply.sectionChild">Child &amp; branch</h3>
                     <div class="form-grid">
                         <div class="field full">
-                            <label for="f-student-name" data-i18n="apply.fStudentName">Student's full name</label>
-                            <input id="f-student-name" name="studentName" type="text" required="" autocomplete="off">
+                            <label for="f-branch" data-i18n="apply.fBranch">Branch</label>
+                            <select id="f-branch" name="branch" required="">
+                                <option value="" data-i18n="apply.optSelect">Select one</option>
+                                <option value="mansoura">Mansoura</option>
+                                <option value="talkha">Talkha</option>
+                                <option value="toril">Toril – Baby Inn</option>
+                                <option value="gzert-elward">Gzert-Elward Sport Club</option>
+                                <option value="glow-international">Glow International</option>
+                                <option value="shoha">Shoha Branch</option>
+                                <option value="online" data-i18n="apply.optOnline">Online</option>
+                            </select>
                             <span class="field-error" data-i18n="apply.errRequired">This field is required.</span>
                         </div>
                         <div class="field">
-                            <label for="f-age" data-i18n="apply.fAge">Student's age</label>
-                            <input id="f-age" name="age" type="number" min="4" max="12" required="" autocomplete="off">
+                            <label for="f-student-name-ar" data-i18n="apply.fStudentNameAr">Child's Arabic name</label>
+                            <input id="f-student-name-ar" name="studentNameAr" type="text" dir="rtl" required=""
+                                autocomplete="off">
                             <span class="field-error" data-i18n="apply.errRequired">This field is required.</span>
                         </div>
                         <div class="field">
-                            <label for="f-grade" data-i18n="apply.fGrade">Grade / school year <span class="opt"
+                            <label for="f-student-name-en" data-i18n="apply.fStudentNameEn">Child's English name</label>
+                            <input id="f-student-name-en" name="studentNameEn" type="text" required=""
+                                autocomplete="off">
+                            <span class="field-error" data-i18n="apply.errRequired">This field is required.</span>
+                        </div>
+                        <div class="field">
+                            <label for="f-dob" data-i18n="apply.fDob">Date of birth</label>
+                            <input id="f-dob" name="dob" type="date" required="" autocomplete="off">
+                            <span class="field-error" data-i18n="apply.errRequired">This field is required.</span>
+                        </div>
+                        <div class="field">
+                            <label for="f-national-id" data-i18n="apply.fNationalId">National ID <span class="opt"
                                     data-i18n="apply.optional">(optional)</span></label>
-                            <input id="f-grade" name="grade" type="text" autocomplete="off">
+                            <input id="f-national-id" name="nationalId" type="text" inputmode="numeric" maxlength="14"
+                                autocomplete="off" data-i18n-placeholder="apply.nationalIdHint">
+                            <span class="field-error" data-i18n="apply.errNationalId">Must be 14 digits, starting with
+                                2 or 3.</span>
                         </div>
+                        <div class="field">
+                            <label data-i18n="apply.fGender">Gender</label>
+                            <div class="radio-row">
+                                <label><input type="radio" name="gender" value="male" required=""> <span
+                                        data-i18n="apply.optMale">Male</span></label>
+                                <label><input type="radio" name="gender" value="female"> <span
+                                        data-i18n="apply.optFemale">Female</span></label>
+                            </div>
+                            <span class="field-error" data-i18n="apply.errRequired">This field is required.</span>
+                        </div>
+                        <div class="field">
+                            <label data-i18n="apply.fReligion">Religion</label>
+                            <div class="radio-row">
+                                <label><input type="radio" name="religion" value="muslim" required=""> <span
+                                        data-i18n="apply.optMuslim">Muslim</span></label>
+                                <label><input type="radio" name="religion" value="christian"> <span
+                                        data-i18n="apply.optChristian">Christian</span></label>
+                                <label><input type="radio" name="religion" value="other"> <span
+                                        data-i18n="apply.optOther">Other</span></label>
+                            </div>
+                            <span class="field-error" data-i18n="apply.errRequired">This field is required.</span>
+                        </div>
+                        <div class="field">
+                            <label for="f-nationality" data-i18n="apply.fNationality">Nationality</label>
+                            <select id="f-nationality" name="nationality">
+                                <option value="egyptian" selected="" data-i18n="apply.optEgyptian">Egyptian</option>
+                                <option value="other" data-i18n="apply.optOther">Other</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <h3 class="form-section-title" data-i18n="apply.sectionFamily">Family</h3>
+                    <div class="form-grid">
                         <div class="field">
                             <label for="f-parent-name" data-i18n="apply.fParentName">Parent / guardian name</label>
                             <input id="f-parent-name" name="parentName" type="text" required="" autocomplete="off">
                             <span class="field-error" data-i18n="apply.errRequired">This field is required.</span>
                         </div>
                         <div class="field">
-                            <label for="f-phone" data-i18n="apply.fPhone">Phone number</label>
-                            <input id="f-phone" name="phone" type="tel" required="" autocomplete="off">
+                            <label for="f-relationship" data-i18n="apply.fRelationship">Relationship to child</label>
+                            <select id="f-relationship" name="relationship" required="">
+                                <option value="" data-i18n="apply.optSelect">Select one</option>
+                                <option value="father" data-i18n="apply.optFather">Father</option>
+                                <option value="mother" data-i18n="apply.optMother">Mother</option>
+                                <option value="guardian" data-i18n="apply.optGuardian">Guardian</option>
+                            </select>
                             <span class="field-error" data-i18n="apply.errRequired">This field is required.</span>
                         </div>
-                        <div class="field full">
+                        <div class="field">
+                            <label for="f-phone" data-i18n="apply.fPhone">Phone number</label>
+                            <input id="f-phone" name="phone" type="tel" placeholder="01xxxxxxxxx" required=""
+                                autocomplete="off">
+                            <span class="field-error" data-i18n="apply.errRequired">This field is required.</span>
+                        </div>
+                        <div class="field">
                             <label for="f-email" data-i18n="apply.fEmail">Email address</label>
                             <input id="f-email" name="email" type="email" required="" autocomplete="off">
                             <span class="field-error" data-i18n="apply.errEmail">Enter a valid email address.</span>
                         </div>
+                        <div class="field full">
+                            <label for="f-occupation" data-i18n="apply.fOccupation">Guardian occupation <span
+                                    class="opt" data-i18n="apply.optional">(optional)</span></label>
+                            <input id="f-occupation" name="occupation" type="text" autocomplete="off">
+                        </div>
+                    </div>
+
+                    <h3 class="form-section-title" data-i18n="apply.sectionLocation">Location &amp; school</h3>
+                    <div class="form-grid">
+                        <div class="field full">
+                            <label for="f-address" data-i18n="apply.fAddress">Address</label>
+                            <input id="f-address" name="address" type="text" required="" autocomplete="off">
+                            <span class="field-error" data-i18n="apply.errRequired">This field is required.</span>
+                        </div>
+                        <div class="field">
+                            <label for="f-governorate" data-i18n="apply.fGovernorate">Governorate</label>
+                            <select id="f-governorate" name="governorate" required="">
+                                <option value="" data-i18n="apply.optSelect">Select one</option>
+                                <option value="dakahlia">Dakahlia</option>
+                                <option value="cairo">Cairo</option>
+                                <option value="giza">Giza</option>
+                                <option value="alexandria">Alexandria</option>
+                                <option value="sharqia">Sharqia</option>
+                                <option value="other" data-i18n="apply.optOther">Other</option>
+                            </select>
+                            <span class="field-error" data-i18n="apply.errRequired">This field is required.</span>
+                        </div>
+                        <div class="field">
+                            <label for="f-city" data-i18n="apply.fCity">City</label>
+                            <input id="f-city" name="city" type="text" required="" autocomplete="off">
+                            <span class="field-error" data-i18n="apply.errRequired">This field is required.</span>
+                        </div>
+                        <div class="field">
+                            <label for="f-school-name" data-i18n="apply.fSchoolName">School name</label>
+                            <input id="f-school-name" name="schoolName" type="text" required="" autocomplete="off">
+                            <span class="field-error" data-i18n="apply.errRequired">This field is required.</span>
+                        </div>
+                        <div class="field">
+                            <label data-i18n="apply.fSchoolType">School type</label>
+                            <div class="radio-row">
+                                <label><input type="radio" name="schoolType" value="arabic" required=""> <span
+                                        data-i18n="apply.optSchoolArabic">Arabic</span></label>
+                                <label><input type="radio" name="schoolType" value="languages"> <span
+                                        data-i18n="apply.optSchoolLanguages">Languages</span></label>
+                                <label><input type="radio" name="schoolType" value="international"> <span
+                                        data-i18n="apply.optSchoolInternational">International</span></label>
+                            </div>
+                            <span class="field-error" data-i18n="apply.errRequired">This field is required.</span>
+                        </div>
+                        <div class="field">
+                            <label for="f-grade" data-i18n="apply.fGrade">Grade / school year</label>
+                            <input id="f-grade" name="grade" type="text" required="" autocomplete="off">
+                            <span class="field-error" data-i18n="apply.errRequired">This field is required.</span>
+                        </div>
+                    </div>
+
+                    <h3 class="form-section-title" data-i18n="apply.sectionExtras">Program &amp; extras</h3>
+                    <div class="form-grid">
                         <div class="field">
                             <label for="f-program" data-i18n="apply.fProgram">Preferred level</label>
                             <select id="f-program" name="program">
@@ -526,16 +689,6 @@
                                 <option value="expert" data-i18n="programs.l3title">Expert</option>
                                 <option value="unsure" selected="" data-i18n="apply.optNotSure">Not sure — need
                                     assessment</option>
-                            </select>
-                        </div>
-                        <div class="field">
-                            <label for="f-experience" data-i18n="apply.fExperience">Prior soroban / math
-                                experience</label>
-                            <select id="f-experience" name="experience">
-                                <option value="none" data-i18n="apply.optExpNone">None</option>
-                                <option value="some" data-i18n="apply.optExpSome">Some, self-taught</option>
-                                <option value="switching" data-i18n="apply.optExpSwitch">Switching from another academy
-                                </option>
                             </select>
                         </div>
                         <div class="field">
@@ -551,6 +704,30 @@
                             </select>
                         </div>
                         <div class="field full">
+                            <label for="f-experience" data-i18n="apply.fExperience">Prior abacus / soroban experience
+                                <span class="opt" data-i18n="apply.optional">(optional)</span></label>
+                            <textarea id="f-experience" name="experience"
+                                data-i18n-placeholder="apply.experiencePlaceholder"></textarea>
+                        </div>
+                        <div class="field full">
+                            <label for="f-hobbies" data-i18n="apply.fHobbies">Hobbies &amp; interests</label>
+                            <textarea id="f-hobbies" name="hobbies" required=""
+                                data-i18n-placeholder="apply.hobbiesPlaceholder"></textarea>
+                            <span class="field-error" data-i18n="apply.errRequired">This field is required.</span>
+                        </div>
+                        <div class="field">
+                            <label for="f-medical" data-i18n="apply.fMedical">Medical / health notes <span class="opt"
+                                    data-i18n="apply.optional">(optional)</span></label>
+                            <textarea id="f-medical" name="medical"
+                                data-i18n-placeholder="apply.medicalPlaceholder"></textarea>
+                        </div>
+                        <div class="field">
+                            <label for="f-dietary" data-i18n="apply.fDietary">Dietary requirements <span class="opt"
+                                    data-i18n="apply.optional">(optional)</span></label>
+                            <textarea id="f-dietary" name="dietary"
+                                data-i18n-placeholder="apply.dietaryPlaceholder"></textarea>
+                        </div>
+                        <div class="field full">
                             <label for="f-goals" data-i18n="apply.fGoals">Goals or notes for us <span class="opt"
                                     data-i18n="apply.optional">(optional)</span></label>
                             <textarea id="f-goals" name="goals" placeholder=""></textarea>
@@ -561,6 +738,53 @@
                     <p class="form-note" data-i18n="apply.privacyNote">Your details are only used to contact you about
                         joining Egysoroban.</p>
                     <div class="form-status" id="form-status"></div>
+                </form>
+            </div>
+        </section>
+
+        <!-- ============ TEACHER APPLY ============ -->
+        <section class="apply" id="teach">
+            <div class="container apply-wrap">
+                <div class="apply-side">
+                    <p class="eyebrow" data-i18n="teacher.eyebrow">Join our team</p>
+                    <h2 class="section-title" data-i18n="teacher.title">Teach at EGY Soroban</h2>
+                    <p class="section-lede" data-i18n="teacher.lede">Certified instructors, apply below. Our team
+                        reviews every application.</p>
+                </div>
+                <form class="app-form" id="teacher-apply-form" novalidate="">
+                    <div class="form-grid">
+                        <div class="field full">
+                            <label for="t-name" data-i18n="teacher.fName">Full name</label>
+                            <input id="t-name" name="name" type="text" required="" autocomplete="off">
+                            <span class="field-error" data-i18n="apply.errRequired">This field is required.</span>
+                        </div>
+                        <div class="field">
+                            <label for="t-email" data-i18n="teacher.fEmail">Email address</label>
+                            <input id="t-email" name="email" type="email" required="" autocomplete="off">
+                            <span class="field-error" data-i18n="apply.errEmail">Enter a valid email address.</span>
+                        </div>
+                        <div class="field">
+                            <label for="t-phone" data-i18n="teacher.fPhone">Phone number</label>
+                            <input id="t-phone" name="phone" type="tel" placeholder="01xxxxxxxxx" required=""
+                                autocomplete="off">
+                            <span class="field-error" data-i18n="apply.errRequired">This field is required.</span>
+                        </div>
+                        <div class="field full">
+                            <label for="t-experience" data-i18n="teacher.fExperience">Teaching / soroban
+                                experience</label>
+                            <textarea id="t-experience" name="experience" required=""
+                                data-i18n-placeholder="teacher.experiencePlaceholder"></textarea>
+                            <span class="field-error" data-i18n="apply.errRequired">This field is required.</span>
+                        </div>
+                        <div class="field full">
+                            <label for="t-notes" data-i18n="teacher.fNotes">Anything else we should know? <span
+                                    class="opt" data-i18n="apply.optional">(optional)</span></label>
+                            <textarea id="t-notes" name="notes"></textarea>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block" id="teacher-apply-submit"
+                        data-i18n="teacher.submit">Submit application</button>
+                    <div class="form-status" id="teacher-form-status"></div>
                 </form>
             </div>
         </section>
@@ -653,6 +877,7 @@
                     <li><a href="#programs" data-i18n="nav.programs">Programs</a></li>
                     <li><a href="#faq" data-i18n="nav.faq">FAQ</a></li>
                     <li><a href="#apply" data-i18n="nav.apply">Apply now</a></li>
+                    <li><a href="#teach" data-i18n="teacher.eyebrow">Join our team</a></li>
                 </ul>
             </div>
             <div class="footer-col">
@@ -683,21 +908,44 @@
                 </button>
             </div>
             <h2 data-i18n="admin.gateTitle">Staff login</h2>
-            <p class="section-lede" data-i18n="admin.gateLede" style="margin-bottom:20px;">Enter the admin password to
-                view submitted applications.</p>
+            <p class="section-lede" data-i18n="admin.gateLede" style="margin-bottom:20px;">Sign in with your staff
+                account to view applications.</p>
             <form id="admin-login-form">
                 <div class="field">
+                    <label for="admin-email" data-i18n="admin.emailLabel">Email</label>
+                    <input id="admin-email" type="email" autocomplete="username" required="">
+                </div>
+                <div class="field">
                     <label for="admin-password" data-i18n="admin.passwordLabel">Password</label>
-                    <input id="admin-password" type="password" autocomplete="off" required="">
+                    <input id="admin-password" type="password" autocomplete="current-password" required="">
                 </div>
                 <button type="submit" class="btn btn-jade btn-block" data-i18n="admin.loginBtn">View
                     applications</button>
-                <p class="admin-error" id="admin-login-error" data-i18n="admin.wrongPassword">That password isn't right.
-                    Try again.</p>
+                <p class="admin-error" id="admin-login-error" data-i18n="admin.wrongPassword">That email or password
+                    isn't right. Try again.</p>
+                <p class="admin-error" id="admin-login-unauthorized" data-i18n="admin.unauthorized">This account isn't
+                    registered as staff. Ask a super-admin to add you.</p>
             </form>
-            <p class="admin-hint" data-i18n="admin.gateHint">This is a light front-door lock for staff convenience, not
-                full security — anyone with real edit access to this page can still change its data regardless of this
-                password.</p>
+            <p class="admin-hint" data-i18n="admin.gateHint">Staff access is controlled per email address by a
+                super-admin, and every account must verify its email before it can sign in.</p>
+        </div>
+
+        <div class="admin-card" id="admin-verify" hidden="">
+            <div class="admin-close-row">
+                <button class="icon-btn" id="admin-verify-close" aria-label="Close" type="button">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                        <path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="1.7" stroke-linecap="round">
+                        </path>
+                    </svg>
+                </button>
+            </div>
+            <h2 data-i18n="admin.verifyTitle">Verify your email</h2>
+            <p class="section-lede" data-i18n="admin.verifyLede" style="margin-bottom:20px;">We sent a verification
+                link to your email. Click it, then press "I've verified" below.</p>
+            <button type="button" class="btn btn-jade btn-block" id="admin-verify-check"
+                data-i18n="admin.verifyCheckBtn">I've verified — continue</button>
+            <button type="button" class="btn btn-secondary btn-block" id="admin-verify-resend"
+                style="margin-top:10px;" data-i18n="admin.verifyResendBtn">Resend verification email</button>
         </div>
 
         <div class="admin-dash" id="admin-dashboard" hidden="">
@@ -726,6 +974,15 @@
             </div>
 
             <div class="admin-body">
+                <div class="admin-tabs" id="admin-tabs">
+                    <button class="admin-tab active" type="button" data-tab="students" data-i18n="admin.tabStudents">Students</button>
+                    <button class="admin-tab" type="button" data-tab="teachers" id="admin-tab-teachers" hidden=""
+                        data-i18n="admin.tabTeachers">Teacher applications</button>
+                    <button class="admin-tab" type="button" data-tab="manage-admins" id="admin-tab-manage-admins"
+                        hidden="" data-i18n="admin.tabManageAdmins">Manage admins</button>
+                </div>
+
+                <div class="admin-panel" data-panel="students">
                 <div class="admin-summary">
                     <div class="summary-card">
                         <div class="num" id="sum-total">0</div>
@@ -748,10 +1005,10 @@
                 <details class="manual-add" id="manual-add">
                     <summary data-i18n="admin.manualAddTitle">+ Log an application received by phone or email</summary>
                     <form id="manual-add-form" class="form-grid">
-                        <div class="field"><label data-i18n="apply.fStudentName">Student's full name</label><input
+                        <div class="field"><label data-i18n="apply.fStudentNameEn">Child's English name</label><input
                                 name="studentName" type="text" required=""></div>
-                        <div class="field"><label data-i18n="apply.fAge">Student's age</label><input name="age"
-                                type="number" min="3" max="18"></div>
+                        <div class="field"><label data-i18n="apply.fDob">Date of birth</label><input name="dob"
+                                type="text" placeholder="—"></div>
                         <div class="field"><label data-i18n="apply.fParentName">Parent / guardian name</label><input
                                 name="parentName" type="text" required=""></div>
                         <div class="field"><label data-i18n="apply.fPhone">Phone number</label><input name="phone"
@@ -759,11 +1016,11 @@
                         <div class="field full"><label data-i18n="apply.fEmail">Email address</label><input name="email"
                                 type="email"></div>
                         <div class="field">
-                            <label data-i18n="apply.fProgram">Preferred program</label>
+                            <label data-i18n="apply.fProgram">Preferred level</label>
                             <select name="program">
-                                <option value="little-sparks" data-i18n="programs.l1title">Little Sparks (4–6)</option>
-                                <option value="foundation" data-i18n="programs.l2title">Foundation I–IV (7–9)</option>
-                                <option value="advanced" data-i18n="programs.l3title">Advanced V–VIII (9–12)</option>
+                                <option value="beginner" data-i18n="programs.l1title">Beginner</option>
+                                <option value="intermediate" data-i18n="programs.l2title">Intermediate</option>
+                                <option value="expert" data-i18n="programs.l3title">Expert</option>
                                 <option value="unsure" selected="" data-i18n="apply.optNotSure">Not sure — need
                                     assessment</option>
                             </select>
@@ -801,6 +1058,51 @@
                         <tbody id="admin-table-body"></tbody>
                     </table>
                 </div>
+                </div>
+
+                <div class="admin-panel" data-panel="teachers" hidden="">
+                    <p class="section-lede" data-i18n="admin.teachersLede" style="margin-bottom:20px;">Applications
+                        from people who want to teach at EGY Soroban. Approve to grant them teacher access (their
+                        Firebase login must still be created in the Firebase console).</p>
+                    <div class="app-table-wrap">
+                        <table class="app-table">
+                            <thead>
+                                <tr>
+                                    <th data-i18n="teacher.colName">Name</th>
+                                    <th data-i18n="teacher.colEmail">Email</th>
+                                    <th data-i18n="teacher.colPhone">Phone</th>
+                                    <th data-i18n="admin.colSubmitted">Submitted</th>
+                                    <th data-i18n="admin.colStatus">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="teacher-table-body"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="admin-panel" data-panel="manage-admins" hidden="">
+                    <p class="section-lede" data-i18n="admin.manageAdminsLede" style="margin-bottom:20px;">Add an
+                        email to grant admin access. After adding it here, create a matching user for that exact
+                        email in Firebase console → Authentication → Add user.</p>
+                    <form id="add-admin-form" class="admin-toolbar">
+                        <input type="email" id="add-admin-email" data-i18n-placeholder="admin.addAdminPlaceholder"
+                            placeholder="new-admin@example.com" required="">
+                        <button type="submit" class="btn btn-jade btn-sm" data-i18n="admin.addAdminBtn">Add
+                            admin</button>
+                    </form>
+                    <div class="app-table-wrap">
+                        <table class="app-table">
+                            <thead>
+                                <tr>
+                                    <th data-i18n="admin.colEmail">Email</th>
+                                    <th data-i18n="admin.colRole">Role</th>
+                                    <th data-i18n="admin.colActions">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admins-table-body"></tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -811,7 +1113,7 @@
 
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-    <script type="module" src="script.js?v=1787780267"></script>
+    <script type="module" src="js/main.js?v=1787827300"></script>
 
 
 
