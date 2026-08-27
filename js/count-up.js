@@ -1,5 +1,5 @@
 function initCountUp() {
-    var els = Array.prototype.slice.call(document.querySelectorAll(".achv-stat .num[data-count]"));
+    var els = Array.prototype.slice.call(document.querySelectorAll("[data-count]"));
     if (els.length === 0) return;
 
     var reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
