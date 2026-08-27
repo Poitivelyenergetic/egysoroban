@@ -22,3 +22,9 @@
 }
 .footer-bottom button { background: none; border: none; color: inherit; text-decoration: underline; cursor: pointer; font-size: inherit; padding: 0; }
 .footer-login-links { display: flex; gap: 16px; }
+.footer-credit {
+  max-width: var(--maxw); margin: 10px auto 0; padding-inline: 24px;
+  text-align: center; font-size: 0.78rem;
+}
+.footer-credit a { color: #f5c518; text-decoration: none; }
+.footer-credit a:hover { text-decoration: underline; }
