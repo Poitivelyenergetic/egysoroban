@@ -28,12 +28,13 @@ var auth = getAuth(firebaseApp);
     var translations = {
         en: {
             "a11y.skip": "Skip to content",
-            "nav.about": "About", "nav.programs": "Programs", "nav.journey": "How it works",
+            "nav.about": "About", "nav.programs": "Programs", "nav.tryit": "Try it", "nav.journey": "How it works",
             "nav.stories": "Stories", "nav.faq": "FAQ", "nav.contact": "Contact", "nav.apply": "Apply now",
             "hero.eyebrow": "Soroban mental-math academy · Cairo",
             "hero.titleA": "Give your child a", "hero.titleAccent": "calculator in their mind",
-            "hero.sub": "Egysoroban trains children ages 4–14 to add, subtract, multiply and divide by visualizing a Japanese abacus — building focus, memory and confidence one bead at a time.",
-            "hero.ctaApply": "Apply for a free trial class", "hero.ctaPrograms": "See programs",
+            "hero.sub": "Egysoroban trains children ages 4–14 to add, subtract, multiply and divide by visualizing an abacus — building focus, memory and confidence one bead at a time.",
+            "hero.abacusCaption": "Focus. Memory. Speed.",
+            "hero.ctaApply": "Apply for a free trial class", "hero.ctaPrograms": "See programs", "hero.ctaTryIt": "Play with the beads",
             "hero.meta1": "Age range", "hero.meta2": "Levels to master", "hero.meta3": "Cairo branches + online",
             "about.eyebrow": "About the academy",
             "about.title": "A calm, structured way into serious mental math",
@@ -55,6 +56,17 @@ var auth = getAuth(firebaseApp);
             "programs.l4age": "Ages 10+", "programs.l4title": "Competition Track", "programs.l4desc": "Optional, by invitation once Level VI is complete — speed drills and entry to regional soroban competitions.",
             "programs.duration": "~3 months", "programs.durationLong": "~12 months", "programs.ongoing": "Ongoing",
             "programs.format1": "In-person", "programs.format2": "In-person / online",
+            "tryit.eyebrow": "Practice", "tryit.title": "Try mental math yourself",
+            "tryit.lede": "Two quick demos of what soroban and Anzan training feel like — no sign-up needed.",
+            "tryit.abacusTitle": "Interactive abacus", "tryit.abacusLede": "Tap the beads to form numbers, just like our students do.",
+            "tryit.valueLabel": "Value:",
+            "tryit.flashTitle": "Flash challenge", "tryit.flashLede": "Three numbers will flash quickly — add them in your head!",
+            "tryit.flashQuestion": "What's the sum?", "tryit.flashCheck": "Check",
+            "tryit.flashStart": "Start challenge", "tryit.flashStartAgain": "Try again",
+            "tryit.flashCorrect": "🎉 Correct! Well done.",
+            "tryit.flashWrong": "The correct sum was {sum} — try again!",
+            "tryit.flashCta": "Want your child calculating this fast? Apply now →",
+            "tryit.beadHeaven": "Five-bead — column {col}", "tryit.beadEarth": "One-bead {n} — column {col}",
             "journey.eyebrow": "How it works", "journey.title": "From application to first level exam",
             "journey.s1t": "Apply online", "journey.s1p": "Send your child's details through the form below — takes about two minutes.",
             "journey.s2t": "Free trial & assessment", "journey.s2p": "We call within 48 hours to book a free trial class and a short placement chat.",
@@ -130,12 +142,13 @@ var auth = getAuth(firebaseApp);
         },
         ar: {
             "a11y.skip": "تخطَّ إلى المحتوى",
-            "nav.about": "عن الأكاديمية", "nav.programs": "البرامج", "nav.journey": "كيف نعمل",
+            "nav.about": "عن الأكاديمية", "nav.programs": "البرامج", "nav.tryit": "جرّب بنفسك", "nav.journey": "كيف نعمل",
             "nav.stories": "آراء أولياء الأمور", "nav.faq": "الأسئلة الشائعة", "nav.contact": "تواصل معنا", "nav.apply": "قدّم الآن",
             "hero.eyebrow": "أكاديمية السوروبان للحساب الذهني · القاهرة",
             "hero.titleA": "امنح طفلك", "hero.titleAccent": "آلة حاسبة داخل عقله",
-            "hero.sub": "تُدرّب إيجي سوروبان الأطفال من سن 4 إلى 14 عامًا على الجمع والطرح والضرب والقسمة من خلال تخيّل العداد الياباني (السوروبان) — لبناء التركيز والذاكرة والثقة، خرزة تلو الأخرى.",
-            "hero.ctaApply": "قدّم للحصول على حصة تجريبية مجانية", "hero.ctaPrograms": "استعرض البرامج",
+            "hero.sub": "تُدرّب إيجي سوروبان الأطفال من سن 4 إلى 14 عامًا على الجمع والطرح والضرب والقسمة من خلال تخيّل العداد (السوروبان) — لبناء التركيز والذاكرة والثقة، خرزة تلو الأخرى.",
+            "hero.abacusCaption": "تركيز. ذاكرة. سرعة.",
+            "hero.ctaApply": "قدّم للحصول على حصة تجريبية مجانية", "hero.ctaPrograms": "استعرض البرامج", "hero.ctaTryIt": "جرّب الخرزات",
             "hero.meta1": "الفئة العمرية", "hero.meta2": "مستويات للإتقان", "hero.meta3": "فروع بالقاهرة + عبر الإنترنت",
             "about.eyebrow": "عن الأكاديمية",
             "about.title": "طريق هادئ ومنظّم نحو حساب ذهني حقيقي",
@@ -157,6 +170,17 @@ var auth = getAuth(firebaseApp);
             "programs.l4age": "10 سنوات فأكثر", "programs.l4title": "مسار المسابقات", "programs.l4desc": "اختياري وبالدعوة بعد إتمام المستوى السادس — تدريبات سرعة والمشاركة في مسابقات سوروبان إقليمية.",
             "programs.duration": "نحو 3 أشهر", "programs.durationLong": "نحو 12 شهرًا", "programs.ongoing": "مستمر",
             "programs.format1": "حضوري", "programs.format2": "حضوري / عبر الإنترنت",
+            "tryit.eyebrow": "تدرّب", "tryit.title": "جرّب الحساب الذهني بنفسك",
+            "tryit.lede": "نموذجان سريعان لما يشعر به تدريب السوروبان وأنزان — بلا حاجة للتسجيل.",
+            "tryit.abacusTitle": "العداد التفاعلي", "tryit.abacusLede": "اضغطي على الخرزات لتكوين الأرقام كما يفعل طلابنا.",
+            "tryit.valueLabel": "القيمة:",
+            "tryit.flashTitle": "تحدي الومضة", "tryit.flashLede": "ستظهر ثلاثة أرقام سريعًا — اجمعيها في ذهنكِ!",
+            "tryit.flashQuestion": "ما مجموع الأرقام؟", "tryit.flashCheck": "تحقّق",
+            "tryit.flashStart": "ابدأ التحدي", "tryit.flashStartAgain": "جرّب مرة أخرى",
+            "tryit.flashCorrect": "🎉 إجابة صحيحة! أحسنتِ.",
+            "tryit.flashWrong": "المجموع الصحيح هو {sum} — حاولي مرة أخرى!",
+            "tryit.flashCta": "هل يستطيع طفلكِ أن يحسبها بهذه السرعة؟ قدّمي الآن ←",
+            "tryit.beadHeaven": "خرزة الخمسات — عمود {col}", "tryit.beadEarth": "خرزة الآحاد {n} — عمود {col}",
             "journey.eyebrow": "كيف نعمل", "journey.title": "من التقديم إلى اختبار المستوى الأول",
             "journey.s1t": "قدّم عبر الموقع", "journey.s1p": "أرسلي بيانات طفلك عبر النموذج أدناه — يستغرق ذلك نحو دقيقتين.",
             "journey.s2t": "حصة تجريبية وتقييم مجانيان", "journey.s2p": "نتصل خلال 48 ساعة لحجز حصة تجريبية مجانية ومحادثة قصيرة لتحديد المستوى.",
@@ -346,6 +370,165 @@ var auth = getAuth(firebaseApp);
             item.setAttribute("data-open", isOpen ? "false" : "true");
         });
     });
+
+    /* ============================================================
+       TRY IT — interactive abacus + flash challenge
+       Each rod: 1 heaven bead (value 5) + 4 earth beads (value 1 each).
+       ============================================================ */
+    function initSoroban() {
+        var root = document.getElementById("try-soroban");
+        var valueEl = document.getElementById("soroban-value-num");
+        if (!root || !valueEl) return;
+
+        var rodCount = parseInt(root.getAttribute("data-rods"), 10) || 3;
+        var rods = [];
+
+        function makeBead(label, onClick) {
+            var b = document.createElement("button");
+            b.type = "button";
+            b.className = "try-bead";
+            b.setAttribute("aria-label", label);
+            b.addEventListener("click", onClick);
+            return b;
+        }
+
+        function render() {
+            var total = 0;
+            rods.forEach(function (rod, i) {
+                var digit = (rod.heaven ? 5 : 0) + rod.earth;
+                total += digit * Math.pow(10, rods.length - 1 - i);
+                rod.heavenBtn.classList.toggle("active", rod.heaven);
+                rod.heavenBtn.setAttribute("aria-pressed", String(rod.heaven));
+                rod.earthBtns.forEach(function (b, j) {
+                    var active = j < rod.earth;
+                    b.classList.toggle("active", active);
+                    b.setAttribute("aria-pressed", String(active));
+                });
+            });
+            valueEl.textContent = total.toLocaleString(state.lang === "ar" ? "ar-EG" : "en-US");
+        }
+
+        function buildRod(index) {
+            var rod = { heaven: false, earth: 0, heavenBtn: null, earthBtns: [] };
+
+            var col = document.createElement("div");
+            col.className = "soroban-rod";
+
+            var heavenArea = document.createElement("div");
+            heavenArea.className = "soroban-heaven";
+            rod.heavenBtn = makeBead(t("tryit.beadHeaven").replace("{col}", index + 1), function () {
+                rod.heaven = !rod.heaven;
+                render();
+            });
+            heavenArea.appendChild(rod.heavenBtn);
+
+            var bar = document.createElement("div");
+            bar.className = "soroban-bar";
+
+            var earthArea = document.createElement("div");
+            earthArea.className = "soroban-earth";
+            for (var j = 0; j < 4; j++) {
+                (function (idx) {
+                    var b = makeBead(t("tryit.beadEarth").replace("{n}", idx + 1).replace("{col}", index + 1), function () {
+                        rod.earth = (rod.earth >= idx + 1) ? idx : idx + 1;
+                        render();
+                    });
+                    rod.earthBtns.push(b);
+                    earthArea.appendChild(b);
+                })(j);
+            }
+
+            col.appendChild(heavenArea);
+            col.appendChild(bar);
+            col.appendChild(earthArea);
+            root.appendChild(col);
+            return rod;
+        }
+
+        for (var r = 0; r < rodCount; r++) {
+            rods.push(buildRod(r));
+        }
+        render();
+    }
+
+    function initFlashGame() {
+        var root = document.querySelector(".flash-game");
+        if (!root) return;
+
+        var display = root.querySelector(".flash-display");
+        var form = root.querySelector(".flash-form");
+        var input = root.querySelector("#flash-answer");
+        var result = root.querySelector(".flash-result");
+        var startBtn = root.querySelector(".flash-start");
+        var cta = root.querySelector(".flash-cta");
+
+        var FLASH_MS = 800;
+        var GAP_MS = 250;
+        var COUNT = 3;
+        var sum = 0;
+        var running = false;
+
+        function fmtNum(n) {
+            return n.toLocaleString(state.lang === "ar" ? "ar-EG" : "en-US");
+        }
+
+        function randomNumber() {
+            return Math.floor(Math.random() * 20) + 1;
+        }
+
+        function flashNumber(i) {
+            if (i >= COUNT) {
+                display.textContent = "?";
+                form.hidden = false;
+                input.value = "";
+                input.focus();
+                running = false;
+                startBtn.disabled = false;
+                startBtn.textContent = t("tryit.flashStartAgain");
+                return;
+            }
+            var n = randomNumber();
+            sum += n;
+            display.textContent = fmtNum(n);
+            setTimeout(function () {
+                display.textContent = "";
+                setTimeout(function () { flashNumber(i + 1); }, GAP_MS);
+            }, FLASH_MS);
+        }
+
+        function startRound() {
+            if (running) return;
+            running = true;
+            sum = 0;
+            result.textContent = "";
+            result.className = "flash-result";
+            form.hidden = true;
+            cta.hidden = true;
+            startBtn.disabled = true;
+            flashNumber(0);
+        }
+
+        form.addEventListener("submit", function (e) {
+            e.preventDefault();
+            var answer = parseInt(input.value, 10);
+            if (isNaN(answer)) return;
+
+            if (answer === sum) {
+                result.textContent = t("tryit.flashCorrect");
+                result.className = "flash-result ok";
+            } else {
+                result.textContent = t("tryit.flashWrong").replace("{sum}", fmtNum(sum));
+                result.className = "flash-result no";
+            }
+            form.hidden = true;
+            cta.hidden = false;
+        });
+
+        startBtn.addEventListener("click", startRound);
+    }
+
+    initSoroban();
+    initFlashGame();
 
     /* ============================================================
        FIRESTORE — shared applications data
