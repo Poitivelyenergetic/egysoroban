@@ -5,8 +5,34 @@ html { scroll-behavior: smooth; }
   html { scroll-behavior: auto; }
   * { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; }
 }
-.reveal-target { opacity: 0; transform: translateY(26px); transition: opacity 0.65s ease, transform 0.65s ease; }
+.reveal-target { opacity: 0; transform: translateY(26px); transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1), transform 0.65s cubic-bezier(0.16, 1, 0.3, 1); }
+.reveal-target.reveal-left { transform: translateX(-32px); }
+.reveal-target.reveal-right { transform: translateX(32px); }
 .reveal-target.in-view { opacity: 1; transform: none; }
+
+/* card lift-on-hover, shared across programs/journey/testimonials/instructors/about/why/mv/news cards */
+.stat-card, .benefit-card, .level-card, .journey-step, .instructor-card,
+.quote-card, .mv-card, .news-card {
+  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.stat-card:hover, .benefit-card:hover, .level-card:hover, .journey-step:hover, .instructor-card:hover,
+.quote-card:hover, .mv-card:hover, .news-card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-2);
+}
+
+/* hero load-in: staggered fade-up on page load */
+@keyframes heroFadeUp { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: none; } }
+.hero-intro { opacity: 0; animation: heroFadeUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+.hero .eyebrow.hero-intro { animation-delay: 0.05s; }
+.hero .hero-title.hero-intro { animation-delay: 0.15s; }
+.hero .hero-sub.hero-intro { animation-delay: 0.28s; }
+.hero .hero-ctas.hero-intro { animation-delay: 0.4s; }
+.hero .hero-meta.hero-intro { animation-delay: 0.52s; }
+.hero .hero-carousel.hero-intro { animation-delay: 0.3s; }
+@media (prefers-reduced-motion: reduce) {
+  .hero-intro { opacity: 1; animation: none; }
+}
 
 body {
   margin: 0;
@@ -72,16 +98,23 @@ h2.section-title { font-size: clamp(1.7rem, 1.2rem + 2vw, 2.5rem); }
   display: inline-flex; align-items: center; justify-content: center; gap: 0.5em;
   font-family: var(--font-body); font-weight: 700; font-size: 0.95rem;
   padding: 0.85em 1.5em; border-radius: 999px; border: 1px solid transparent;
-  cursor: pointer; text-decoration: none; transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
-  white-space: nowrap;
+  cursor: pointer; text-decoration: none; white-space: nowrap;
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+    background 0.2s ease, filter 0.2s ease, border-color 0.2s ease;
 }
-.btn:active { transform: translateY(1px); }
+.btn:active { transform: translateY(0) scale(0.97); }
 .btn-primary { background: var(--brass); color: #1b1304; }
-.btn-primary:hover { background: var(--brass-strong); box-shadow: var(--shadow-1); }
+.btn-primary:hover {
+  background: var(--brass-strong); transform: translateY(-2px); filter: brightness(1.05);
+  box-shadow: 0 10px 26px color-mix(in srgb, var(--brass) 45%, transparent);
+}
 .btn-secondary { background: transparent; color: var(--ink); border-color: var(--line); }
-.btn-secondary:hover { border-color: var(--ink-faint); background: var(--paper-raised); }
+.btn-secondary:hover { border-color: var(--ink-faint); background: var(--paper-raised); transform: translateY(-2px); box-shadow: var(--shadow-1); }
 .btn-jade { background: var(--jade); color: #f4fbf9; }
-.btn-jade:hover { background: var(--jade-strong); }
+.btn-jade:hover {
+  background: var(--jade-strong); transform: translateY(-2px); filter: brightness(1.05);
+  box-shadow: 0 10px 26px color-mix(in srgb, var(--jade) 45%, transparent);
+}
 .btn-ghost { background: transparent; color: var(--ink-soft); border: none; text-decoration: underline; padding: 0.4em 0.2em; }
 .btn-block { width: 100%; }
 .btn-sm { padding: 0.55em 1em; font-size: 0.82rem; }
