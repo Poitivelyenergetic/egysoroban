@@ -1,11 +1,8 @@
 var ROTATE_MS = 10000;
 
-function initHeroCarousel() {
-    var root = document.getElementById("hero-carousel");
-    if (!root) return;
-
-    var slides = Array.prototype.slice.call(root.querySelectorAll(".hero-slide"));
-    var dotsWrap = document.getElementById("hero-carousel-dots");
+function initCarousel(root) {
+    var slides = Array.prototype.slice.call(root.querySelectorAll(".carousel-slide"));
+    var dotsWrap = root.querySelector(".carousel-dots");
     if (slides.length === 0) return;
 
     var index = 0;
@@ -48,10 +45,10 @@ function initHeroCarousel() {
     root.addEventListener("mouseenter", function () { clearInterval(timer); });
     root.addEventListener("mouseleave", restart);
 
-    var prevBtn = document.getElementById("hero-carousel-prev");
-    var nextBtn = document.getElementById("hero-carousel-next");
+    var prevBtn = root.querySelector(".carousel-arrow.prev");
+    var nextBtn = root.querySelector(".carousel-arrow.next");
     if (prevBtn) prevBtn.addEventListener("click", function () { prev(); restart(); });
     if (nextBtn) nextBtn.addEventListener("click", function () { next(); restart(); });
 }
 
-initHeroCarousel();
+Array.prototype.slice.call(document.querySelectorAll(".carousel")).forEach(initCarousel);

@@ -13,3 +13,12 @@
 }
 .stat-card .num { font-family: var(--font-mono); font-size: 1.9rem; font-weight: 600; color: var(--brass-strong); font-variant-numeric: tabular-nums; }
 .stat-card .lbl { color: var(--ink-soft); font-size: 0.88rem; margin-top: 4px; }
+
+.stat-card:nth-child(1) { background: var(--brass-tint); border-color: color-mix(in srgb, var(--brass) 35%, var(--line)); }
+.stat-card:nth-child(1) .num { color: var(--brass-strong); }
+.stat-card:nth-child(2) { background: var(--jade-tint); border-color: color-mix(in srgb, var(--jade) 35%, var(--line)); }
+.stat-card:nth-child(2) .num { color: var(--jade); }
+.stat-card:nth-child(3) { background: var(--ok-tint); border-color: color-mix(in srgb, var(--ok) 35%, var(--line)); }
+.stat-card:nth-child(3) .num { color: var(--ok); }
+.stat-card:nth-child(4) { background: var(--warn-tint); border-color: color-mix(in srgb, var(--warn) 35%, var(--line)); }
+.stat-card:nth-child(4) .num { color: var(--warn); }

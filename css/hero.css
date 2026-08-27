@@ -16,33 +16,35 @@
 :root[data-theme="dark"] .hero-meta .num { color: var(--ink); }
 .hero-meta .lbl { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-faint); }
 
-.hero-carousel {
+/* ============ Carousel (shared: hero + wapr) ============ */
+.carousel {
   position: relative; border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-2);
-  aspect-ratio: 4/3; background: var(--rod);
+  background: var(--rod);
 }
-.hero-carousel-track { position: relative; width: 100%; height: 100%; }
-.hero-slide {
+.hero-carousel { aspect-ratio: 4/3; }
+.carousel-track { position: relative; width: 100%; height: 100%; }
+.carousel-slide {
   position: absolute; inset: 0; margin: 0; opacity: 0; transition: opacity 0.6s ease;
 }
-.hero-slide.active { opacity: 1; }
-.hero-slide img { width: 100%; height: 100%; object-fit: cover; }
-.hero-carousel-dots {
+.carousel-slide.active { opacity: 1; }
+.carousel-slide img { width: 100%; height: 100%; object-fit: cover; }
+.carousel-dots {
   position: absolute; bottom: 14px; inset-inline: 0; display: flex; justify-content: center; gap: 8px;
 }
-.hero-carousel-dots button {
+.carousel-dots button {
   width: 9px; height: 9px; border-radius: 50%; border: none; padding: 0; cursor: pointer;
   background: rgba(255,255,255,0.45); transition: background 0.2s ease, width 0.2s ease;
 }
-.hero-carousel-dots button.on { background: var(--brass); width: 22px; border-radius: 5px; }
-.hero-carousel-arrow {
+.carousel-dots button.on { background: var(--brass); width: 22px; border-radius: 5px; }
+.carousel-arrow {
   position: absolute; top: 50%; transform: translateY(-50%); z-index: 2;
   width: 38px; height: 38px; border-radius: 50%; border: none; cursor: pointer;
   background: rgba(0,0,0,0.35); color: #fff; font-size: 1.4rem; line-height: 1;
   display: flex; align-items: center; justify-content: center; transition: background 0.2s ease;
 }
-.hero-carousel-arrow:hover { background: rgba(0,0,0,0.55); }
-.hero-carousel-arrow.prev { inset-inline-start: 12px; }
-.hero-carousel-arrow.next { inset-inline-end: 12px; }
-[dir="rtl"] .hero-carousel-arrow.prev { transform: translateY(-50%) scaleX(-1); }
-[dir="rtl"] .hero-carousel-arrow.next { transform: translateY(-50%) scaleX(-1); }
+.carousel-arrow:hover { background: rgba(0,0,0,0.55); }
+.carousel-arrow.prev { inset-inline-start: 12px; }
+.carousel-arrow.next { inset-inline-end: 12px; }
+[dir="rtl"] .carousel-arrow.prev { transform: translateY(-50%) scaleX(-1); }
+[dir="rtl"] .carousel-arrow.next { transform: translateY(-50%) scaleX(-1); }
 @media (max-width: 900px) { .hero-carousel { aspect-ratio: 16/10; } }

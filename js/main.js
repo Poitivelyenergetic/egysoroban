@@ -5,6 +5,6 @@ import "./mobile-nav.js";
 import "./faq-accordion.js";
 import "./soroban-widget.js";
 import "./flash-game.js";
-import "./hero-carousel.js";
+import "./carousel.js";
 import "./moments-lightbox.js";
 import "./admin.js";

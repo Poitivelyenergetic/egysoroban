@@ -2,7 +2,7 @@ function initMomentsLightbox() {
     var box = document.getElementById("moments-lightbox");
     if (!box) return;
 
-    var imgs = Array.prototype.slice.call(document.querySelectorAll(".moments-grid img, .wapr-grid img"));
+    var imgs = Array.prototype.slice.call(document.querySelectorAll(".moments-grid img"));
     if (imgs.length === 0) return;
     var imgEl = document.getElementById("lightbox-img");
     var captionEl = document.getElementById("lightbox-caption");
