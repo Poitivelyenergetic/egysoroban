@@ -1,6 +1,9 @@
 import { t, fmtDate } from "./i18n.js";
 import { toast } from "./toast.js";
-import { loadTeacherApplications, approveTeacherApplication, rejectTeacherApplication } from "./teacher-applications.js";
+import {
+    loadTeacherApplications, approveTeacherApplication, rejectTeacherApplication,
+    loadStaffSignups, approveStaffSignup,
+} from "./teacher-applications.js";
 
 var tableBody = document.getElementById("teacher-table-body");
 var teacherApps = [];
@@ -13,7 +16,12 @@ function statusLabel(status) {
 
 export async function renderTeachersPanel() {
     if (!tableBody) return;
-    teacherApps = await loadTeacherApplications();
+    var apps = await loadTeacherApplications();
+    var signups = await loadStaffSignups();
+    var appEmails = {};
+    apps.forEach(function (a) { appEmails[(a.email || "").toLowerCase()] = true; });
+    signups = signups.filter(function (s) { return !appEmails[s.email]; });
+    teacherApps = apps.concat(signups);
     tableBody.innerHTML = "";
 
     if (teacherApps.length === 0) {
@@ -46,6 +54,29 @@ export async function renderTeachersPanel() {
             pill.className = "status-pill " + (app.status === "approved" ? "enrolled" : "declined");
             pill.textContent = statusLabel(app.status);
             tdStatus.appendChild(pill);
+        } else if (app.isSignup) {
+            var signupPill = document.createElement("span");
+            signupPill.className = "status-pill new";
+            signupPill.textContent = t("teacher.statusSignup");
+            signupPill.style.marginInlineEnd = "6px";
+            var approveSignupBtn = document.createElement("button");
+            approveSignupBtn.type = "button";
+            approveSignupBtn.className = "btn btn-jade btn-sm";
+            approveSignupBtn.textContent = t("admin.approve");
+            approveSignupBtn.addEventListener("click", async function (e) {
+                e.stopPropagation();
+                approveSignupBtn.disabled = true;
+                var result = await approveStaffSignup(app.email);
+                if (result.ok) {
+                    toast(t("admin.savedToast"));
+                    renderTeachersPanel();
+                } else {
+                    approveSignupBtn.disabled = false;
+                    toast(t("admin.savingFailedToast"));
+                }
+            });
+            tdStatus.appendChild(signupPill);
+            tdStatus.appendChild(approveSignupBtn);
         } else {
             var approveBtn = document.createElement("button");
             approveBtn.type = "button";

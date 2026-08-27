@@ -2,7 +2,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Teach — Egysoroban</title>
+    <title>Programs — Egysoroban</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="css/tokens.css?v=1787849661">
     <link rel="stylesheet" href="css/base.css?v=1787849661">
     <link rel="stylesheet" href="css/header.css?v=1787849661">
-    <link rel="stylesheet" href="css/apply-form.css?v=1787849661">
+    <link rel="stylesheet" href="css/programs.css?v=1787849661">
     <link rel="stylesheet" href="css/footer.css?v=1787849661">
     <link rel="icon" type="image/png" href="assets/favicon.png?v=1787849661">
 </head>
@@ -29,10 +29,12 @@
             </a>
             <nav class="main-nav" id="main-nav">
                 <a href="index.html#about" data-i18n="nav.about">About</a>
+                <a href="index.html#mv" data-i18n="nav.mv">Vision</a>
                 <a href="index.html#programs" data-i18n="nav.programs">Programs</a>
                 <a href="index.html#try-it" data-i18n="nav.tryit">Try it</a>
-                <a href="index.html#journey" data-i18n="nav.journey">How it works</a>
+                <a href="index.html#journey" data-i18n="nav.journey">Journey</a>
                 <a href="index.html#testimonials" data-i18n="nav.stories">Stories</a>
+                <a href="index.html#news" data-i18n="nav.news">News</a>
                 <a href="index.html#faq" data-i18n="nav.faq">FAQ</a>
                 <a href="index.html#contact" data-i18n="nav.contact">Contact</a>
             </nav>
@@ -50,50 +52,55 @@
 
     <main id="main">
 
-        <!-- ============ TEACHER APPLY ============ -->
-        <section class="apply" id="teach">
-            <div class="container apply-wrap">
-                <div class="apply-side">
-                    <p class="eyebrow" data-i18n="teacher.eyebrow">Join our team</p>
-                    <h2 class="section-title" data-i18n="teacher.title">Teach at EGY Soroban</h2>
-                    <p class="section-lede" data-i18n="teacher.lede">Certified instructors, apply below. Our team
-                        reviews every application.</p>
-                </div>
-                <form class="app-form" id="teacher-apply-form" novalidate="">
-                    <div class="form-grid">
-                        <div class="field full">
-                            <label for="t-name" data-i18n="teacher.fName">Full name</label>
-                            <input id="t-name" name="name" type="text" required="" autocomplete="off">
-                            <span class="field-error" data-i18n="apply.errRequired">This field is required.</span>
-                        </div>
-                        <div class="field">
-                            <label for="t-email" data-i18n="teacher.fEmail">Email address</label>
-                            <input id="t-email" name="email" type="email" required="" autocomplete="off">
-                            <span class="field-error" data-i18n="apply.errEmail">Enter a valid email address.</span>
-                        </div>
-                        <div class="field">
-                            <label for="t-phone" data-i18n="teacher.fPhone">Phone number</label>
-                            <input id="t-phone" name="phone" type="tel" placeholder="01xxxxxxxxx" required=""
-                                autocomplete="off">
-                            <span class="field-error" data-i18n="apply.errRequired">This field is required.</span>
-                        </div>
-                        <div class="field full">
-                            <label for="t-experience" data-i18n="teacher.fExperience">Teaching / soroban
-                                experience</label>
-                            <textarea id="t-experience" name="experience" required=""
-                                data-i18n-placeholder="teacher.experiencePlaceholder"></textarea>
-                            <span class="field-error" data-i18n="apply.errRequired">This field is required.</span>
-                        </div>
-                        <div class="field full">
-                            <label for="t-notes" data-i18n="teacher.fNotes">Anything else we should know? <span
-                                    class="opt" data-i18n="apply.optional">(optional)</span></label>
-                            <textarea id="t-notes" name="notes"></textarea>
-                        </div>
+        <!-- ============ PROGRAMS ============ -->
+        <section id="programs">
+            <div class="container">
+                <p class="eyebrow" data-i18n="programs.eyebrow">Programs</p>
+                <h2 class="section-title" data-i18n="programs.title">Eleven levels, one path</h2>
+                <p class="section-lede" data-i18n="programs.lede">Assessed once. 11 levels. A certified exam every
+                    step.</p>
+                <div class="programs-grid">
+
+                    <div class="level-card">
+                        <span class="age" data-i18n="programs.l1age">Ages 4–12 · 10th–8th KYU</span>
+                        <h3 data-i18n="programs.l1title">Beginner</h3>
+                        <p data-i18n="programs.l1desc">First contact with the abacus: counting, number sense, and
+                            single-digit addition and subtraction.</p>
+                        <div class="level-beads" aria-hidden="true"><span class="bead"></span><span
+                                class="bead is-off"></span><span class="bead is-off"></span><span
+                                class="bead is-off"></span></div>
+                        <div class="level-foot"><span data-i18n="programs.duration">4–8 months per level</span><span
+                                data-i18n="programs.format1">1 session / week</span></div>
                     </div>
-                    <button type="submit" class="btn btn-primary btn-block" id="teacher-apply-submit"
-                        data-i18n="teacher.submit">Submit application</button>
-                    <div class="form-status" id="teacher-form-status"></div>
-                </form>
+
+                    <div class="level-card">
+                        <span class="age" data-i18n="programs.l2age">Ages 4–12 · 7th–4th KYU</span>
+                        <h3 data-i18n="programs.l2title">Intermediate</h3>
+                        <p data-i18n="programs.l2desc">Multi-digit addition and subtraction, and the shift toward
+                            Anzan — calculating without touching the beads.</p>
+                        <div class="level-beads" aria-hidden="true"><span class="bead"></span><span
+                                class="bead"></span><span class="bead is-off"></span><span class="bead is-off"></span>
+                        </div>
+                        <div class="level-foot"><span data-i18n="programs.duration">4–8 months per level</span><span
+                                data-i18n="programs.format1">1 session / week</span></div>
+                    </div>
+
+                    <div class="level-card">
+                        <span class="age" data-i18n="programs.l3age">Ages 4–12 · 3rd–1st KYU</span>
+                        <h3 data-i18n="programs.l3title">Expert</h3>
+                        <p data-i18n="programs.l3desc">Multiplication, division, and full mental (Anzan) calculation
+                            — the level competition-track students train at.</p>
+                        <div class="level-beads" aria-hidden="true"><span class="bead"></span><span
+                                class="bead"></span><span class="bead"></span><span class="bead is-off"></span></div>
+                        <div class="level-foot"><span data-i18n="programs.duration">4–8 months per level</span><span
+                                data-i18n="programs.format1">1 session / week</span></div>
+                    </div>
+
+                </div>
+                <div class="bead-row" aria-hidden="true" style="margin-top:44px;"><span class="rod-line"></span></div>
+                <p class="section-lede" style="margin-top:24px;">
+                    <a href="apply.html" class="btn btn-primary" data-i18n="hero.ctaApply">Apply for a free trial class</a>
+                </p>
             </div>
         </section>
 
@@ -136,9 +143,12 @@
         <div class="footer-bottom">
             <span data-i18n="footer.copy">© 2026 Egysoroban — EGY Soroban Academy, Al-Mansoura, Egypt</span>
         </div>
+        <div class="footer-credit">
+            <a href="https://wa.me/966549985189" target="_blank" rel="noopener">Made by Mustafa Mohammed</a>
+        </div>
     </footer>
 
-    <script type="module" src="js/teach-page.js?v=1787849661"></script>
+    <script type="module" src="js/programs-page.js?v=1787849661"></script>
 
 </body>
 

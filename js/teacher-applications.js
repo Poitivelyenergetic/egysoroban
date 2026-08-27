@@ -51,3 +51,43 @@ export async function rejectTeacherApplication(id) {
         return { ok: false, code: (err && err.code) || "upstream_error" };
     }
 }
+
+/* Self-service signups (username/email/phone/password, created via the "Create your
+   staff account" form) that don't yet have an approved teachers/{email} doc — i.e.
+   people who can log in but have no dashboard access until an admin approves them. */
+export async function loadStaffSignups() {
+    try {
+        var profSnap = await getDocs(collection(db, "staffProfiles"));
+        var teacherSnap = await getDocs(collection(db, "teachers"));
+        var approvedTeachers = {};
+        teacherSnap.forEach(function (d) {
+            if (d.data().status === "approved") approvedTeachers[d.id] = true;
+        });
+        var list = [];
+        profSnap.forEach(function (d) {
+            var email = d.id.toLowerCase();
+            if (approvedTeachers[email]) return;
+            var data = d.data();
+            list.push({
+                id: "signup:" + email, email: email, name: data.username || "",
+                phone: data.phone || "", submittedAt: data.createdAt || "", isSignup: true,
+            });
+        });
+        list.sort(function (a, b) { return (b.submittedAt || "").localeCompare(a.submittedAt || ""); });
+        return list;
+    } catch (e) {
+        return [];
+    }
+}
+
+export async function approveStaffSignup(email) {
+    email = email.toLowerCase().trim();
+    try {
+        await setDoc(doc(db, "teachers", email), {
+            email: email, status: "approved", approvedAt: new Date().toISOString(),
+        });
+        return { ok: true };
+    } catch (err) {
+        return { ok: false, code: (err && err.code) || "upstream_error" };
+    }
+}

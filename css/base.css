@@ -81,6 +81,14 @@ section { padding-block: 96px; }
 }
 [dir="rtl"] .eyebrow::before { order: 2; }
 
+[data-lang="ar"] .eyebrow,
+[data-lang="ar"] .level-card .age,
+[data-lang="ar"] .level-foot {
+  font-family: var(--font-ar);
+  text-transform: none;
+  letter-spacing: normal;
+}
+
 h2.section-title { font-size: clamp(1.7rem, 1.2rem + 2vw, 2.5rem); }
 .section-lede { color: var(--ink-soft); font-size: 1.08rem; max-width: 62ch; }
 

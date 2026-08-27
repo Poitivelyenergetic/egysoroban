@@ -28,6 +28,13 @@
 .try-bead:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
 .soroban-heaven .try-bead.active { transform: translateY(26px); }
 .soroban-earth .try-bead.active { transform: translateY(-26px); }
+.soroban-rod:nth-child(1) .try-bead { background: var(--ok); }
+.soroban-rod:nth-child(1) .try-bead:hover { background: color-mix(in srgb, var(--ok) 80%, black); }
+.soroban-rod:nth-child(1) .soroban-bar { background: color-mix(in srgb, var(--ok) 40%, transparent); }
+.soroban-rod:nth-child(2) .try-bead { background: #f2c94c; }
+.soroban-rod:nth-child(2) .try-bead:hover { background: #d9ad2f; }
+.soroban-rod:nth-child(2) .soroban-bar { background: rgba(242, 201, 76, 0.4); }
+
 .soroban-value { margin-top: 18px; font-family: var(--font-mono); font-weight: 700; font-size: 1rem; color: var(--ink); }
 .soroban-value span:last-child { color: var(--brass-strong); font-size: 1.3rem; margin-inline-start: 4px; }
 @media (prefers-reduced-motion: reduce) { .try-bead { transition: none; } }

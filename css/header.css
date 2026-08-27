@@ -1,8 +1,7 @@
 /* ============ Header ============ */
 .site-header {
   position: sticky; top: 0; z-index: 100;
-  background: color-mix(in srgb, var(--paper) 88%, transparent);
-  backdrop-filter: blur(10px);
+  background: #1d5b9a;
 }
 .header-inner {
   padding-inline: 32px;
@@ -11,18 +10,18 @@
 }
 .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
 .brand-mark-img { width: 40px; height: 40px; border-radius: 50%; flex-shrink: 0; }
-.brand-name { font-family: var(--font-display); font-weight: 600; font-size: 1.28rem; letter-spacing: -0.01em; }
+.brand-name { font-family: var(--font-display); font-weight: 600; font-size: 1.28rem; letter-spacing: -0.01em; color: #fff; }
 .main-nav {
   display: flex; gap: 22px; flex: 1 1 auto; min-width: 0; justify-content: center;
   overflow-x: auto; scrollbar-width: none; -ms-overflow-style: none;
 }
 .main-nav::-webkit-scrollbar { display: none; }
 .main-nav a {
-  text-decoration: none; font-weight: 600; font-size: 0.88rem; color: var(--ink-soft);
+  text-decoration: none; font-weight: 600; font-size: 0.88rem; color: rgba(255,255,255,0.82);
   white-space: nowrap; flex-shrink: 0; padding: 0.5em 0.85em; border-radius: 999px;
   transition: background 0.2s ease, color 0.2s ease;
 }
-.main-nav a:hover { color: var(--ink); background: color-mix(in srgb, var(--brass) 12%, transparent); }
+.main-nav a:hover { color: #fff; background: rgba(255,255,255,0.16); }
 .header-actions { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
 .home-btn {
   display: flex; align-items: center; gap: 6px; text-decoration: none;
@@ -43,33 +42,34 @@
 .home-btn svg { flex-shrink: 0; }
 @media (max-width: 1300px) { .home-btn span { display: none; } .home-btn { padding: 0.55em; } }
 .lang-toggle {
-  background: transparent; border: 1px solid var(--line); border-radius: 999px;
+  background: transparent; border: 1px solid rgba(255,255,255,0.32); border-radius: 999px;
   padding: 0.45em 0.8em; font-family: var(--font-mono); font-size: 0.72rem; font-weight: 600;
-  cursor: pointer; color: var(--ink-soft);
+  cursor: pointer; color: rgba(255,255,255,0.82);
 }
-.lang-toggle:hover { border-color: var(--ink-faint); color: var(--ink); }
+.lang-toggle:hover { border-color: rgba(255,255,255,0.6); color: #fff; }
 .theme-toggle {
-  background: transparent; border: 1px solid var(--line); border-radius: 999px;
+  background: transparent; border: 1px solid rgba(255,255,255,0.32); border-radius: 999px;
   padding: 0.45em 0.65em; font-size: 0.9rem; line-height: 1;
-  cursor: pointer; color: var(--ink-soft);
+  cursor: pointer; color: rgba(255,255,255,0.82);
 }
-.theme-toggle:hover { border-color: var(--ink-faint); color: var(--ink); }
+.theme-toggle:hover { border-color: rgba(255,255,255,0.6); color: #fff; }
 .nav-toggle {
-  display: none; background: transparent; border: 1px solid var(--line); border-radius: var(--radius-sm);
+  display: none; background: transparent; border: 1px solid rgba(255,255,255,0.32); border-radius: var(--radius-sm);
   width: 40px; height: 40px; align-items: center; justify-content: center; cursor: pointer;
 }
 .nav-toggle span, .nav-toggle::before, .nav-toggle::after {
-  content: ""; display: block; width: 18px; height: 2px; background: var(--ink); position: relative;
-  box-shadow: 0 -6px 0 var(--ink), 0 6px 0 var(--ink);
+  content: ""; display: block; width: 18px; height: 2px; background: #fff; position: relative;
+  box-shadow: 0 -6px 0 #fff, 0 6px 0 #fff;
 }
 @media (max-width: 860px) {
   .main-nav {
-    position: fixed; inset: 76px 0 auto 0; background: var(--paper); border-bottom: 1px solid var(--line);
+    position: fixed; inset: 76px 0 auto 0; background: #1d5b9a; border-bottom: 1px solid rgba(255,255,255,0.2);
     flex-direction: column; padding: 12px 24px 24px; gap: 4px; transform: translateY(-8px);
     opacity: 0; pointer-events: none; transition: opacity 0.18s ease, transform 0.18s ease;
   }
   .main-nav.is-open { opacity: 1; pointer-events: auto; transform: translateY(0); }
-  .main-nav a { padding: 12px 0; border-bottom: 1px solid var(--line); white-space: normal; font-size: 0.92rem; }
+  .main-nav a { padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.2); border-radius: 0; white-space: normal; font-size: 0.92rem; }
+  .main-nav a:hover { background: transparent; }
   .nav-toggle { display: inline-flex; }
   .header-actions .btn-primary { display: none; }
 }
