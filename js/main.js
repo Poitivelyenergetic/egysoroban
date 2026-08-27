@@ -6,6 +6,6 @@ import "./faq-accordion.js";
 import "./soroban-widget.js";
 import "./flash-game.js";
 import "./carousel.js";
-import "./moments-lightbox.js";
+import "./lightbox.js";
 import "./scroll-reveal.js";
 import "./admin.js";

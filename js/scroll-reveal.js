@@ -3,7 +3,7 @@ function initScrollReveal() {
     if (!("IntersectionObserver" in window)) return;
 
     var selectors = [
-        ".about-photo", ".stat-card", ".benefit-card", ".level-card", ".journey-step",
+        ".about-carousel", ".stat-card", ".benefit-card", ".level-card", ".journey-step",
         ".instructor-card", ".quote-card", ".achievement-photo", ".moments-grid img",
         ".wapr-carousel", ".faq-item", ".try-card", ".contact-item", ".contact-map",
         ".app-form", ".apply-side", ".section-title", ".section-lede", ".eyebrow"

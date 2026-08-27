@@ -1,6 +1,6 @@
 /* ============ About ============ */
-.about-photo {
-  margin-top: 24px; width: 100%; max-width: 340px; aspect-ratio: 4/3; object-fit: cover;
+.about-carousel {
+  margin-top: 24px; width: 100%; max-width: 340px; aspect-ratio: 4/3;
   border-radius: var(--radius-lg); box-shadow: var(--shadow-2); border: 1px solid var(--line);
 }
 .about-grid { display: grid; grid-template-columns: 0.95fr 1.05fr; gap: 64px; align-items: start; }

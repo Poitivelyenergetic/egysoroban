@@ -1,26 +1,28 @@
-function initMomentsLightbox() {
+function initLightbox() {
     var box = document.getElementById("moments-lightbox");
     if (!box) return;
 
-    var imgs = Array.prototype.slice.call(document.querySelectorAll(".moments-grid img"));
-    if (imgs.length === 0) return;
     var imgEl = document.getElementById("lightbox-img");
     var captionEl = document.getElementById("lightbox-caption");
     var closeBtn = document.getElementById("lightbox-close");
     var prevBtn = document.getElementById("lightbox-prev");
     var nextBtn = document.getElementById("lightbox-next");
+
+    var currentImgs = [];
     var index = 0;
 
     function show(i) {
-        index = ((i % imgs.length) + imgs.length) % imgs.length;
-        var src = imgs[index].currentSrc || imgs[index].src;
+        if (currentImgs.length === 0) return;
+        index = ((i % currentImgs.length) + currentImgs.length) % currentImgs.length;
+        var src = currentImgs[index].currentSrc || currentImgs[index].src;
         imgEl.src = src;
-        imgEl.alt = imgs[index].alt || "";
-        captionEl.textContent = imgs[index].alt || "";
+        imgEl.alt = currentImgs[index].alt || "";
+        captionEl.textContent = currentImgs[index].alt || "";
     }
 
-    function open(i) {
-        show(i);
+    function open(imgs, startIndex) {
+        currentImgs = imgs;
+        show(startIndex);
         box.hidden = false;
         document.body.style.overflow = "hidden";
     }
@@ -30,10 +32,6 @@ function initMomentsLightbox() {
         imgEl.src = "";
         document.body.style.overflow = "";
     }
-
-    imgs.forEach(function (img, i) {
-        img.addEventListener("click", function () { open(i); });
-    });
 
     closeBtn.addEventListener("click", close);
     prevBtn.addEventListener("click", function () { show(index - 1); });
@@ -46,6 +44,15 @@ function initMomentsLightbox() {
         else if (e.key === "ArrowLeft") show(index - 1);
         else if (e.key === "ArrowRight") show(index + 1);
     });
+
+    var galleryRoots = Array.prototype.slice.call(document.querySelectorAll(".moments-grid, .carousel"));
+    galleryRoots.forEach(function (root) {
+        var imgs = Array.prototype.slice.call(root.querySelectorAll("img"));
+        imgs.forEach(function (img, i) {
+            img.style.cursor = "zoom-in";
+            img.addEventListener("click", function () { open(imgs, i); });
+        });
+    });
 }
 
-initMomentsLightbox();
+initLightbox();
