@@ -7,7 +7,7 @@ html { scroll-behavior: smooth; }
 }
 .reveal-target {
   opacity: 0; transform: translateY(48px) scale(0.94);
-  transition: opacity 0.6s ease-out, transform 0.9s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: opacity 2.4s ease-out, transform 2.8s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 .reveal-target.reveal-left { transform: translateX(-56px) scale(0.94); }
 .reveal-target.reveal-right { transform: translateX(56px) scale(0.94); }
@@ -26,13 +26,13 @@ html { scroll-behavior: smooth; }
 
 /* hero load-in: staggered fade-up on page load */
 @keyframes heroFadeUp { from { opacity: 0; transform: translateY(40px) scale(0.96); } to { opacity: 1; transform: none; } }
-.hero-intro { opacity: 0; animation: heroFadeUp 0.9s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
-.hero .eyebrow.hero-intro { animation-delay: 0.05s; }
-.hero .hero-title.hero-intro { animation-delay: 0.15s; }
-.hero .hero-sub.hero-intro { animation-delay: 0.28s; }
-.hero .hero-ctas.hero-intro { animation-delay: 0.4s; }
-.hero .hero-meta.hero-intro { animation-delay: 0.52s; }
-.hero .hero-carousel.hero-intro { animation-delay: 0.3s; }
+.hero-intro { opacity: 0; animation: heroFadeUp 2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+.hero .eyebrow.hero-intro { animation-delay: 0.15s; }
+.hero .hero-title.hero-intro { animation-delay: 0.45s; }
+.hero .hero-sub.hero-intro { animation-delay: 0.8s; }
+.hero .hero-ctas.hero-intro { animation-delay: 1.15s; }
+.hero .hero-meta.hero-intro { animation-delay: 1.5s; }
+.hero .hero-carousel.hero-intro { animation-delay: 0.85s; }
 @media (prefers-reduced-motion: reduce) {
   .hero-intro { opacity: 1; animation: none; }
 }

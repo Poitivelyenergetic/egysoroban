@@ -38,7 +38,7 @@ function initScrollReveal() {
             var dir = g.dir === "alt" ? (i % 2 === 0 ? "left" : "right") : g.dir;
             if (dir === "left") el.classList.add("reveal-left");
             else if (dir === "right") el.classList.add("reveal-right");
-            el.style.transitionDelay = (Math.min(i, 6) * 70) + "ms";
+            el.style.transitionDelay = (550 + Math.min(i, 6) * 260) + "ms";
             els.push(el);
         });
     });
