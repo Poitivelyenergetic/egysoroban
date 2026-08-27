@@ -8,8 +8,12 @@
   padding: 26px 22px;
 }
 .benefit-card .glyph {
-  width: 40px; height: 40px; border-radius: 10px; background: var(--jade-tint); color: var(--jade);
+  width: 40px; height: 40px; border-radius: 10px;
   display: flex; align-items: center; justify-content: center; margin-bottom: 16px;
 }
+.benefit-card:nth-child(1) .glyph { background: var(--brass-tint); color: var(--brass-strong); }
+.benefit-card:nth-child(2) .glyph { background: var(--jade-tint); color: var(--jade); }
+.benefit-card:nth-child(3) .glyph { background: var(--ok-tint); color: var(--ok); }
+.benefit-card:nth-child(4) .glyph { background: var(--warn-tint); color: var(--warn); }
 .benefit-card h3 { font-size: 1.06rem; margin-bottom: 0.4em; }
 .benefit-card p { color: var(--ink-soft); font-size: 0.94rem; margin: 0; }

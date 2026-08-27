@@ -1,20 +1,20 @@
 /* ============ Tokens ============ */
 :root {
-  --paper: #fafbfc;
+  --paper: #ffffff;
   --paper-raised: #ffffff;
-  --paper-sunken: #f0f4fa;
-  --ink: #0e2a47;
-  --ink-soft: #4373ae;
-  --ink-faint: #6f95c8;
-  --brass: #f5c24a;
-  --brass-strong: #d39e1e;
-  --brass-tint: #fef8e7;
-  --jade: #2a5594;
-  --jade-strong: #1a3e6d;
-  --jade-tint: #f0f4fa;
-  --rod: #0e2a47;
-  --rod-tint: #d4dff0;
-  --line: #d0d3d8;
+  --paper-sunken: #f0f0f0;
+  --ink: #14171c;
+  --ink-soft: #4a5568;
+  --ink-faint: #8a94a3;
+  --brass: #f37342;
+  --brass-strong: #d95a2b;
+  --brass-tint: #fdeee7;
+  --jade: #204499;
+  --jade-strong: #17337a;
+  --jade-tint: #e8edf9;
+  --rod: #14245c;
+  --rod-tint: #cdd8f0;
+  --line: #dfdbdb;
   --danger: #dc2626;
   --danger-tint: #fde3e3;
   --ok: #16a34a;
@@ -35,20 +35,20 @@
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --paper: #0a1626;
+    --paper: #0a1220;
     --paper-raised: #12213a;
     --paper-sunken: #060d18;
-    --ink: #f0f4fa;
-    --ink-soft: #a8bfe1;
-    --ink-faint: #6f95c8;
-    --brass: #f6cc5d;
-    --brass-strong: #fce18b;
-    --brass-tint: #3a2e10;
-    --jade: #6f95c8;
-    --jade-strong: #a8bfe1;
+    --ink: #f5f6f8;
+    --ink-soft: #b9c2d0;
+    --ink-faint: #7c8aa0;
+    --brass: #ff8a5c;
+    --brass-strong: #ffab85;
+    --brass-tint: #3a1f10;
+    --jade: #7d9fe0;
+    --jade-strong: #a8c0ef;
     --jade-tint: #16233b;
-    --rod: #143257;
-    --rod-tint: #d4dff0;
+    --rod: #060f1c;
+    --rod-tint: #cdd8f0;
     --line: #1e304e;
     --danger: #f28b82;
     --danger-tint: #3a1a17;
@@ -61,20 +61,20 @@
   }
 }
 :root[data-theme="dark"] {
-  --paper: #0a1626;
+  --paper: #0a1220;
   --paper-raised: #12213a;
   --paper-sunken: #060d18;
-  --ink: #f0f4fa;
-  --ink-soft: #a8bfe1;
-  --ink-faint: #6f95c8;
-  --brass: #f6cc5d;
-  --brass-strong: #fce18b;
-  --brass-tint: #3a2e10;
-  --jade: #6f95c8;
-  --jade-strong: #a8bfe1;
+  --ink: #f5f6f8;
+  --ink-soft: #b9c2d0;
+  --ink-faint: #7c8aa0;
+  --brass: #ff8a5c;
+  --brass-strong: #ffab85;
+  --brass-tint: #3a1f10;
+  --jade: #7d9fe0;
+  --jade-strong: #a8c0ef;
   --jade-tint: #16233b;
-  --rod: #143257;
-  --rod-tint: #d4dff0;
+  --rod: #060f1c;
+  --rod-tint: #cdd8f0;
   --line: #1e304e;
   --danger: #f28b82;
   --danger-tint: #3a1a17;

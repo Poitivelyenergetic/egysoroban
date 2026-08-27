@@ -7,9 +7,12 @@
 }
 .instructor-avatar {
   width: 56px; height: 56px; border-radius: 50%; margin-bottom: 14px;
-  background: var(--jade-tint); color: var(--jade-strong); display: flex; align-items: center; justify-content: center;
+  display: flex; align-items: center; justify-content: center;
   font-family: var(--font-display); font-weight: 700; font-size: 1.3rem;
 }
+.instructor-card:nth-child(1) .instructor-avatar { background: var(--brass-tint); color: var(--brass-strong); }
+.instructor-card:nth-child(2) .instructor-avatar { background: var(--jade-tint); color: var(--jade-strong); }
+.instructor-card:nth-child(3) .instructor-avatar { background: var(--ok-tint); color: var(--ok); }
 .instructor-card h3 { font-size: 1.02rem; margin: 0 0 2px; }
 .instructor-card .role { font-size: 0.82rem; color: var(--brass-strong); font-weight: 600; margin-bottom: 6px; }
 .instructor-card p { font-size: 0.88rem; color: var(--ink-soft); margin: 0; }

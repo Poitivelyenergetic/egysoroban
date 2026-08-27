@@ -5,6 +5,13 @@
   background: var(--paper-raised); border: 1px solid var(--line); border-radius: var(--radius-md);
   padding: 26px 22px; display: flex; flex-direction: column; gap: 12px;
 }
+.level-card:nth-child(1) { background: var(--brass-tint); border-color: color-mix(in srgb, var(--brass) 35%, var(--line)); }
+.level-card:nth-child(2) { background: var(--jade-tint); border-color: color-mix(in srgb, var(--jade) 35%, var(--line)); }
+.level-card:nth-child(3) { background: var(--ok-tint); border-color: color-mix(in srgb, var(--ok) 35%, var(--line)); }
+.level-card:nth-child(1) .age { color: var(--brass-strong); }
+.level-card:nth-child(2) .age { color: var(--jade); }
+.level-card:nth-child(3) .age { color: var(--ok); }
+.level-card .level-foot { border-top-color: color-mix(in srgb, currentColor 18%, transparent); }
 .level-card .age { font-family: var(--font-mono); font-size: 0.74rem; color: var(--ink-faint); text-transform: uppercase; letter-spacing: 0.06em; }
 .level-card h3 { font-size: 1.16rem; margin: 0; }
 .level-card p { color: var(--ink-soft); font-size: 0.92rem; margin: 0; flex: 1; }

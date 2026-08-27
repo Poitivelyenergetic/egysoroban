@@ -17,6 +17,15 @@
 .main-nav a { text-decoration: none; font-weight: 600; font-size: 0.92rem; color: var(--ink-soft); }
 .main-nav a:hover { color: var(--ink); }
 .header-actions { display: flex; align-items: center; gap: 14px; }
+.home-btn {
+  display: flex; align-items: center; gap: 8px; text-decoration: none;
+  background: var(--jade); color: #fff; border-radius: 999px;
+  padding: 0.6em 1.1em; font-weight: 700; font-size: 0.92rem;
+  box-shadow: var(--shadow-1);
+}
+.home-btn:hover { background: var(--jade-strong); }
+.home-btn svg { flex-shrink: 0; }
+@media (max-width: 560px) { .home-btn span { display: none; } .home-btn { padding: 0.6em; } }
 .lang-toggle {
   background: transparent; border: 1px solid var(--line); border-radius: 999px;
   padding: 0.5em 0.95em; font-family: var(--font-mono); font-size: 0.78rem; font-weight: 600;

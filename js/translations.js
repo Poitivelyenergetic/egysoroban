@@ -1,12 +1,14 @@
 export var translations = {
     en: {
         "a11y.skip": "Skip to content",
+        "nav.home": "Home",
+        "wapr.eyebrow": "WAPR 2026 · We Are Ready", "wapr.title": "Team Egypt at WAPR 2026 — EGY Soroban Academy",
+        "wapr.lede": "Our students representing Egypt at the World Abacus & Anzan Championship 2026.",
         "nav.about": "About", "nav.programs": "Programs", "nav.tryit": "Try it", "nav.journey": "How it works",
         "nav.stories": "Stories", "nav.faq": "FAQ", "nav.contact": "Contact", "nav.apply": "Apply now",
         "hero.eyebrow": "Soroban mental-math academy · Al-Mansoura, Egypt",
         "hero.titleA": "Give your child a", "hero.titleAccent": "calculator in their mind",
         "hero.sub": "Turn your child into a mental-math champion — one bead at a time.",
-        "hero.abacusCaption": "Focus. Memory. Speed.",
         "hero.ctaApply": "Apply now", "hero.ctaPrograms": "See programs", "hero.ctaTryIt": "Play with the beads",
         "hero.meta1": "Age range", "hero.meta2": "Levels to master", "hero.meta3": "Years of experience",
         "about.eyebrow": "About the academy",
@@ -161,6 +163,9 @@ export var translations = {
     },
     ar: {
         "a11y.skip": "تخطَّ إلى المحتوى",
+        "nav.home": "الرئيسية",
+        "wapr.eyebrow": "WAPR 2026 · فريق مصر جاهز", "wapr.title": "فريق مصر في WAPR 2026 — أكاديمية إيجي سوروبان",
+        "wapr.lede": "طلابنا يمثلون مصر في بطولة العالم للحساب الذهني (أباكوس وأنزان) 2026.",
         "nav.about": "عن الأكاديمية", "nav.programs": "البرامج", "nav.tryit": "جرّب بنفسك", "nav.journey": "كيف نعمل",
         "nav.stories": "آراء أولياء الأمور", "nav.faq": "الأسئلة الشائعة", "nav.contact": "تواصل معنا", "nav.apply": "قدّم الآن",
         "hero.eyebrow": "أكاديمية السوروبان للحساب الذهني · المنصورة، مصر",
