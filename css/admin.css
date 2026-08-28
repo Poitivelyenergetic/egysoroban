@@ -75,13 +75,23 @@
    theme tokens. The header's versions are painted for a dark bar (white text
    on translucent white) and would vanish against the light topbar. */
 .admin-topbar-tools { display: flex; align-items: center; gap: 8px; }
+/* Same pill as the header's: identical radius, padding, font and the same
+   32%/82% alphas. The header hardcodes those alphas over white because it
+   always sits on the dark navy bar; this topbar follows the theme, so the
+   alphas are mixed against the current ink instead — visually identical in
+   dark mode, and the correct dark-on-light equivalent in light mode, where
+   the header's white-on-white would be invisible. */
 .admin-topbar-btn {
-  background: transparent; border: 1px solid var(--line); border-radius: 999px;
+  background: transparent; border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--ink) 32%, transparent);
+  color: color-mix(in srgb, var(--ink) 82%, transparent);
   padding: 0.45em 0.8em; font-family: var(--font-mono); font-size: 0.72rem; font-weight: 600;
-  cursor: pointer; color: var(--ink-soft); line-height: 1;
-  transition: border-color 0.15s ease, color 0.15s ease, background 0.15s ease;
+  cursor: pointer; line-height: 1;
+  transition: border-color 0.15s ease, color 0.15s ease;
 }
-.admin-topbar-btn:hover { border-color: var(--ink-faint); color: var(--ink); background: var(--paper-sunken); }
+.admin-topbar-btn:hover {
+  border-color: color-mix(in srgb, var(--ink) 60%, transparent); color: var(--ink);
+}
 .admin-topbar-btn-icon { padding: 0.45em 0.65em; font-size: 0.9rem; }
 .admin-body { max-width: 1240px; margin: 0 auto; padding: 28px; width: 100%; }
 

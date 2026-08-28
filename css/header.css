@@ -94,3 +94,19 @@
   .nav-toggle { display: inline-flex; }
   .header-actions .btn-primary { display: none; }
 }
+
+/* Below ~600px the header was wider than the screen — brand, Sign in, both
+   toggles and the menu button came to 489px inside a 390px viewport, which
+   scrolled every page on the site sideways. Nothing is dropped, because Sign
+   in is the only route to the portal from the header and the nav menu has no
+   link of its own; the space is found by tightening instead. */
+@media (max-width: 600px) {
+  .header-inner { padding-inline: 14px; gap: 10px; }
+  .header-actions { gap: 6px; }
+  .lang-toggle { padding: 0.45em 0.6em; font-size: 0.68rem; }
+}
+/* On the narrowest phones the wordmark gives way to the logo alone — it is the
+   one piece that repeats immediately below in the hero. */
+@media (max-width: 420px) {
+  .brand-name { display: none; }
+}

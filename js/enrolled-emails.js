@@ -54,24 +54,24 @@ export async function checkEnrolled(email, role) {
    changed — the common case is an admin opening Student records and nothing
    needing to be written at all. */
 export async function syncEnrolledEmails(students) {
-    var desired = {};
-    for (var i = 0; i < students.length; i++) {
-        var s = students[i];
-        var parentEmail = String(s.parentEmail || "").toLowerCase().trim();
-        var studentEmail = String(s.studentEmail || "").toLowerCase().trim();
-        if (parentEmail) {
-            var pk = await emailKey(parentEmail);
-            desired[pk] = desired[pk] || { asParent: false, asStudent: false };
-            desired[pk].asParent = true;
-        }
-        if (studentEmail) {
-            var sk = await emailKey(studentEmail);
-            desired[sk] = desired[sk] || { asParent: false, asStudent: false };
-            desired[sk].asStudent = true;
-        }
-    }
-
     try {
+        var desired = {};
+        for (var i = 0; i < students.length; i++) {
+            var s = students[i];
+            var parentEmail = String(s.parentEmail || "").toLowerCase().trim();
+            var studentEmail = String(s.studentEmail || "").toLowerCase().trim();
+            if (parentEmail) {
+                var pk = await emailKey(parentEmail);
+                desired[pk] = desired[pk] || { asParent: false, asStudent: false };
+                desired[pk].asParent = true;
+            }
+            if (studentEmail) {
+                var sk = await emailKey(studentEmail);
+                desired[sk] = desired[sk] || { asParent: false, asStudent: false };
+                desired[sk].asStudent = true;
+            }
+        }
+
         var snap = await getDocs(collection(db, COL));
         var existing = {};
         snap.forEach(function (d) { existing[d.id] = d.data() || {}; });
@@ -88,10 +88,19 @@ export async function syncEnrolledEmails(students) {
             }
         });
         /* A family that leaves must lose the ability to create a new login,
-           so entries with no student behind them any more are removed. */
-        Object.keys(existing).forEach(function (key) {
-            if (!desired[key]) writes.push(deleteDoc(doc(db, COL, key)));
-        });
+           so entries with no student behind them any more are removed.
+
+           Guarded on a non-empty roster, because loadStudents() reports a
+           failed read as an empty array — indistinguishable from a genuinely
+           empty academy. Without this, one dropped connection would delete
+           every entry and lock every existing parent out of signing up. An
+           academy that really has removed its last student keeps a few stale
+           entries instead, which is recoverable; a wiped directory is not. */
+        if (students.length) {
+            Object.keys(existing).forEach(function (key) {
+                if (!desired[key]) writes.push(deleteDoc(doc(db, COL, key)));
+            });
+        }
 
         await Promise.all(writes);
         return { ok: true, changed: writes.length };

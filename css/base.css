@@ -16,6 +16,13 @@ html { scroll-behavior: smooth; }
   html { scroll-behavior: auto; }
   * { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; }
 }
+/* The reveal animations start elements 56px to the side of where they land, so
+   every not-yet-revealed .reveal-right hung past the right edge and gave the
+   whole site a horizontal scrollbar on anything narrower than about 1000px.
+   `clip` rather than `hidden` deliberately: `hidden` would turn the body into
+   a scroll container and break the sticky header. */
+html, body { overflow-x: clip; }
+
 .reveal-target {
   opacity: 0; transform: translateY(48px) scale(0.94);
   transition: opacity 2.4s ease-out, transform 2.8s cubic-bezier(0.34, 1.56, 0.64, 1);

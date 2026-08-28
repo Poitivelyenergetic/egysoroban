@@ -117,7 +117,10 @@ export function renderAreaLine(container, items, options) {
     if (!container) return;
     var opts = options || {};
     container.innerHTML = "";
-    if (!items.length) {
+    /* Two points minimum: a curve through one point has no shape to read, and
+       smoothPath returns "" for it, which would build a path starting with a
+       lineto instead of a moveto — invalid, and silently blank. */
+    if (items.length < 2) {
         container.appendChild(el("p", "chart-empty", opts.emptyText || ""));
         return;
     }

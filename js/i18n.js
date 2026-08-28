@@ -37,6 +37,16 @@ export function applyLanguage(lang) {
         if (pval) placeholders[j].setAttribute("placeholder", pval);
     }
 
+    /* Controls in the admin toolbars sit outside a .field wrapper and have no
+       visible <label>, so their only accessible name is an aria-label — which
+       has to be translated like any other visible string. */
+    var ariaNodes = document.querySelectorAll("[data-i18n-aria-label]");
+    for (var k = 0; k < ariaNodes.length; k++) {
+        var akey = ariaNodes[k].getAttribute("data-i18n-aria-label");
+        var aval = t(akey, lang);
+        if (aval) ariaNodes[k].setAttribute("aria-label", aval);
+    }
+
     var label = lang === "ar" ? "EN / عربي" : "عربي / EN";
     langToggleButtons().forEach(function (btn) { btn.textContent = label; });
 
