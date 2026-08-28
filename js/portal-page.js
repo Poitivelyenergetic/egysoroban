@@ -9,10 +9,13 @@ import { auth } from "./firebase-init.js";
 import { t, fmtDate, onLanguageChangeCallbacks } from "./i18n.js";
 import { toast } from "./toast.js";
 import { loadStudentsForAccount } from "./student-records.js";
+import { recordPortalAccount } from "./portal-accounts.js";
 
 var gate = document.getElementById("portal-gate");
 var loginForm = document.getElementById("portal-login-form");
+var roleChoice = document.getElementById("portal-role-choice");
 var signupForm = document.getElementById("portal-signup-form");
+var signupAsLabel = document.getElementById("portal-signup-as");
 var verifyScreen = document.getElementById("portal-verify");
 var dashboard = document.getElementById("portal-dashboard");
 var emailInput = document.getElementById("portal-email");
@@ -24,16 +27,23 @@ var signupError = document.getElementById("portal-signup-error");
 var gotoSignupBtn = document.getElementById("portal-goto-signup");
 var gotoLoginBtn = document.getElementById("portal-goto-login");
 var studentsWrap = document.getElementById("portal-students");
+var signupRole = null; // "parent" | "student"
 
 function showGate() {
     gate.hidden = false; verifyScreen.hidden = true; dashboard.hidden = true;
-    loginForm.hidden = false; signupForm.hidden = true;
-    gotoSignupBtn.hidden = false; gotoLoginBtn.hidden = true;
+    roleChoice.hidden = false; loginForm.hidden = true; signupForm.hidden = true;
+    gotoLoginBtn.hidden = false; gotoSignupBtn.hidden = true;
+}
+function showLogin() {
+    roleChoice.hidden = true; signupForm.hidden = true; loginForm.hidden = false;
+    gotoLoginBtn.hidden = true; gotoSignupBtn.hidden = false;
     loginError.classList.remove("show");
 }
-function showSignup() {
-    loginForm.hidden = true; signupForm.hidden = false;
-    gotoSignupBtn.hidden = true; gotoLoginBtn.hidden = false;
+function showSignupForm(role) {
+    signupRole = role;
+    roleChoice.hidden = true; loginForm.hidden = true; signupForm.hidden = false;
+    gotoLoginBtn.hidden = false; gotoSignupBtn.hidden = true;
+    signupAsLabel.textContent = t(role === "student" ? "portal.signupAsStudent" : "portal.signupAsParent");
     signupError.classList.remove("show");
 }
 function showVerify() {
@@ -221,8 +231,10 @@ document.getElementById("portal-forgot-btn").addEventListener("click", async fun
     }
 });
 
-gotoSignupBtn.addEventListener("click", showSignup);
-gotoLoginBtn.addEventListener("click", showGate);
+gotoSignupBtn.addEventListener("click", showGate);
+gotoLoginBtn.addEventListener("click", showLogin);
+document.getElementById("portal-role-parent").addEventListener("click", function () { showSignupForm("parent"); });
+document.getElementById("portal-role-student").addEventListener("click", function () { showSignupForm("student"); });
 
 signupForm.addEventListener("submit", async function (e) {
     e.preventDefault();
@@ -232,6 +244,7 @@ signupForm.addEventListener("submit", async function (e) {
     btn.disabled = true;
     try {
         var cred = await createUserWithEmailAndPassword(auth, signupEmailInput.value.trim(), signupPasswordInput.value);
+        try { await recordPortalAccount(signupRole, signupEmailInput.value.trim()); } catch (e3) { }
         try { await sendEmailVerification(cred.user); } catch (e2) { }
         showVerify();
     } catch (err) {

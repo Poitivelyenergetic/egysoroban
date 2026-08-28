@@ -1,8 +1,29 @@
 /* ============ Parent portal ============ */
 #portal-gate, #portal-verify { max-width: 440px; margin: 0 auto; }
-#portal-gate .app-form, #portal-verify { background: var(--paper-raised); border: 1px solid var(--line); border-radius: var(--radius-lg); padding: 32px; box-shadow: var(--shadow-1); }
+#portal-gate .app-form, #portal-verify, #portal-role-choice { background: var(--paper-raised); border: 1px solid var(--line); border-radius: var(--radius-lg); padding: 32px; box-shadow: var(--shadow-1); }
 #portal-gate .admin-hint { text-align: center; }
 #portal-gate .admin-forgot-link { display: block; margin: 14px auto 0; }
+
+.role-choice-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media (max-width: 420px) { .role-choice-grid { grid-template-columns: 1fr; } }
+.role-choice-btn {
+  display: flex; flex-direction: column; align-items: center; text-align: center; gap: 6px;
+  background: var(--paper-sunken); border: 1px solid var(--line); border-radius: var(--radius-md);
+  padding: 20px 14px; cursor: pointer; font: inherit; color: var(--ink);
+  transition: border-color 0.2s ease, transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.role-choice-btn:hover { border-color: var(--brass-strong); transform: translateY(-3px); }
+.role-choice-icon {
+  width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  background: var(--brass-tint); color: var(--brass-strong);
+}
+.role-choice-btn:nth-child(2) .role-choice-icon { background: var(--jade-tint); color: var(--jade); }
+.role-choice-label { font-weight: 700; font-size: 0.98rem; }
+.role-choice-desc { font-size: 0.78rem; color: var(--ink-faint); }
+.portal-signup-as {
+  text-align: center; font-size: 0.84rem; color: var(--ink-soft); margin: 0 0 18px;
+  background: var(--paper-sunken); border-radius: var(--radius-sm); padding: 8px 12px;
+}
 
 .portal-student-card {
   background: var(--paper-raised); border: 1px solid var(--line); border-radius: var(--radius-lg);

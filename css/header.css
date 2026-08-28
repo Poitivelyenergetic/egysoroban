@@ -47,6 +47,12 @@
 .header-actions .btn-primary {
   background: linear-gradient(135deg, var(--brass) 0%, var(--brass-strong) 100%);
 }
+.header-actions .btn-secondary {
+  background: rgba(255, 255, 255, 0.92); color: var(--rod); border-color: transparent;
+}
+.header-actions .btn-secondary:hover {
+  background: #fff; transform: translateY(-2px); box-shadow: 0 10px 26px rgba(255, 255, 255, 0.3);
+}
 .home-btn svg { flex-shrink: 0; }
 @media (max-width: 1300px) { .home-btn span { display: none; } .home-btn { padding: 0.55em; } }
 .lang-toggle {

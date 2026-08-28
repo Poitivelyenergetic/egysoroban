@@ -1,13 +1,57 @@
 import { t, fmtDate } from "./i18n.js";
 import { toast } from "./toast.js";
 import { loadStudents, addStudent, updateStudent, addExamResult, deleteStudent } from "./student-records.js";
+import { loadPortalAccounts } from "./portal-accounts.js";
 
 var tableBody = document.getElementById("students-table-body");
 var addForm = document.getElementById("add-student-form");
 var detailOverlay = document.getElementById("detail-overlay");
 var detailCard = document.getElementById("detail-card");
+var portalAccountsBody = document.getElementById("portal-accounts-table-body");
 var students = [];
 var deletePending = null;
+
+async function renderPortalAccounts(studentsList) {
+    if (!portalAccountsBody) return;
+    var accounts = await loadPortalAccounts();
+    var linkedEmails = {};
+    studentsList.forEach(function (s) {
+        if (s.parentEmail) linkedEmails[s.parentEmail.toLowerCase()] = true;
+        if (s.studentEmail) linkedEmails[s.studentEmail.toLowerCase()] = true;
+    });
+    portalAccountsBody.innerHTML = "";
+    if (accounts.length === 0) {
+        var tr = document.createElement("tr");
+        tr.className = "empty-row";
+        var td = document.createElement("td");
+        td.colSpan = 4;
+        td.textContent = t("admin.emptyList");
+        tr.appendChild(td);
+        portalAccountsBody.appendChild(tr);
+        return;
+    }
+    accounts.forEach(function (a) {
+        var tr = document.createElement("tr");
+        var tdEmail = document.createElement("td");
+        tdEmail.textContent = a.email || t("detail.none");
+        var tdRole = document.createElement("td");
+        tdRole.textContent = a.role === "student" ? t("portal.roleStudent") : t("portal.roleParent");
+        var tdDate = document.createElement("td");
+        tdDate.className = "muted";
+        tdDate.textContent = fmtDate(a.createdAt);
+        var tdLinked = document.createElement("td");
+        var linked = !!linkedEmails[(a.email || "").toLowerCase()];
+        var pill = document.createElement("span");
+        pill.className = "status-pill " + (linked ? "enrolled" : "new");
+        pill.textContent = linked ? t("admin.portalAccountsLinkedYes") : t("admin.portalAccountsLinkedNo");
+        tdLinked.appendChild(pill);
+        tr.appendChild(tdEmail);
+        tr.appendChild(tdRole);
+        tr.appendChild(tdDate);
+        tr.appendChild(tdLinked);
+        portalAccountsBody.appendChild(tr);
+    });
+}
 
 function levelLabel(levelIndex) {
     var n = Number(levelIndex) || 1;
@@ -18,6 +62,7 @@ function levelLabel(levelIndex) {
 export async function renderRecordsPanel() {
     if (!tableBody) return;
     students = await loadStudents();
+    renderPortalAccounts(students);
     tableBody.innerHTML = "";
 
     if (students.length === 0) {

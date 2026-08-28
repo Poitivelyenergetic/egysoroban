@@ -1,0 +1,22 @@
+/* ============ Real egysoroban.com brand override ============ */
+/* Pulled from app.egysoroban.com's actual design tokens (navy + amber),
+   remapped onto our existing --brass/--jade/--rod token names so every
+   component (buttons, cards, header accents) picks it up automatically.
+   Loaded only on the registration/account pages (apply, competition, portal). */
+:root {
+  --brass: #F5C24A; --brass-strong: #e3ad33; --brass-tint: #fef8e7;
+  --jade: #1a3e6d; --jade-strong: #143257; --jade-tint: #f0f4fa;
+  --rod: #0E2A47; --rod-tint: #d4dff0;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --brass: #F5C24A; --brass-strong: #f6cc5d; --brass-tint: #3a2f10;
+    --jade: #6f95c8; --jade-strong: #a8bfe1; --jade-tint: #16233b;
+    --rod: #0E2A47; --rod-tint: #d4dff0;
+  }
+}
+:root[data-theme="dark"] {
+  --brass: #F5C24A; --brass-strong: #f6cc5d; --brass-tint: #3a2f10;
+  --jade: #6f95c8; --jade-strong: #a8bfe1; --jade-tint: #16233b;
+  --rod: #0E2A47; --rod-tint: #d4dff0;
+}

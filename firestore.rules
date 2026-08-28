@@ -74,6 +74,20 @@ service cloud.firestore {
       allow write: if isSignedIn() && myEmail() == email;
     }
 
+    // parentAccounts/{email} and studentAccounts/{email} record which group a
+    // self-signed-up Parent Portal account belongs to (chosen at signup) — a
+    // lightweight registry so staff can see who signed up as what and link
+    // them to the right students/{id} record. Anyone signed in may write only
+    // their own entry; staff (or the account owner) may read it.
+    match /parentAccounts/{email} {
+      allow read: if isStaff() || (isSignedIn() && myEmail() == email);
+      allow write: if isSignedIn() && myEmail() == email;
+    }
+    match /studentAccounts/{email} {
+      allow read: if isStaff() || (isSignedIn() && myEmail() == email);
+      allow write: if isSignedIn() && myEmail() == email;
+    }
+
     // students/{id} holds a child's level, attendance, homework, and exam
     // history. Only staff can create/edit it; a parent OR the student's own
     // account (whichever email matches, via parentEmail or studentEmail) may
