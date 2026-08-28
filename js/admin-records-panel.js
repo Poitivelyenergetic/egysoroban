@@ -3,6 +3,7 @@ import { toast } from "./toast.js";
 import { loadStudents, loadStudentsForTeacher, addStudent, updateStudent, addExamResult, deleteStudent } from "./student-records.js";
 import { loadPortalAccounts } from "./portal-accounts.js";
 import { listApprovedTeachers, isAdminRole } from "./roles.js";
+import { BRANCHES } from "./branches.js";
 import { auth } from "./firebase-init.js";
 import { state } from "./state.js";
 import { showLoadingRow } from "./loading-row.js";
@@ -55,7 +56,7 @@ async function renderPortalAccounts(studentsList) {
         tr.className = "empty-row";
         var td = document.createElement("td");
         td.colSpan = 5;
-        td.textContent = t("admin.emptyList");
+        td.textContent = t("admin.emptyPortalAccounts");
         tr.appendChild(td);
         portalAccountsBody.appendChild(tr);
         return;
@@ -120,7 +121,7 @@ export async function renderRecordsPanel() {
         tr.className = "empty-row";
         var td = document.createElement("td");
         td.colSpan = 5;
-        td.textContent = t("admin.emptyList");
+        td.textContent = t("admin.emptyStudents");
         tr.appendChild(td);
         tableBody.appendChild(tr);
         return;
@@ -204,6 +205,47 @@ async function openStudentDetail(id) {
 
     var rows = document.createElement("div");
     rows.className = "detail-rows";
+
+    /* Name and branch were fixed at creation time with no way to correct a
+       typo or move a child to another branch — both are editable by an admin
+       now. Teachers still can't touch them; the Firestore rules restrict a
+       teacher's update to the progress fields only. */
+    var nameInput = null;
+    var branchSelect = null;
+    if (admin) {
+        var nameWrap = document.createElement("div");
+        nameWrap.className = "row";
+        var nameK = document.createElement("div");
+        nameK.className = "k";
+        nameK.textContent = t("admin.colStudent");
+        nameInput = document.createElement("input");
+        nameInput.type = "text";
+        nameInput.value = s.name || "";
+        nameWrap.appendChild(nameK);
+        nameWrap.appendChild(nameInput);
+        rows.appendChild(nameWrap);
+
+        var branchWrap = document.createElement("div");
+        branchWrap.className = "row";
+        var branchK = document.createElement("div");
+        branchK.className = "k";
+        branchK.textContent = t("detail.branch");
+        branchSelect = document.createElement("select");
+        var noBranch = document.createElement("option");
+        noBranch.value = "";
+        noBranch.textContent = t("detail.none");
+        branchSelect.appendChild(noBranch);
+        BRANCHES.forEach(function (b) {
+            var opt = document.createElement("option");
+            opt.value = b.id;
+            opt.textContent = b.label;
+            if (s.branch === b.id) opt.selected = true;
+            branchSelect.appendChild(opt);
+        });
+        branchWrap.appendChild(branchK);
+        branchWrap.appendChild(branchSelect);
+        rows.appendChild(branchWrap);
+    }
 
     var parentEmailInput = null;
     if (admin) {
@@ -400,6 +442,8 @@ async function openStudentDetail(id) {
             fields.parentEmail = parentEmailInput.value.trim().toLowerCase();
             fields.studentEmail = studentEmailInput.value.trim().toLowerCase();
             if (teacherSelect) fields.teacherEmail = teacherSelect.value;
+            if (nameInput) fields.name = nameInput.value.trim();
+            if (branchSelect) fields.branch = branchSelect.value;
         }
         var result = await updateStudent(s.id, fields);
         saveBtn.disabled = false;

@@ -35,7 +35,7 @@ export async function renderCompetitionPanel() {
         tr.className = "empty-row";
         var td = document.createElement("td");
         td.colSpan = 5;
-        td.textContent = t("admin.emptyList");
+        td.textContent = t("admin.emptyCompetition");
         tr.appendChild(td);
         tableBody.appendChild(tr);
         return;

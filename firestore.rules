@@ -81,11 +81,13 @@ service cloud.firestore {
     }
 
     // staffProfiles/{email} holds the username/phone a staff member sets for
-    // themselves when creating their login account. Anyone signed in may
-    // write only their own profile; any signed-in user may read profiles.
+    // themselves when creating their login account. Anyone signed in may write
+    // their own profile; admin/superadmin may also write someone else's, which
+    // is what lets an admin fill in the name and phone when they create an
+    // account on a new colleague's behalf.
     match /staffProfiles/{email} {
       allow read: if isSignedIn();
-      allow write: if isSignedIn() && myEmail() == email;
+      allow write: if (isSignedIn() && myEmail() == email) || isAdminOrSuper();
     }
 
     // parentAccounts/{email} and studentAccounts/{email} record which group a
@@ -154,6 +156,32 @@ service cloud.firestore {
         request.resource.data.diff(resource.data).affectedKeys().hasOnly(['bookedCount']) &&
         request.resource.data.bookedCount == resource.data.bookedCount + 1
       );
+    }
+
+    // classes/{id} is the recurring weekly timetable (day of week + start time,
+    // not a dated event). Any staff member may read it — a teacher needs to see
+    // their own timetable, and the Calendar panel filters to their own classes
+    // client-side — but only admin/superadmin may schedule, edit, or cancel a
+    // class, so a teacher can't assign themselves work or drop someone else's.
+    match /classes/{id} {
+      allow read: if isStaff();
+      allow create, update, delete: if isAdminOrSuper();
+    }
+
+    // payments/{id} records one monthly-tuition payment against a student.
+    // Financial records are admin-only in both directions: approved teachers
+    // have no read access at all, and nothing here is ever public. Admins can
+    // correct their own bookkeeping, deletion included — a mistyped payment
+    // has to be removable by the person who took it, not just a superadmin.
+    match /payments/{id} {
+      allow read, create, update, delete: if isAdminOrSuper();
+    }
+
+    // expenses/{id} records money going out — salaries, rent, materials. Even
+    // more sensitive than payments (it exposes what staff are paid), so it is
+    // admin-only in every direction and never readable by a teacher.
+    match /expenses/{id} {
+      allow read, create, update, delete: if isAdminOrSuper();
     }
 
     // Deny everything else by default.

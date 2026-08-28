@@ -707,24 +707,22 @@
                             <div>
                                 <h3 data-i18n="contact.hoursLabel">Follow us</h3>
                                 <p class="social-links">
-                                    <a href="https://www.instagram.com/sorobanegy" target="_blank" rel="noopener">Instagram</a> ·
-                                    <a href="https://www.facebook.com/share/1HhkmkXW1g/" target="_blank" rel="noopener">Facebook</a> ·
-                                    <a href="https://youtube.com/@egysorobanacademy" target="_blank" rel="noopener">YouTube</a>
-                                    <span data-i18n="contact.hoursValue"> — @sorobanegy</span>
+                                    <a class="social-icon" href="https://www.instagram.com/sorobanegy" target="_blank" rel="noopener" aria-label="Instagram">
+                                        <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><defs><linearGradient id="igGrad" x1="0%" y1="100%" x2="100%" y2="0%"><stop offset="0%" stop-color="#FEDA75"></stop><stop offset="25%" stop-color="#FA7E1E"></stop><stop offset="50%" stop-color="#D62976"></stop><stop offset="75%" stop-color="#962FBF"></stop><stop offset="100%" stop-color="#4F5BD5"></stop></linearGradient></defs><rect x="2" y="2" width="20" height="20" rx="5.5" fill="url(#igGrad)"></rect><circle cx="12" cy="12" r="4.2" fill="none" stroke="#fff" stroke-width="1.9"></circle><circle cx="17.2" cy="6.8" r="1.25" fill="#fff"></circle></svg>
+                                    </a>
+                                    <a class="social-icon" href="https://www.facebook.com/share/1HhkmkXW1g/" target="_blank" rel="noopener" aria-label="Facebook">
+                                        <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path fill="#1877F2" d="M24 12a12 12 0 1 0-13.9 11.9v-8.4H7.1V12h3V9.4c0-3 1.8-4.6 4.5-4.6 1.3 0 2.6.2 2.6.2v2.9h-1.5c-1.5 0-1.9.9-1.9 1.8V12h3.3l-.5 3.5h-2.8v8.4A12 12 0 0 0 24 12Z"></path></svg>
+                                    </a>
+                                    <a class="social-icon" href="https://youtube.com/@egysorobanacademy" target="_blank" rel="noopener" aria-label="YouTube">
+                                        <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path fill="#FF0000" d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.6 12 3.6 12 3.6s-7.5 0-9.4.5A3 3 0 0 0 .5 6.2C0 8.1 0 12 0 12s0 3.9.5 5.8a3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1c.5-1.9.5-5.8.5-5.8s0-3.9-.5-5.8Z"></path><path fill="#fff" d="M9.6 15.6 15.8 12 9.6 8.4z"></path></svg>
+                                    </a>
+                                    <span class="social-handle" data-i18n="contact.hoursValue"> — @sorobanegy</span>
                                 </p>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="contact-map" id="home-map">
-                    <button type="button" class="home-map-card" id="home-map-toggle" aria-expanded="false">
-                        <span class="home-map-live"><span class="home-map-dot" aria-hidden="true"></span><span
-                                data-i18n="home.mapLive">LIVE</span></span>
-                        <span class="home-map-eyebrow" data-i18n="home.mapEyebrow">Current location</span>
-                        <span class="home-map-city" data-i18n="home.mapCity">Al-Mansoura, Egypt</span>
-                        <span class="home-map-coords" data-i18n="home.mapCoords">31.0409° N, 31.3785° E</span>
-                        <span class="home-map-hint" data-i18n="home.mapClickExpand">Click to expand</span>
-                    </button>
+                <div class="contact-map">
                     <iframe
                         src="https://www.google.com/maps?q=EGY+Soroban+Academy%2C+Al-Mansoura%2C+Egypt&output=embed"
                         title="EGY Soroban Academy location on the map" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
@@ -882,45 +880,90 @@
         </div>
 
         <div class="admin-dash" id="admin-dashboard" hidden="">
-            <div class="admin-topbar">
-                <div class="title">
-                    <svg width="20" height="20" viewBox="0 0 26 26" fill="none" aria-hidden="true">
-                        <rect x="2" y="3" width="22" height="20" rx="3" stroke="currentColor" stroke-width="1.6"></rect>
-                        <line x1="2" y1="10" x2="24" y2="10" stroke="currentColor" stroke-width="1.6"></line>
-                        <circle cx="8" cy="6.5" r="2" fill="currentColor"></circle>
-                        <circle cx="16" cy="6.5" r="2" fill="currentColor"></circle>
-                    </svg>
-                    <span data-i18n="admin.dashTitle">Egysoroban admin</span>
+            <aside class="admin-sidebar">
+                <div class="admin-sidebar-brand">
+                    <img class="admin-sidebar-mark" src="assets/logo.png?v=1787932828" alt="" width="30" height="30">
+                    <div>
+                        <div class="admin-sidebar-org" data-i18n="admin.dashTitle">Egysoroban admin</div>
+                        <div class="admin-sidebar-role" id="admin-role-badge">Admin console</div>
+                    </div>
                 </div>
-                <div class="actions">
-                    <button class="btn btn-secondary btn-sm" id="admin-refresh" type="button" data-i18n="admin.refresh"
-                        style="color:#fff;border-color:rgba(255,255,255,0.3);">Refresh</button>
-                    <button class="btn btn-secondary btn-sm" id="admin-logout" type="button" data-i18n="admin.logout"
-                        style="color:#fff;border-color:rgba(255,255,255,0.3);">Log out</button>
-                    <button class="icon-btn" id="admin-dash-close" aria-label="Close" type="button" style="color:#fff;">
+
+                <nav class="admin-tabs" id="admin-tabs">
+                    <button class="admin-tab active" type="button" data-tab="students">
+                        <svg class="admin-tab-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="8" r="3.4" stroke="currentColor" stroke-width="1.7"></circle><path d="M4.5 20c1-3.8 4.2-6 7.5-6s6.5 2.2 7.5 6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"></path></svg>
+                        <span data-i18n="admin.tabStudents">Students</span>
+                    </button>
+                    <button class="admin-tab" type="button" data-tab="analytics" id="admin-tab-analytics" hidden="">
+                        <svg class="admin-tab-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 13.5h3l2.5-6 3.5 12 3-9 2 3h4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                        <span data-i18n="admin.tabAnalytics">Analytics</span>
+                    </button>
+
+                    <div class="admin-tabs-group" data-i18n="admin.navGroupWorkspace">Workspace</div>
+                    <button class="admin-tab" type="button" data-tab="calendar" id="admin-tab-calendar" hidden="">
+                        <svg class="admin-tab-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15" rx="2.2" stroke="currentColor" stroke-width="1.6"></rect><path d="M3.5 9.5h17M8 3v3.4M16 3v3.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"></path></svg>
+                        <span data-i18n="admin.tabCalendar">Calendar</span>
+                    </button>
+                    <button class="admin-tab" type="button" data-tab="team" id="admin-tab-team" hidden="">
+                        <svg class="admin-tab-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="9" cy="8.5" r="3" stroke="currentColor" stroke-width="1.6"></circle><path d="M3 19.5c.8-3.2 3.3-5 6-5s5.2 1.8 6 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"></path><path d="M16.5 6.2a3 3 0 0 1 0 5.6M18 14.9c2 .7 3.3 2.3 3.8 4.6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"></path></svg>
+                        <span data-i18n="admin.tabTeam">Team</span>
+                    </button>
+                    <button class="admin-tab" type="button" data-tab="records" id="admin-tab-records" hidden="">
+                        <svg class="admin-tab-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3.5 7.5c0-1 .8-1.8 1.8-1.8h4l1.6 2h7.8c1 0 1.8.8 1.8 1.8v9c0 1-.8 1.8-1.8 1.8H5.3c-1 0-1.8-.8-1.8-1.8V7.5Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"></path></svg>
+                        <span data-i18n="admin.tabRecords">Student records</span>
+                    </button>
+                    <button class="admin-tab" type="button" data-tab="slots" id="admin-tab-slots" hidden="">
+                        <svg class="admin-tab-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 8v4l2.5 1.6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"></path><circle cx="12" cy="12" r="8.5" stroke="currentColor" stroke-width="1.6"></circle></svg>
+                        <span data-i18n="admin.tabSlots">Trial slots</span>
+                    </button>
+                    <button class="admin-tab" type="button" data-tab="competition" id="admin-tab-competition" hidden="">
+                        <svg class="admin-tab-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M7 4h10v4a5 5 0 0 1-10 0V4Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"></path><path d="M7 5H4v1.6A3.4 3.4 0 0 0 7 10M17 5h3v1.6A3.4 3.4 0 0 1 17 10M12 14v3.4M9 20.5h6M10 17.4h4v3.1h-4z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                        <span data-i18n="admin.tabCompetition">Competition</span>
+                    </button>
+
+                    <div class="admin-tabs-group" id="admin-nav-group-admin" hidden="" data-i18n="admin.navGroupAdmin">Administration</div>
+                    <button class="admin-tab" type="button" data-tab="finance" id="admin-tab-finance" hidden="">
+                        <svg class="admin-tab-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="2.5" y="6" width="19" height="12" rx="2.2" stroke="currentColor" stroke-width="1.6"></rect><path d="M2.5 10.5h19" stroke="currentColor" stroke-width="1.6"></path><path d="M6 14.5h3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"></path></svg>
+                        <span data-i18n="admin.tabFinance">Finance</span>
+                    </button>
+                    <button class="admin-tab" type="button" data-tab="teachers" id="admin-tab-teachers" hidden="">
+                        <svg class="admin-tab-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2.4" stroke="currentColor" stroke-width="1.7"></rect><circle cx="9" cy="11" r="2" stroke="currentColor" stroke-width="1.5"></circle><path d="M6.2 16c.5-1.6 1.7-2.4 2.8-2.4s2.3.8 2.8 2.4M14 10h4M14 13.4h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path></svg>
+                        <span data-i18n="admin.tabTeachers">Teacher applications</span>
+                    </button>
+                    <button class="admin-tab" type="button" data-tab="manage-admins" id="admin-tab-manage-admins" hidden="">
+                        <svg class="admin-tab-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3.5 19 6.3v5.2c0 4.6-3 7.8-7 9-4-1.2-7-4.4-7-9V6.3L12 3.5Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"></path><path d="m9.2 12.2 1.9 1.9 3.7-3.9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                        <span data-i18n="admin.tabManageAdmins">Manage admins</span>
+                    </button>
+                </nav>
+
+                <div class="admin-sidebar-foot">
+                    <button class="admin-sidebar-action" id="admin-refresh" type="button">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20 11a8 8 0 1 0-2.3 5.6M20 11V5.5M20 11h-5.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                        <span data-i18n="admin.refresh">Refresh</span>
+                    </button>
+                    <button class="admin-sidebar-action" id="admin-logout" type="button">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M15 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h7a2 2 0 0 0 2-2v-2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"></path><path d="M10 12h10m0 0-3-3m3 3-3 3" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                        <span data-i18n="admin.logout">Log out</span>
+                    </button>
+                </div>
+            </aside>
+
+            <div class="admin-main">
+                <div class="admin-topbar">
+                    <div class="admin-crumb">
+                        <span data-i18n="admin.dashTitle">Egysoroban admin</span>
+                        <span class="admin-crumb-sep">/</span>
+                        <span id="admin-crumb-current">Students</span>
+                    </div>
+                    <button class="icon-btn admin-topbar-close" id="admin-dash-close" aria-label="Close" type="button">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
                             <path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="1.7"
                                 stroke-linecap="round"></path>
                         </svg>
                     </button>
                 </div>
-            </div>
 
             <div class="admin-body">
-                <div class="admin-tabs" id="admin-tabs">
-                    <button class="admin-tab active" type="button" data-tab="students" data-i18n="admin.tabStudents">Students</button>
-                    <button class="admin-tab" type="button" data-tab="teachers" id="admin-tab-teachers" hidden=""
-                        data-i18n="admin.tabTeachers">Teacher applications</button>
-                    <button class="admin-tab" type="button" data-tab="manage-admins" id="admin-tab-manage-admins"
-                        hidden="" data-i18n="admin.tabManageAdmins">Manage admins</button>
-                    <button class="admin-tab" type="button" data-tab="records" id="admin-tab-records" hidden=""
-                        data-i18n="admin.tabRecords">Student records</button>
-                    <button class="admin-tab" type="button" data-tab="slots" id="admin-tab-slots" hidden=""
-                        data-i18n="admin.tabSlots">Trial slots</button>
-                    <button class="admin-tab" type="button" data-tab="competition" id="admin-tab-competition"
-                        hidden="" data-i18n="admin.tabCompetition">Competition</button>
-                </div>
-
                 <div class="admin-panel" data-panel="students">
                 <div class="admin-summary">
                     <div class="summary-card">
@@ -1202,6 +1245,317 @@
                         </table>
                     </div>
                 </div>
+
+                <div class="admin-panel" data-panel="analytics" hidden="">
+                    <p class="section-lede" data-i18n="analytics.lede" style="margin-bottom:20px;">How the academy is
+                        doing right now — enrolment, teaching quality and revenue, all read straight from your live
+                        records.</p>
+                    <div class="stat-tile-grid" id="analytics-tiles"></div>
+
+                    <div class="chart-grid">
+                        <div class="chart-card">
+                            <div class="chart-card-head">
+                                <h3 data-i18n="analytics.appsTrendTitle">Applications per month</h3>
+                                <p class="chart-card-sub" data-i18n="analytics.appsTrendSub">Last six months</p>
+                            </div>
+                            <div class="chart-card-body" id="analytics-apps-trend"></div>
+                        </div>
+                        <div class="chart-card">
+                            <div class="chart-card-head">
+                                <h3 data-i18n="analytics.revenueTrendTitle">Revenue per month</h3>
+                                <p class="chart-card-sub" data-i18n="analytics.revenueTrendSub">Tuition collected, in
+                                    thousands of EGP</p>
+                            </div>
+                            <div class="chart-card-body" id="analytics-revenue"></div>
+                        </div>
+                        <div class="chart-card">
+                            <div class="chart-card-head">
+                                <h3 data-i18n="analytics.pipelineTitle">Application pipeline</h3>
+                                <p class="chart-card-sub" data-i18n="analytics.pipelineSub">Where every application
+                                    currently sits</p>
+                            </div>
+                            <div class="chart-card-body" id="analytics-pipeline"></div>
+                        </div>
+                        <div class="chart-card">
+                            <div class="chart-card-head">
+                                <h3 data-i18n="analytics.branchesTitle">Students per branch</h3>
+                            </div>
+                            <div class="chart-card-body" id="analytics-branches"></div>
+                        </div>
+                        <div class="chart-card">
+                            <div class="chart-card-head">
+                                <h3 data-i18n="analytics.levelsTitle">Students per level</h3>
+                            </div>
+                            <div class="chart-card-body" id="analytics-levels"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="admin-panel" data-panel="calendar" hidden="">
+                    <p class="section-lede" data-i18n="calendar.lede" style="margin-bottom:20px;">The weekly class
+                        timetable — when every class runs, who teaches it and at which branch.</p>
+
+                    <div class="admin-toolbar">
+                        <label class="admin-check">
+                            <input type="checkbox" id="calendar-mine-only">
+                            <span data-i18n="calendar.mineOnly">Only show my classes</span>
+                        </label>
+                    </div>
+
+                    <details class="manual-add" id="add-class" hidden="">
+                        <summary data-i18n="calendar.addClassTitle">+ Add a weekly class</summary>
+                        <form id="add-class-form" class="form-grid">
+                            <div class="field">
+                                <label data-i18n="calendar.fDay">Day</label>
+                                <select name="dayOfWeek">
+                                    <option value="6" data-i18n="calendar.daySat">Saturday</option>
+                                    <option value="0" data-i18n="calendar.daySun">Sunday</option>
+                                    <option value="1" data-i18n="calendar.dayMon">Monday</option>
+                                    <option value="2" data-i18n="calendar.dayTue">Tuesday</option>
+                                    <option value="3" data-i18n="calendar.dayWed">Wednesday</option>
+                                    <option value="4" data-i18n="calendar.dayThu">Thursday</option>
+                                    <option value="5" data-i18n="calendar.dayFri">Friday</option>
+                                </select>
+                            </div>
+                            <div class="field"><label data-i18n="calendar.fStartTime">Start time</label><input
+                                    name="startTime" type="time" required=""></div>
+                            <div class="field"><label data-i18n="calendar.fDuration">Duration (minutes)</label><input
+                                    name="durationMins" type="number" min="15" step="5" value="60"></div>
+                            <div class="field">
+                                <label data-i18n="calendar.fBranch">Branch</label>
+                                <select name="branch" required="">
+                                    <option value="mansoura">Mansoura</option>
+                                    <option value="talkha">Talkha</option>
+                                    <option value="toril">Toril – Baby Inn</option>
+                                    <option value="gzert-elward">Gzert-Elward Sport Club</option>
+                                    <option value="glow-international">Glow International</option>
+                                    <option value="shoha">Shoha Branch</option>
+                                    <option value="online">Online</option>
+                                </select>
+                            </div>
+                            <div class="field">
+                                <label data-i18n="calendar.fTeacher">Teacher</label>
+                                <select name="teacherEmail"></select>
+                            </div>
+                            <div class="field"><label data-i18n="calendar.fLevel">Level</label><input name="levelIndex"
+                                    type="number" min="1" max="11" value="1"></div>
+                            <div class="field"><label data-i18n="calendar.fCapacity">Capacity</label><input
+                                    name="capacity" type="number" min="1" value="10"></div>
+                            <div class="field full"><button type="submit" class="btn btn-jade"
+                                    data-i18n="calendar.addClassSubmit">Add class</button></div>
+                        </form>
+                    </details>
+
+                    <div class="calendar-grid" id="calendar-grid"></div>
+
+                    <div class="chart-card" style="margin-top:24px;">
+                        <div class="chart-card-head">
+                            <h3 data-i18n="calendar.upcomingTrials">Upcoming trial slots</h3>
+                            <p class="chart-card-sub" data-i18n="calendar.upcomingTrialsSub">Booked free trials, next
+                                six</p>
+                        </div>
+                        <div class="chart-card-body" id="calendar-trial-slots"></div>
+                    </div>
+                </div>
+
+                <div class="admin-panel" data-panel="team" hidden="">
+                    <p class="section-lede" data-i18n="team.lede" style="margin-bottom:20px;">Everyone teaching at the
+                        academy, how many students each one carries, and how those students are actually doing.</p>
+                    <div class="stat-tile-grid" id="team-tiles"></div>
+
+                    <details class="manual-add" id="add-staff" hidden="">
+                        <summary data-i18n="team.addStaffTitle">+ Add a team member</summary>
+                        <p class="team-method-note" style="margin-top:14px;" data-i18n="team.addStaffNote">This creates
+                            their sign-in account and grants the role straight away. They'll get a verification email
+                            and must confirm it before they can log in — send them the password you set here so they
+                            can change it afterwards.</p>
+                        <form id="add-staff-form" class="form-grid">
+                            <div class="field"><label data-i18n="team.fName">Full name</label><input name="name"
+                                    type="text" autocomplete="off" required=""></div>
+                            <div class="field"><label data-i18n="admin.emailLabel">Email</label><input name="email"
+                                    type="email" autocomplete="off" required=""></div>
+                            <div class="field"><label data-i18n="admin.phoneLabel">Phone number</label><input
+                                    name="phone" type="tel" autocomplete="off"></div>
+                            <div class="field">
+                                <label data-i18n="team.fRole">Role</label>
+                                <select name="role" id="add-staff-role">
+                                    <option value="teacher" data-i18n="team.roleTeacher">Teacher</option>
+                                    <option value="admin" class="staff-role-admin" data-i18n="admin.roleAdmin">Admin</option>
+                                    <option value="superadmin" class="staff-role-admin" data-i18n="admin.roleSuperadmin">Super admin</option>
+                                </select>
+                            </div>
+                            <div class="field"><label data-i18n="team.fPassword">Initial password</label><input
+                                    name="password" type="password" autocomplete="new-password" minlength="6" required=""></div>
+                            <div class="field"><label data-i18n="admin.passwordConfirmLabel">Confirm password</label><input
+                                    name="passwordConfirm" type="password" autocomplete="new-password" minlength="6" required=""></div>
+                            <div class="field full">
+                                <button type="submit" class="btn btn-jade" data-i18n="team.addStaffSubmit">Create account</button>
+                                <p class="admin-error" id="add-staff-error"></p>
+                            </div>
+                        </form>
+                    </details>
+
+                    <div class="chart-card" style="margin-bottom:24px;">
+                        <div class="chart-card-head">
+                            <h3 data-i18n="team.loadTitle">Students per teacher</h3>
+                            <p class="chart-card-sub" data-i18n="team.loadSub">Who is carrying the heaviest load</p>
+                        </div>
+                        <div class="chart-card-body" id="team-load-chart"></div>
+                    </div>
+
+                    <p class="team-method-note" data-i18n="team.methodNote">Rating averages attendance, homework and
+                        exam pass rate across each teacher's own students. Metrics with nothing recorded yet are left
+                        out rather than counted as zero.</p>
+
+                    <div class="app-table-wrap">
+                        <table class="app-table">
+                            <thead>
+                                <tr>
+                                    <th data-i18n="team.colTeacher">Teacher</th>
+                                    <th data-i18n="team.colLoad">Students · classes</th>
+                                    <th data-i18n="team.colAttendance">Attendance</th>
+                                    <th data-i18n="team.colHomework">Homework</th>
+                                    <th data-i18n="team.colExams">Exam pass</th>
+                                    <th data-i18n="team.colRating">Rating</th>
+                                    <th data-i18n="team.colSalary">Monthly salary (EGP)</th>
+                                    <th data-i18n="finance.colAction">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="team-table-body"></tbody>
+                        </table>
+                    </div>
+
+                    <h3 class="team-subhead" data-i18n="team.adminStaffTitle">Admin staff</h3>
+                    <div class="app-table-wrap">
+                        <table class="app-table">
+                            <thead>
+                                <tr>
+                                    <th data-i18n="admin.emailLabel">Email</th>
+                                    <th data-i18n="team.colRole">Role</th>
+                                </tr>
+                            </thead>
+                            <tbody id="team-staff-body"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="admin-panel" data-panel="finance" hidden="">
+                    <p class="section-lede" data-i18n="finance.lede" style="margin-bottom:20px;">Monthly tuition — who
+                        has paid, who hasn't, and what the academy actually collected.</p>
+                    <div class="stat-tile-grid" id="finance-tiles"></div>
+
+                    <div class="chart-grid">
+                        <div class="chart-card">
+                            <div class="chart-card-head">
+                                <h3 data-i18n="finance.trendTitle">Revenue per month</h3>
+                                <p class="chart-card-sub" data-i18n="finance.trendSub">Thousands of EGP collected</p>
+                            </div>
+                            <div class="chart-card-body" id="finance-trend"></div>
+                        </div>
+                        <div class="chart-card">
+                            <div class="chart-card-head">
+                                <h3 data-i18n="finance.branchTitle">Collected per branch</h3>
+                                <p class="chart-card-sub" data-i18n="finance.branchSub">Selected month</p>
+                            </div>
+                            <div class="chart-card-body" id="finance-by-branch"></div>
+                        </div>
+                    </div>
+
+                    <div class="admin-toolbar">
+                        <select id="finance-period"></select>
+                        <select id="finance-method" aria-label="Payment method">
+                            <option value="cash" data-i18n="finance.methodCash">Cash</option>
+                            <option value="instapay" data-i18n="finance.methodInstapay">InstaPay</option>
+                            <option value="transfer" data-i18n="finance.methodTransfer">Bank transfer</option>
+                            <option value="card" data-i18n="finance.methodCard">Card</option>
+                        </select>
+                        <label class="admin-check">
+                            <input type="checkbox" id="finance-unpaid-only">
+                            <span data-i18n="finance.unpaidOnly">Only show unpaid</span>
+                        </label>
+                    </div>
+
+                    <div class="app-table-wrap">
+                        <table class="app-table">
+                            <thead>
+                                <tr>
+                                    <th data-i18n="admin.colStudent">Student</th>
+                                    <th data-i18n="detail.branch">Branch</th>
+                                    <th data-i18n="finance.colFee">Monthly fee (EGP)</th>
+                                    <th data-i18n="finance.colStatus">This month</th>
+                                    <th data-i18n="finance.colLastPaid">Last payment</th>
+                                    <th data-i18n="finance.colRecord">Record payment</th>
+                                </tr>
+                            </thead>
+                            <tbody id="finance-table-body"></tbody>
+                        </table>
+                    </div>
+
+                    <h3 class="team-subhead" data-i18n="finance.expensesTitle">Expenses</h3>
+                    <p class="team-method-note" data-i18n="finance.expensesNote">Everything the academy pays out in the
+                        selected month — salaries, rent, materials. Income minus these is the net figure in the tiles
+                        above.</p>
+
+                    <details class="manual-add" id="add-expense">
+                        <summary data-i18n="finance.addExpenseTitle">+ Record an expense</summary>
+                        <form id="add-expense-form" class="form-grid">
+                            <div class="field">
+                                <label data-i18n="finance.fCategory">Category</label>
+                                <select name="category">
+                                    <option value="salary" data-i18n="finance.catSalary">Salary</option>
+                                    <option value="rent" data-i18n="finance.catRent">Rent</option>
+                                    <option value="materials" data-i18n="finance.catMaterials">Materials</option>
+                                    <option value="utilities" data-i18n="finance.catUtilities">Utilities</option>
+                                    <option value="marketing" data-i18n="finance.catMarketing">Marketing</option>
+                                    <option value="other" data-i18n="finance.catOther">Other</option>
+                                </select>
+                            </div>
+                            <div class="field"><label data-i18n="finance.colAmount">Amount</label><input name="amount"
+                                    type="number" min="0" required=""></div>
+                            <div class="field full"><label data-i18n="finance.fDescription">Description</label><input
+                                    name="description" type="text"></div>
+                            <div class="field full"><button type="submit" class="btn btn-jade"
+                                    data-i18n="finance.addExpenseSubmit">Record expense</button></div>
+                        </form>
+                    </details>
+
+                    <div class="app-table-wrap">
+                        <table class="app-table">
+                            <thead>
+                                <tr>
+                                    <th data-i18n="finance.fCategory">Category</th>
+                                    <th data-i18n="finance.fDescription">Description</th>
+                                    <th data-i18n="finance.colAmount">Amount</th>
+                                    <th data-i18n="finance.colRecordedAt">Recorded</th>
+                                    <th data-i18n="finance.colRecordedBy">By</th>
+                                    <th data-i18n="finance.colAction">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="finance-expenses-body"></tbody>
+                        </table>
+                    </div>
+
+                    <h3 class="team-subhead" data-i18n="finance.historyTitle">Recent payments</h3>
+                    <p class="team-method-note" data-i18n="finance.historyNote">Everything recorded for the selected
+                        month. Delete a row to undo a payment that was entered by mistake — it comes straight back out
+                        of the totals above.</p>
+                    <div class="app-table-wrap">
+                        <table class="app-table">
+                            <thead>
+                                <tr>
+                                    <th data-i18n="admin.colStudent">Student</th>
+                                    <th data-i18n="finance.colAmount">Amount</th>
+                                    <th data-i18n="finance.colMethod">Method</th>
+                                    <th data-i18n="finance.colRecordedAt">Recorded</th>
+                                    <th data-i18n="finance.colRecordedBy">By</th>
+                                    <th data-i18n="finance.colAction">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="finance-history-body"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
             </div>
         </div>
     </div>
@@ -1225,6 +1579,13 @@
     <script type="module" src="js/index-page.js?v=1787932828"></script>
 
 
+
+    <a class="wa-float" href="https://wa.me/201557794946" target="_blank" rel="noopener" aria-label="WhatsApp">
+        <span class="wa-float-label" data-i18n="wa.chat">Chat with us</span>
+        <span class="wa-float-icon" aria-hidden="true">
+            <svg width="30" height="30" viewBox="0 0 24 24"><path fill="#fff" d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.39 1.26 4.81L2 22l5.42-1.42c1.36.74 2.92 1.17 4.58 1.17h.01c5.46 0 9.9-4.45 9.9-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2zm5.72 14.02c-.24.68-1.19 1.25-1.95 1.41-.52.11-1.2.2-3.48-.75-2.92-1.21-4.8-4.17-4.95-4.36-.14-.19-1.18-1.57-1.18-3 0-1.43.75-2.13 1.02-2.42.27-.29.58-.36.78-.36.2 0 .39 0 .56.01.18.01.42-.07.65.5.24.58.81 2 .88 2.14.07.14.12.31.02.5-.09.19-.14.31-.28.48-.14.16-.29.36-.42.49-.14.14-.28.28-.12.55.16.27.72 1.19 1.55 1.93 1.06.95 1.96 1.24 2.23 1.38.27.14.43.12.59-.07.16-.19.68-.79.86-1.06.18-.27.36-.22.6-.13.24.09 1.55.73 1.81.86.27.13.45.2.51.31.07.12.07.68-.17 1.36z"></path></svg>
+        </span>
+    </a>
 
 </body>
 

@@ -30,6 +30,10 @@
   transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .main-nav a:hover::after { transform: scaleX(1); }
+/* The page you're currently on keeps the underline permanently, so the nav
+   shows where you are rather than only where you're pointing. */
+.main-nav a[aria-current="page"] { color: #fff; }
+.main-nav a[aria-current="page"]::after { transform: scaleX(1); }
 .header-actions { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
 .home-btn {
   display: flex; align-items: center; gap: 6px; text-decoration: none;
@@ -84,6 +88,9 @@
   .main-nav.is-open { opacity: 1; pointer-events: auto; transform: translateY(0); }
   .main-nav a { padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.2); border-radius: 0; white-space: normal; font-size: 0.92rem; }
   .main-nav a:hover { background: transparent; }
+  /* Stacked items are full width, so the underline has to start at the edge
+     rather than inset by the pill padding it no longer has. */
+  .main-nav a::after { left: 0; right: 0; bottom: 0; }
   .nav-toggle { display: inline-flex; }
   .header-actions .btn-primary { display: none; }
 }

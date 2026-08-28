@@ -132,3 +132,47 @@ h2.section-title { font-size: clamp(1.7rem, 1.2rem + 2vw, 2.5rem); }
 .btn-block { width: 100%; }
 .btn-sm { padding: 0.55em 1em; font-size: 0.82rem; }
 .btn[disabled] { opacity: 0.55; cursor: not-allowed; }
+
+/* ============ Floating WhatsApp button ============ */
+/* Fixed to the viewport so it stays reachable at any scroll position. Kept
+   below the header (100) and well below the admin/detail overlays (300/320),
+   so it never floats on top of the dashboard or a modal. Mirrors side in RTL. */
+.wa-float {
+  position: fixed; bottom: 22px; inset-inline-end: 22px; z-index: 90;
+  display: flex; align-items: center; gap: 10px; text-decoration: none;
+}
+.wa-float-icon {
+  display: flex; align-items: center; justify-content: center;
+  width: 56px; height: 56px; border-radius: 50%; background: #25D366; flex-shrink: 0;
+  box-shadow: 0 8px 24px rgba(37, 211, 102, 0.4), 0 2px 8px rgba(0, 0, 0, 0.2);
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease;
+}
+.wa-float:hover .wa-float-icon,
+.wa-float:focus-visible .wa-float-icon {
+  transform: scale(1.08);
+  box-shadow: 0 12px 30px rgba(37, 211, 102, 0.55), 0 2px 8px rgba(0, 0, 0, 0.22);
+}
+.wa-float:active .wa-float-icon { transform: scale(0.96); }
+.wa-float:focus-visible { outline: none; }
+.wa-float:focus-visible .wa-float-icon { outline: 3px solid var(--brass); outline-offset: 3px; }
+
+/* The label stays collapsed until hover/focus so the button reads as one
+   quiet circle at rest. */
+.wa-float-label {
+  order: -1; white-space: nowrap; background: var(--rod); color: #fff;
+  font-size: 0.84rem; font-weight: 600; border-radius: 999px;
+  max-width: 0; opacity: 0; overflow: hidden; padding: 0; 
+  box-shadow: var(--shadow-1);
+  transition: max-width 0.32s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.22s ease, padding 0.32s ease;
+}
+.wa-float:hover .wa-float-label,
+.wa-float:focus-visible .wa-float-label { max-width: 200px; opacity: 1; padding: 0.6em 1em; }
+
+@media (max-width: 720px) {
+  .wa-float { bottom: 16px; inset-inline-end: 16px; }
+  .wa-float-icon { width: 50px; height: 50px; }
+  .wa-float-label { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .wa-float-icon, .wa-float-label { transition: none; }
+}

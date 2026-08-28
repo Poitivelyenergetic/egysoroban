@@ -8,12 +8,17 @@ import { state } from "./state.js";
 import { t, fmtDate, onLanguageChangeCallbacks } from "./i18n.js";
 import { toast } from "./toast.js";
 import { loadApplications, addApplicationDoc, updateApplicationDoc, deleteApplicationDoc, migrateOldApplications } from "./applications.js";
-import { ROLE_SUPERADMIN, ROLE_TEACHER, getCurrentRole, isAdminRole } from "./roles.js";
+import { addStudent } from "./student-records.js";
+import { ROLE_SUPERADMIN, ROLE_ADMIN, ROLE_TEACHER, getCurrentRole, isAdminRole } from "./roles.js";
 import { renderTeachersPanel } from "./admin-teachers-panel.js";
 import { renderManagePanel } from "./admin-manage-panel.js";
 import { renderRecordsPanel } from "./admin-records-panel.js";
 import { renderSlotsPanel } from "./admin-slots-panel.js";
 import { renderCompetitionPanel } from "./admin-competition-panel.js";
+import { renderAnalyticsPanel } from "./admin-analytics-panel.js";
+import { renderCalendarPanel } from "./admin-calendar-panel.js";
+import { renderTeamPanel } from "./admin-team-panel.js";
+import { renderFinancePanel } from "./admin-finance-panel.js";
 
 var adminOverlay = document.getElementById("admin-overlay");
 var adminGate = document.getElementById("admin-gate");
@@ -25,6 +30,7 @@ var adminEmailInput = document.getElementById("admin-email");
 var adminPasswordInput = document.getElementById("admin-password");
 var adminLoginError = document.getElementById("admin-login-error");
 var adminUnauthorized = document.getElementById("admin-login-unauthorized");
+var adminGotoSignup = document.getElementById("admin-goto-signup");
 var signupUsernameInput = document.getElementById("signup-username");
 var signupEmailInput = document.getElementById("signup-email");
 var signupPhoneInput = document.getElementById("signup-phone");
@@ -41,6 +47,11 @@ var adminTabManageAdmins = document.getElementById("admin-tab-manage-admins");
 var adminTabRecords = document.getElementById("admin-tab-records");
 var adminTabSlots = document.getElementById("admin-tab-slots");
 var adminTabCompetition = document.getElementById("admin-tab-competition");
+var adminTabAnalytics = document.getElementById("admin-tab-analytics");
+var adminTabCalendar = document.getElementById("admin-tab-calendar");
+var adminTabTeam = document.getElementById("admin-tab-team");
+var adminTabFinance = document.getElementById("admin-tab-finance");
+var adminNavGroupAdmin = document.getElementById("admin-nav-group-admin");
 var deletePending = null;
 var loginMode = null; // "teacher" | "admin"
 
@@ -53,6 +64,7 @@ function showGate() {
     adminLoginError.classList.remove("show");
     adminUnauthorized.classList.remove("show");
     adminGateTitle.textContent = t(loginMode === "admin" ? "admin.gateTitleAdmin" : "admin.gateTitleTeacher");
+    adminGotoSignup.hidden = loginMode === "admin";
     setTimeout(function () { adminEmailInput.focus(); }, 50);
 }
 function showSignup() {
@@ -87,6 +99,22 @@ function closeAdminOverlay() {
     adminOverlay.hidden = true;
     document.body.style.overflow = "";
 }
+function syncAdminCrumb() {
+    var crumb = document.getElementById("admin-crumb-current");
+    if (!crumb) return;
+    var activeBtn = document.querySelector(".admin-tab.active");
+    var label = activeBtn && activeBtn.querySelector("[data-i18n]");
+    crumb.textContent = label ? label.textContent : "";
+}
+function updateAdminRoleBadge() {
+    var el = document.getElementById("admin-role-badge");
+    if (!el) return;
+    var key = state.role === ROLE_SUPERADMIN ? "admin.roleSuperadmin"
+        : state.role === ROLE_ADMIN ? "admin.roleAdmin" : "admin.roleTeacher";
+    el.textContent = t(key);
+}
+onLanguageChangeCallbacks.push(syncAdminCrumb);
+onLanguageChangeCallbacks.push(updateAdminRoleBadge);
 function setPanel(name) {
     document.querySelectorAll(".admin-panel").forEach(function (p) {
         p.hidden = p.getAttribute("data-panel") !== name;
@@ -94,11 +122,16 @@ function setPanel(name) {
     document.querySelectorAll(".admin-tab").forEach(function (b) {
         b.classList.toggle("active", b.getAttribute("data-tab") === name);
     });
+    syncAdminCrumb();
     if (name === "teachers") renderTeachersPanel();
     if (name === "manage-admins") renderManagePanel();
     if (name === "records") renderRecordsPanel();
     if (name === "slots") renderSlotsPanel();
     if (name === "competition") renderCompetitionPanel();
+    if (name === "analytics") renderAnalyticsPanel();
+    if (name === "calendar") renderCalendarPanel();
+    if (name === "team") renderTeamPanel();
+    if (name === "finance") renderFinancePanel();
 }
 if (adminTabs) {
     adminTabs.addEventListener("click", function (e) {
@@ -118,8 +151,18 @@ async function showAdminDashboard() {
     adminTabRecords.hidden = false;
     adminTabSlots.hidden = isTeacherOnly;
     adminTabCompetition.hidden = isTeacherOnly;
+    // Analytics, Team and Finance aggregate the whole academy — including
+    // revenue and other teachers' results — so they stay admin-only. The
+    // calendar is for everyone; a teacher's view is filtered to their own
+    // classes inside the panel.
+    adminTabAnalytics.hidden = isTeacherOnly;
+    adminTabTeam.hidden = isTeacherOnly;
+    adminTabFinance.hidden = isTeacherOnly;
+    adminTabCalendar.hidden = false;
+    adminNavGroupAdmin.hidden = isTeacherOnly;
     adminTabs.hidden = false;
     document.getElementById("admin-migrate-applications").hidden = isTeacherOnly;
+    updateAdminRoleBadge();
     setPanel("students");
 
     await loadApplications();
@@ -525,6 +568,50 @@ function openDetail(id) {
     });
 
     actions.appendChild(saveBtn);
+
+    /* Marking an application "enrolled" only ever changed a label — it never
+       produced the students/{id} record that Student records, the Calendar,
+       Finance, the Team ratings and Analytics all read from. This is the step
+       that actually moves a family from the funnel into the academy. */
+    if (isAdminRole(state.role) && !app.studentRecordId) {
+        var enrolBtn = document.createElement("button");
+        enrolBtn.type = "button";
+        enrolBtn.className = "btn btn-jade";
+        enrolBtn.textContent = t("detail.enrolAsStudent");
+        enrolBtn.addEventListener("click", async function () {
+            enrolBtn.disabled = true;
+            var startingLevel = { beginner: 1, intermediate: 4, expert: 7 }[app.program] || 1;
+            var created = await addStudent({
+                name: app.studentName || app.studentNameAr || "",
+                parentEmail: (app.email || "").toLowerCase(),
+                studentEmail: "",
+                teacherEmail: "",
+                branch: app.branch || "",
+                levelIndex: startingLevel,
+                attendedSessions: 0,
+                totalSessions: 0,
+                homeworkCompleted: 0,
+                homeworkAssigned: 0,
+                monthlyFee: 0,
+                parentName: app.parentName || "",
+                parentPhone: app.phone || "",
+                enrolledAt: new Date().toISOString(),
+                fromApplicationId: app.id,
+            });
+            if (!created.ok) {
+                enrolBtn.disabled = false;
+                toast(t("admin.savingFailedToast"));
+                return;
+            }
+            /* Link both ways and flip the status, so the button can't be used
+               twice and the application shows where the student ended up. */
+            await updateApplicationDoc(app.id, { status: "enrolled", studentRecordId: created.id });
+            toast(t("detail.enrolledToast"));
+            renderAdminDashboard();
+            closeDetail();
+        });
+        actions.appendChild(enrolBtn);
+    }
 
     if (isAdminRole(state.role)) {
         var deleteBtn = document.createElement("button");

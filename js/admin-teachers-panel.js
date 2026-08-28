@@ -31,7 +31,7 @@ export async function renderTeachersPanel() {
         tr.className = "empty-row";
         var td = document.createElement("td");
         td.colSpan = 5;
-        td.textContent = t("admin.emptyList");
+        td.textContent = t("admin.emptyTeacherApps");
         tr.appendChild(td);
         tableBody.appendChild(tr);
         return;

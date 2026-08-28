@@ -3,7 +3,7 @@ import { getFirestore } from "https://www.gstatic.com/firebasejs/12.18.0/firebas
 import { getAuth } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
 import { getAnalytics, isSupported as isAnalyticsSupported } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-analytics.js";
 
-var firebaseConfig = {
+export var firebaseConfig = {
     apiKey: "AIzaSyBO1uz4RGxrE5abjtdvoECvXmfx-CYEVBE",
     authDomain: "egysoroban-731cd.firebaseapp.com",
     projectId: "egysoroban-731cd",

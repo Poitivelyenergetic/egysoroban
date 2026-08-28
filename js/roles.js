@@ -55,6 +55,31 @@ export async function listApprovedTeachers() {
     }
 }
 
+/* A teacher's agreed monthly salary, stored on their own teachers/{email} doc.
+   Paying it writes a separate expenses record — this field is only the standing
+   figure, so changing it never rewrites what was already paid out. */
+export async function setTeacherSalary(email, amount) {
+    try {
+        await updateDoc(doc(db, "teachers", email.toLowerCase().trim()), { monthlySalary: Number(amount) || 0 });
+        return { ok: true };
+    } catch (err) {
+        return { ok: false, code: (err && err.code) || "upstream_error" };
+    }
+}
+
+/* Revokes a teacher's access by removing their teachers/{email} doc. Their
+   login still exists and their students keep pointing at them, so reinstating
+   is just re-adding them — but getCurrentRole() will no longer return a role,
+   which is what actually locks them out. */
+export async function revokeTeacher(email) {
+    try {
+        await deleteDoc(doc(db, "teachers", email.toLowerCase().trim()));
+        return { ok: true };
+    } catch (err) {
+        return { ok: false, code: (err && err.code) || "upstream_error" };
+    }
+}
+
 export async function listAdmins() {
     var snap = await getDocs(adminsCol);
     var list = [];

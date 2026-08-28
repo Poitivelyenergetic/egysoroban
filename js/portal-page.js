@@ -1,6 +1,7 @@
 import "./i18n.js";
 import "./theme.js";
 import "./mobile-nav.js";
+import "./active-nav.js";
 import {
     onAuthStateChanged, signInWithEmailAndPassword, signOut, sendEmailVerification,
     sendPasswordResetEmail, createUserWithEmailAndPassword, updateProfile,

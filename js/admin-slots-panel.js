@@ -29,7 +29,7 @@ export async function renderSlotsPanel() {
         tr.className = "empty-row";
         var td = document.createElement("td");
         td.colSpan = 4;
-        td.textContent = t("admin.emptyList");
+        td.textContent = t("admin.emptySlots");
         tr.appendChild(td);
         tableBody.appendChild(tr);
         return;
