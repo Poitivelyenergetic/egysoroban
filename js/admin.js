@@ -128,8 +128,11 @@ async function showAdminDashboard() {
 
 async function afterVerifiedLogin() {
     var role = await getCurrentRole();
-    var roleIsAdmin = isAdminRole(role);
-    var modeMismatch = role && ((loginMode === "teacher" && roleIsAdmin) || (loginMode === "admin" && role === ROLE_TEACHER));
+    // An admin using the "teacher" login button isn't a real mismatch — they
+    // still get full admin access either way, since tab visibility is driven
+    // by the resolved role, not which button was clicked. Only block the
+    // other direction: a plain teacher has no admin access at all.
+    var modeMismatch = role && (loginMode === "admin" && role === ROLE_TEACHER);
     if (!role || modeMismatch) {
         if (modeMismatch) {
             toast(t(loginMode === "teacher" ? "admin.wrongModeTeacher" : "admin.wrongModeAdmin"));

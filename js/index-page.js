@@ -10,3 +10,4 @@ import "./lightbox.js";
 import "./scroll-reveal.js";
 import "./count-up.js";
 import "./admin.js";
+import "./home-map.js";
