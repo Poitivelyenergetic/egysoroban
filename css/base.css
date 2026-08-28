@@ -1,5 +1,16 @@
 /* ============ Reset & base ============ */
 * { box-sizing: border-box; }
+
+/* The browser's own [hidden] rule is `display: none` in the user-agent
+   stylesheet, and ANY author rule setting `display` beats it — author styles
+   win over UA styles regardless of specificity. So `.admin-tab { display: flex }`
+   silently defeated `element.hidden = true`, which is how every role-gated tab,
+   the whole dashboard, and the staff-only buttons are hidden. The dashboard
+   rendered behind the login card, and a teacher would have seen the Finance
+   and Manage-admins tabs. Enforce it once, globally, so no future `display`
+   rule can reopen the same hole. */
+[hidden] { display: none !important; }
+
 html { scroll-behavior: smooth; }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
