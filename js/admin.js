@@ -8,7 +8,8 @@ import { state } from "./state.js";
 import { t, fmtDate, onLanguageChangeCallbacks } from "./i18n.js";
 import { toast } from "./toast.js";
 import { loadApplications, addApplicationDoc, updateApplicationDoc, deleteApplicationDoc, migrateOldApplications } from "./applications.js";
-import { addStudent } from "./student-records.js";
+import { addStudent, loadStudents } from "./student-records.js";
+import { syncEnrolledEmails } from "./enrolled-emails.js";
 import { ROLE_SUPERADMIN, ROLE_ADMIN, ROLE_TEACHER, getCurrentRole, isAdminRole } from "./roles.js";
 import { renderTeachersPanel } from "./admin-teachers-panel.js";
 import { renderManagePanel } from "./admin-manage-panel.js";
@@ -606,6 +607,10 @@ function openDetail(id) {
             /* Link both ways and flip the status, so the button can't be used
                twice and the application shows where the student ended up. */
             await updateApplicationDoc(app.id, { status: "enrolled", studentRecordId: created.id });
+            /* Open the parent's signup immediately — otherwise they'd be told
+               they have no child until an admin happened to open Student
+               records, which is where the directory is otherwise rebuilt. */
+            try { await syncEnrolledEmails(await loadStudents()); } catch (e) { }
             toast(t("detail.enrolledToast"));
             renderAdminDashboard();
             closeDetail();

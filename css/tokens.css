@@ -23,6 +23,14 @@
   --warn-tint: #fdedb9;
   --shadow-1: 0 1px 2px rgba(14, 42, 71, 0.08), 0 4px 14px rgba(14, 42, 71, 0.07);
   --shadow-2: 0 8px 30px rgba(14, 42, 71, 0.16);
+  /* Categorical slice colours for the analytics pie — the only chart whose
+     colour carries identity. Validated for colourblind separation against the
+     light surface (#ffffff): worst adjacent pair ΔE 23.1 protan / 15.9 tritan,
+     normal-vision 25.3. Re-validated per theme rather than flipped, so the
+     dark block below carries its own orange. */
+  --pie-1: #5b8dd9;
+  --pie-2: #e08a3c;
+  --pie-3: #a05fb8;
   --radius-sm: 10px;
   --radius-md: 16px;
   --radius-lg: 26px;
@@ -58,6 +66,10 @@
     --warn-tint: #3a2a0e;
     --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.4), 0 4px 16px rgba(0, 0, 0, 0.35);
     --shadow-2: 0 12px 34px rgba(0, 0, 0, 0.5);
+    /* Re-validated against the dark surface (#12213a) rather than inverted:
+       the light orange sits above the dark lightness band, so it steps down.
+       Worst adjacent ΔE 23.1 protan / 12.8 tritan, and all three clear 3:1. */
+    --pie-2: #d2792f;
   }
 }
 :root[data-theme="dark"] {
@@ -84,4 +96,7 @@
   --warn-tint: #3a2a0e;
   --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.4), 0 4px 16px rgba(0, 0, 0, 0.35);
   --shadow-2: 0 12px 34px rgba(0, 0, 0, 0.5);
+  /* Same dark-surface step as the prefers-color-scheme block above, so an
+     explicit dark choice matches an OS-level one. */
+  --pie-2: #d2792f;
 }

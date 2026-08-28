@@ -184,6 +184,26 @@ service cloud.firestore {
       allow read, create, update, delete: if isAdminOrSuper();
     }
 
+    // enrolledEmails/{hash} answers one question for the Parent Portal signup
+    // form: does this email belong to a family we actually teach? It has to be
+    // readable while signed out, because the check happens before the account
+    // exists — students/ can't serve this, since a parent only gains read
+    // access there after signing in and verifying, both of which come later.
+    //
+    // The document ID is a salted SHA-256 of the email and the document holds
+    // no address, so a public `get` reveals nothing to someone who doesn't
+    // already know the address they're asking about. `list` stays admin-only
+    // so the directory can't be dumped, and only an admin can write it — it is
+    // rebuilt from the student records themselves.
+    //
+    // This gate decides who may CREATE a login, not who may read a child's
+    // record; that remains enforced on students/ by the parentEmail match.
+    match /enrolledEmails/{hash} {
+      allow get: if true;
+      allow list: if isAdminOrSuper();
+      allow write: if isAdminOrSuper();
+    }
+
     // Deny everything else by default.
     match /{document=**} {
       allow read, write: if false;

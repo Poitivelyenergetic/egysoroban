@@ -3,6 +3,7 @@ import { toast } from "./toast.js";
 import { loadStudents, loadStudentsForTeacher, addStudent, updateStudent, addExamResult, deleteStudent } from "./student-records.js";
 import { loadPortalAccounts } from "./portal-accounts.js";
 import { listApprovedTeachers, isAdminRole } from "./roles.js";
+import { syncEnrolledEmails } from "./enrolled-emails.js";
 import { BRANCHES } from "./branches.js";
 import { auth } from "./firebase-init.js";
 import { state } from "./state.js";
@@ -105,6 +106,10 @@ export async function renderRecordsPanel() {
 
     if (admin) {
         students = await loadStudents();
+        /* Keep the parent-signup directory in step with who is actually
+           enrolled. Rebuilt from the records themselves and only writes what
+           changed, so the usual case is no writes at all. */
+        syncEnrolledEmails(students);
         renderPortalAccounts(students);
         var teachersForAdd = await listApprovedTeachers();
         teacherNameByEmail = {};

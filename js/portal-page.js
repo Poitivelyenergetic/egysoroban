@@ -11,12 +11,14 @@ import { t, fmtDate, onLanguageChangeCallbacks } from "./i18n.js";
 import { toast } from "./toast.js";
 import { loadStudentsForAccount } from "./student-records.js";
 import { recordPortalAccount } from "./portal-accounts.js";
+import { checkEnrolled } from "./enrolled-emails.js";
 
 var gate = document.getElementById("portal-gate");
 var loginForm = document.getElementById("portal-login-form");
 var roleChoice = document.getElementById("portal-role-choice");
 var signupForm = document.getElementById("portal-signup-form");
 var signupAsLabel = document.getElementById("portal-signup-as");
+var signupNote = document.getElementById("portal-signup-note");
 var verifyScreen = document.getElementById("portal-verify");
 var dashboard = document.getElementById("portal-dashboard");
 var emailInput = document.getElementById("portal-email");
@@ -46,6 +48,12 @@ function showSignupForm(role) {
     roleChoice.hidden = true; loginForm.hidden = true; signupForm.hidden = false;
     gotoLoginBtn.hidden = false; gotoSignupBtn.hidden = true;
     signupAsLabel.textContent = t(role === "student" ? "portal.signupAsStudent" : "portal.signupAsParent");
+    /* Say the requirement up front rather than only rejecting them after they
+       have filled the whole form in. */
+    if (signupNote) {
+        signupNote.hidden = role === "student";
+        if (role !== "student") signupNote.textContent = t("portal.signupParentHint");
+    }
     signupError.classList.remove("show");
 }
 function showVerify() {
@@ -249,6 +257,31 @@ signupForm.addEventListener("submit", async function (e) {
     signupError.textContent = "";
     var btn = signupForm.querySelector('button[type="submit"]');
     btn.disabled = true;
+
+    /* A parent account only makes sense attached to a child we actually
+       teach, so the email has to match a student record before an account is
+       created — not after, or we'd leave an orphan login behind every time
+       someone signed up who isn't with us. Checked before
+       createUserWithEmailAndPassword for exactly that reason. */
+    if (signupRole === "parent") {
+        var check = await checkEnrolled(signupEmailInput.value, "parent");
+        if (!check.ok) {
+            // A failed lookup is not proof of "no child" — don't turn a
+            // dropped connection into a rejection a real parent can't argue with.
+            signupError.textContent = t("portal.signupCheckFailed");
+            signupError.classList.add("show");
+            btn.disabled = false;
+            return;
+        }
+        if (!check.enrolled) {
+            signupError.textContent = t("portal.signupNoChild");
+            signupError.classList.add("show");
+            btn.disabled = false;
+            signupEmailInput.focus();
+            return;
+        }
+    }
+
     try {
         var name = signupNameInput.value.trim();
         var cred = await createUserWithEmailAndPassword(auth, signupEmailInput.value.trim(), signupPasswordInput.value);

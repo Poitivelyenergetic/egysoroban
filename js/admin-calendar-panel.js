@@ -115,9 +115,16 @@ export async function renderCalendarPanel() {
 
     if (admin && teacherSelect) {
         teacherSelect.innerHTML = "";
+        /* Every class has to belong to a teacher, so the empty entry is a
+           disabled prompt rather than a selectable "Unassigned" — combined
+           with `required` on the select, the form won't submit until a real
+           teacher is picked. An unowned class would otherwise sit in the
+           timetable counting toward nobody's workload in the Team panel. */
         var noneOpt = document.createElement("option");
         noneOpt.value = "";
-        noneOpt.textContent = t("admin.teacherUnassigned");
+        noneOpt.disabled = true;
+        noneOpt.selected = true;
+        noneOpt.textContent = t("calendar.pickTeacher");
         teacherSelect.appendChild(noneOpt);
         teachers.forEach(function (te) {
             var opt = document.createElement("option");
@@ -219,7 +226,16 @@ if (addForm) {
         var fd = new FormData(addForm);
         var branch = (fd.get("branch") || "").toString();
         var startTime = (fd.get("startTime") || "").toString();
+        var teacherEmail = (fd.get("teacherEmail") || "").toString().toLowerCase();
         if (!branch || !startTime) return;
+        /* `required` on the select already blocks this in the browser; the
+           guard is here so the class can't be created without an owner if the
+           form is ever submitted another way. */
+        if (!teacherEmail) {
+            toast(t("calendar.needTeacher"));
+            if (teacherSelect) teacherSelect.focus();
+            return;
+        }
         var submitBtn = addForm.querySelector('button[type="submit"]');
         submitBtn.disabled = true;
         var result = await addClass({
@@ -227,7 +243,7 @@ if (addForm) {
             dayOfWeek: Number(fd.get("dayOfWeek")) || 0,
             startTime: startTime,
             durationMins: Number(fd.get("durationMins")) || 60,
-            teacherEmail: (fd.get("teacherEmail") || "").toString().toLowerCase(),
+            teacherEmail: teacherEmail,
             levelIndex: Number(fd.get("levelIndex")) || 1,
             capacity: Number(fd.get("capacity")) || 10,
         });
@@ -309,7 +325,10 @@ export function openClassDetail(c) {
     var branchSel = selectFrom(BRANCHES.map(function (b) { return { value: b.id, label: b.label }; }), c.branch);
     rows.appendChild(fieldRow(t("calendar.fBranch"), branchSel));
 
-    var teacherOpts = [{ value: "", label: t("admin.teacherUnassigned") }].concat(
+    /* The blank entry only survives here so a class created before teachers
+       were mandatory can still be opened and fixed — saving with it selected
+       is refused below. */
+    var teacherOpts = [{ value: "", label: t("calendar.pickTeacher") }].concat(
         teacherList.map(function (te) {
             return { value: te.email, label: te.name ? te.name + " (" + te.email + ")" : te.email };
         }));
@@ -339,6 +358,13 @@ export function openClassDetail(c) {
     saveBtn.className = "btn btn-jade";
     saveBtn.textContent = t("detail.save");
     saveBtn.addEventListener("click", async function () {
+        /* Same rule on the way out as on the way in — a class can't be saved
+           back into an unassigned state. */
+        if (!teacherSel.value) {
+            toast(t("calendar.needTeacher"));
+            teacherSel.focus();
+            return;
+        }
         saveBtn.disabled = true;
         var result = await updateClass(c.id, {
             dayOfWeek: Number(daySel.value) || 0,

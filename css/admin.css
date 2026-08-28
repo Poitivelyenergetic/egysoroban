@@ -70,6 +70,19 @@
 .admin-crumb-sep { color: var(--ink-faint); }
 .admin-topbar-close { color: var(--ink-faint); }
 .admin-topbar-close:hover { color: var(--ink); background: var(--paper-sunken); }
+/* The dashboard covers the site header, so its language and theme controls are
+   unreachable from in here — these are the same controls, restyled from the
+   theme tokens. The header's versions are painted for a dark bar (white text
+   on translucent white) and would vanish against the light topbar. */
+.admin-topbar-tools { display: flex; align-items: center; gap: 8px; }
+.admin-topbar-btn {
+  background: transparent; border: 1px solid var(--line); border-radius: 999px;
+  padding: 0.45em 0.8em; font-family: var(--font-mono); font-size: 0.72rem; font-weight: 600;
+  cursor: pointer; color: var(--ink-soft); line-height: 1;
+  transition: border-color 0.15s ease, color 0.15s ease, background 0.15s ease;
+}
+.admin-topbar-btn:hover { border-color: var(--ink-faint); color: var(--ink); background: var(--paper-sunken); }
+.admin-topbar-btn-icon { padding: 0.45em 0.65em; font-size: 0.9rem; }
 .admin-body { max-width: 1240px; margin: 0 auto; padding: 28px; width: 100%; }
 
 @media (max-width: 900px) {
@@ -142,6 +155,25 @@ table.app-table { width: 100%; border-collapse: collapse; min-width: 760px; }
   color: rgba(255,255,255,0.42); padding: 16px 12px 6px;
 }
 .admin-tabs-group[hidden] { display: none; }
+
+/* ============ Pie ============ */
+.pie-wrap { display: flex; align-items: center; gap: 26px; flex-wrap: wrap; }
+.pie-disc {
+  width: 168px; height: 168px; border-radius: 50%; flex-shrink: 0;
+  /* Donut rather than a full disc — the hole keeps the eye comparing arc
+     length instead of trying to judge area, which people read badly. */
+  -webkit-mask: radial-gradient(circle, transparent 46%, #000 46.5%);
+  mask: radial-gradient(circle, transparent 46%, #000 46.5%);
+}
+.pie-legend { display: flex; flex-direction: column; gap: 10px; flex: 1; min-width: 190px; }
+.pie-legend-row { display: flex; align-items: center; gap: 10px; font-size: 0.88rem; }
+.pie-swatch { width: 12px; height: 12px; border-radius: 3px; flex-shrink: 0; }
+.pie-legend-label { color: var(--ink-soft); }
+.pie-legend-value {
+  margin-inline-start: auto; font-family: var(--font-mono); font-size: 0.82rem;
+  color: var(--ink); font-variant-numeric: tabular-nums; white-space: nowrap;
+}
+@media (max-width: 460px) { .pie-wrap { justify-content: center; } }
 
 /* ============ Stat tiles ============ */
 .stat-tile-grid {

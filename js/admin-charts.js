@@ -86,6 +86,63 @@ export function renderColumns(container, items, options) {
     container.appendChild(plot);
 }
 
+/* Part-to-whole. Unlike the bar/column helpers above, the slices here DO carry
+   identity, so this is the one chart in the file with a categorical palette —
+   three hues validated for colourblind separation against both the light and
+   dark surfaces (see --pie-1..3 in admin.css). Colour is never the only cue:
+   every slice is named and counted in the legend beside it.
+   Drawn with conic-gradient rather than SVG to stay consistent with the rest
+   of the module — no library, and the theme tokens apply directly. */
+export function renderPie(container, items, options) {
+    if (!container) return;
+    var opts = options || {};
+    container.innerHTML = "";
+
+    var total = items.reduce(function (sum, it) { return sum + (Number(it.value) || 0); }, 0);
+    if (!total) {
+        container.appendChild(el("p", "chart-empty", opts.emptyText || ""));
+        return;
+    }
+
+    var GAP = 0.7; // degrees of surface colour between slices, in percent-of-circle
+    var stops = [];
+    var cursor = 0;
+    items.forEach(function (it, i) {
+        var share = ((Number(it.value) || 0) / total) * 100;
+        if (share <= 0) return;
+        var colour = "var(--pie-" + ((i % 3) + 1) + ")";
+        var end = cursor + share;
+        stops.push(colour + " " + cursor + "% " + Math.max(cursor, end - GAP) + "%");
+        stops.push("var(--paper-raised) " + Math.max(cursor, end - GAP) + "% " + end + "%");
+        cursor = end;
+    });
+
+    var wrap = el("div", "pie-wrap");
+    var disc = el("div", "pie-disc");
+    disc.style.background = "conic-gradient(" + stops.join(",") + ")";
+    disc.setAttribute("role", "img");
+    disc.setAttribute("aria-label", items.map(function (it) {
+        return it.label + ": " + (Number(it.value) || 0);
+    }).join(", "));
+    wrap.appendChild(disc);
+
+    var legend = el("div", "pie-legend");
+    items.forEach(function (it, i) {
+        var value = Number(it.value) || 0;
+        var row = el("div", "pie-legend-row");
+        var swatch = el("span", "pie-swatch");
+        swatch.style.background = "var(--pie-" + ((i % 3) + 1) + ")";
+        row.appendChild(swatch);
+        row.appendChild(el("span", "pie-legend-label", it.label));
+        /* Direct label: the count and its share, so the chart is readable
+           without comparing slice angles by eye. */
+        row.appendChild(el("span", "pie-legend-value", value + " · " + pct(value, total) + "%"));
+        legend.appendChild(row);
+    });
+    wrap.appendChild(legend);
+    container.appendChild(wrap);
+}
+
 export function renderChartCard(title, subtitle) {
     var card = el("div", "chart-card");
     var head = el("div", "chart-card-head");

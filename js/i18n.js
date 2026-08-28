@@ -37,16 +37,21 @@ export function applyLanguage(lang) {
         if (pval) placeholders[j].setAttribute("placeholder", pval);
     }
 
-    var langToggle = document.getElementById("lang-toggle");
-    if (langToggle) langToggle.textContent = lang === "ar" ? "EN / عربي" : "عربي / EN";
+    var label = lang === "ar" ? "EN / عربي" : "عربي / EN";
+    langToggleButtons().forEach(function (btn) { btn.textContent = label; });
 
     onLanguageChangeCallbacks.forEach(function (cb) { cb(); });
 }
 
-var langToggleBtn = document.getElementById("lang-toggle");
-if (langToggleBtn) {
-    langToggleBtn.addEventListener("click", function () {
+/* The admin dashboard sits above the site header and carries its own copy of
+   this control, so every instance is wired rather than a single element by id. */
+function langToggleButtons() {
+    return document.querySelectorAll("#lang-toggle, .js-lang-toggle");
+}
+
+langToggleButtons().forEach(function (btn) {
+    btn.addEventListener("click", function () {
         applyLanguage(state.lang === "ar" ? "en" : "ar");
     });
-}
+});
 applyLanguage(state.lang);

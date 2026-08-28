@@ -24,6 +24,13 @@
   text-align: center; font-size: 0.84rem; color: var(--ink-soft); margin: 0 0 18px;
   background: var(--paper-sunken); border-radius: var(--radius-sm); padding: 8px 12px;
 }
+/* States the "must already have a child with us" rule before the form is
+   filled in, rather than only rejecting on submit. Sits between the role
+   label and the first field, so it reads as a condition of signing up. */
+.portal-signup-note {
+  font-size: 0.82rem; line-height: 1.55; color: var(--ink-faint); margin: -8px 0 18px;
+  padding-inline-start: 12px; border-inline-start: 2px solid var(--brass);
+}
 
 .portal-student-card {
   background: var(--paper-raised); border: 1px solid var(--line); border-radius: var(--radius-lg);
