@@ -5,8 +5,8 @@ import { loadOpenSlots, bookSlot } from "./trial-slots.js";
 
 var ADMIN_EMAIL = "info@egysoroban.com";
 
-function buildMailto(app) {
-    var subject = "New Egysoroban application — " + (app.studentNameEn || app.studentName || "");
+function buildMailto(app, to, subjectPrefix) {
+    var subject = (subjectPrefix || "New Egysoroban application — ") + (app.studentNameEn || app.studentName || "");
     var lines = [
         "Branch: " + (app.branch || "—"),
         "Student name (Arabic): " + (app.studentNameAr || "—"),
@@ -34,7 +34,7 @@ function buildMailto(app) {
         "Heard about us via: " + (app.heard || "—"),
         "Goals / notes: " + (app.goals || "—"),
     ];
-    return "mailto:" + ADMIN_EMAIL + "?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(lines.join("\n"));
+    return "mailto:" + (to || ADMIN_EMAIL) + "?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(lines.join("\n"));
 }
 
 var applyForm = document.getElementById("apply-form");
@@ -196,7 +196,18 @@ if (applyForm) {
 
         if (result.ok) {
             formStatus.className = "form-status show ok";
-            formStatus.textContent = t("apply.successOnline");
+            formStatus.innerHTML = "";
+            var okMsg = document.createElement("p");
+            okMsg.style.margin = "0 0 10px";
+            okMsg.textContent = t("apply.successOnline");
+            formStatus.appendChild(okMsg);
+            if (app.email) {
+                var copyLink = document.createElement("a");
+                copyLink.className = "btn btn-secondary btn-sm";
+                copyLink.href = buildMailto(app, app.email, "Your Egysoroban application — ");
+                copyLink.textContent = t("apply.emailCopyBtn");
+                formStatus.appendChild(copyLink);
+            }
             applyForm.reset();
         } else {
             formStatus.className = "form-status show warn";

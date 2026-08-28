@@ -4,6 +4,20 @@ import { addCompetitionRegistration } from "./competition-registrations.js";
 var form = document.getElementById("competition-form");
 var formStatus = document.getElementById("form-status");
 
+function buildSelfCopyMailto(reg) {
+    var subject = "Your Egysoroban competition registration — " + (reg.studentName || "");
+    var lines = [
+        "Competition: " + (reg.competition || "—"),
+        "Student name: " + (reg.studentName || "—"),
+        "National ID: " + (reg.nationalId || "—"),
+        "Parent/guardian: " + (reg.parentName || "—"),
+        "Phone: " + (reg.phone || "—"),
+        "Email: " + (reg.email || "—"),
+        "Notes: " + (reg.notes || "—"),
+    ];
+    return "mailto:" + reg.email + "?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(lines.join("\n"));
+}
+
 function clearFormErrors() {
     form.querySelectorAll(".field.has-error").forEach(function (f) { f.classList.remove("has-error"); });
 }
@@ -69,7 +83,18 @@ if (form) {
 
         if (result.ok) {
             formStatus.className = "form-status show ok";
-            formStatus.textContent = t("comp.successMsg");
+            formStatus.innerHTML = "";
+            var okMsg = document.createElement("p");
+            okMsg.style.margin = "0 0 10px";
+            okMsg.textContent = t("comp.successMsg");
+            formStatus.appendChild(okMsg);
+            if (reg.email) {
+                var copyLink = document.createElement("a");
+                copyLink.className = "btn btn-secondary btn-sm";
+                copyLink.href = buildSelfCopyMailto(reg);
+                copyLink.textContent = t("apply.emailCopyBtn");
+                formStatus.appendChild(copyLink);
+            }
             form.reset();
         } else {
             formStatus.className = "form-status show warn";

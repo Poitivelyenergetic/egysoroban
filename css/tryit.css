@@ -34,6 +34,9 @@
 .soroban-rod:nth-child(2) .try-bead { background: #f2c94c; }
 .soroban-rod:nth-child(2) .try-bead:hover { background: #d9ad2f; }
 .soroban-rod:nth-child(2) .soroban-bar { background: rgba(242, 201, 76, 0.4); }
+.soroban-rod:nth-child(3) .try-bead { background: #f2994a; }
+.soroban-rod:nth-child(3) .try-bead:hover { background: #d97f2e; }
+.soroban-rod:nth-child(3) .soroban-bar { background: rgba(242, 153, 74, 0.4); }
 
 .soroban-value { margin-top: 18px; font-family: var(--font-mono); font-weight: 700; font-size: 1rem; color: var(--ink); }
 .soroban-value span:last-child { color: var(--brass-strong); font-size: 1.3rem; margin-inline-start: 4px; }

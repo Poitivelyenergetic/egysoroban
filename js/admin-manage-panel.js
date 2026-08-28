@@ -3,6 +3,7 @@ import { toast } from "./toast.js";
 import { auth } from "./firebase-init.js";
 import { state } from "./state.js";
 import { ROLE_SUPERADMIN, listAdmins, addAdmin, setAdminRole, removeAdminDoc } from "./roles.js";
+import { showLoadingRow } from "./loading-row.js";
 
 var tableBody = document.getElementById("admins-table-body");
 var addForm = document.getElementById("add-admin-form");
@@ -11,6 +12,7 @@ var admins = [];
 
 export async function renderManagePanel() {
     if (!tableBody) return;
+    showLoadingRow(tableBody, 3, t("admin.loading"));
     admins = await listAdmins();
     var isSuperAdmin = state.role === ROLE_SUPERADMIN;
     var superAdminCount = admins.filter(function (a) { return a.role === ROLE_SUPERADMIN; }).length;

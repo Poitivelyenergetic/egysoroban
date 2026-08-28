@@ -9,6 +9,10 @@ export var ROLE_TEACHER = "teacher";
 
 var adminsCol = collection(db, "admins");
 
+export function isAdminRole(role) {
+    return role === ROLE_SUPERADMIN || role === ROLE_ADMIN;
+}
+
 /*
  * Determines the signed-in user's role by checking Firestore, keyed by their
  * (lowercased) email. Requires a verified email — see Firestore security rules.
@@ -30,6 +34,25 @@ export async function getCurrentRole() {
         }
     } catch (e) { /* not an approved teacher */ }
     return null;
+}
+
+export async function listApprovedTeachers() {
+    try {
+        var snap = await getDocs(collection(db, "teachers"));
+        var profSnap = await getDocs(collection(db, "staffProfiles"));
+        var names = {};
+        profSnap.forEach(function (d) { names[d.id.toLowerCase()] = d.data().username || ""; });
+        var list = [];
+        snap.forEach(function (d) {
+            if (d.data().status === "approved") {
+                list.push(Object.assign({ email: d.id, name: names[d.id.toLowerCase()] || "" }, d.data()));
+            }
+        });
+        list.sort(function (a, b) { return (a.email || "").localeCompare(b.email || ""); });
+        return list;
+    } catch (e) {
+        return [];
+    }
 }
 
 export async function listAdmins() {

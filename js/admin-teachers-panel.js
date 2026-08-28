@@ -4,6 +4,7 @@ import {
     loadTeacherApplications, approveTeacherApplication, rejectTeacherApplication,
     loadStaffSignups, approveStaffSignup,
 } from "./teacher-applications.js";
+import { showLoadingRow } from "./loading-row.js";
 
 var tableBody = document.getElementById("teacher-table-body");
 var teacherApps = [];
@@ -16,6 +17,7 @@ function statusLabel(status) {
 
 export async function renderTeachersPanel() {
     if (!tableBody) return;
+    showLoadingRow(tableBody, 5, t("admin.loading"));
     var apps = await loadTeacherApplications();
     var signups = await loadStaffSignups();
     var appEmails = {};

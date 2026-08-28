@@ -1,18 +1,48 @@
 import { t, fmtDate } from "./i18n.js";
 import { toast } from "./toast.js";
-import { loadStudents, addStudent, updateStudent, addExamResult, deleteStudent } from "./student-records.js";
+import { loadStudents, loadStudentsForTeacher, addStudent, updateStudent, addExamResult, deleteStudent } from "./student-records.js";
 import { loadPortalAccounts } from "./portal-accounts.js";
+import { listApprovedTeachers, isAdminRole } from "./roles.js";
+import { auth } from "./firebase-init.js";
+import { state } from "./state.js";
+import { showLoadingRow } from "./loading-row.js";
 
 var tableBody = document.getElementById("students-table-body");
 var addForm = document.getElementById("add-student-form");
+var addTeacherSelect = addForm ? addForm.querySelector('[name="teacherEmail"]') : null;
+var portalAccountsDetails = document.getElementById("portal-accounts-details");
+var addStudentDetails = document.getElementById("add-student");
 var detailOverlay = document.getElementById("detail-overlay");
 var detailCard = document.getElementById("detail-card");
 var portalAccountsBody = document.getElementById("portal-accounts-table-body");
 var students = [];
 var deletePending = null;
+var teacherNameByEmail = {};
+
+function teacherLabel(email) {
+    if (!email) return t("admin.teacherUnassigned");
+    var name = teacherNameByEmail[email.toLowerCase()];
+    return name ? name + " (" + email + ")" : email;
+}
+
+function fillTeacherSelect(selectEl, teachers, currentValue) {
+    selectEl.innerHTML = "";
+    var noneOpt = document.createElement("option");
+    noneOpt.value = "";
+    noneOpt.textContent = t("admin.teacherUnassigned");
+    selectEl.appendChild(noneOpt);
+    teachers.forEach(function (te) {
+        var opt = document.createElement("option");
+        opt.value = te.email;
+        opt.textContent = te.name ? te.name + " (" + te.email + ")" : te.email;
+        if (currentValue && currentValue.toLowerCase() === te.email.toLowerCase()) opt.selected = true;
+        selectEl.appendChild(opt);
+    });
+}
 
 async function renderPortalAccounts(studentsList) {
     if (!portalAccountsBody) return;
+    showLoadingRow(portalAccountsBody, 5, t("admin.loading"));
     var accounts = await loadPortalAccounts();
     var linkedEmails = {};
     studentsList.forEach(function (s) {
@@ -24,7 +54,7 @@ async function renderPortalAccounts(studentsList) {
         var tr = document.createElement("tr");
         tr.className = "empty-row";
         var td = document.createElement("td");
-        td.colSpan = 4;
+        td.colSpan = 5;
         td.textContent = t("admin.emptyList");
         tr.appendChild(td);
         portalAccountsBody.appendChild(tr);
@@ -32,7 +62,10 @@ async function renderPortalAccounts(studentsList) {
     }
     accounts.forEach(function (a) {
         var tr = document.createElement("tr");
+        var tdName = document.createElement("td");
+        tdName.textContent = a.name || t("detail.none");
         var tdEmail = document.createElement("td");
+        tdEmail.className = "muted";
         tdEmail.textContent = a.email || t("detail.none");
         var tdRole = document.createElement("td");
         tdRole.textContent = a.role === "student" ? t("portal.roleStudent") : t("portal.roleParent");
@@ -45,6 +78,7 @@ async function renderPortalAccounts(studentsList) {
         pill.className = "status-pill " + (linked ? "enrolled" : "new");
         pill.textContent = linked ? t("admin.portalAccountsLinkedYes") : t("admin.portalAccountsLinkedNo");
         tdLinked.appendChild(pill);
+        tr.appendChild(tdName);
         tr.appendChild(tdEmail);
         tr.appendChild(tdRole);
         tr.appendChild(tdDate);
@@ -61,15 +95,31 @@ function levelLabel(levelIndex) {
 
 export async function renderRecordsPanel() {
     if (!tableBody) return;
-    students = await loadStudents();
-    renderPortalAccounts(students);
+    var admin = isAdminRole(state.role);
+
+    if (portalAccountsDetails) portalAccountsDetails.hidden = !admin;
+    if (addStudentDetails) addStudentDetails.hidden = !admin;
+
+    showLoadingRow(tableBody, 5, t("admin.loading"));
+
+    if (admin) {
+        students = await loadStudents();
+        renderPortalAccounts(students);
+        var teachersForAdd = await listApprovedTeachers();
+        teacherNameByEmail = {};
+        teachersForAdd.forEach(function (te) { teacherNameByEmail[te.email.toLowerCase()] = te.name || ""; });
+        if (addTeacherSelect) fillTeacherSelect(addTeacherSelect, teachersForAdd, "");
+    } else {
+        var myEmail = (auth.currentUser && auth.currentUser.email || "").toLowerCase();
+        students = await loadStudentsForTeacher(myEmail);
+    }
     tableBody.innerHTML = "";
 
     if (students.length === 0) {
         var tr = document.createElement("tr");
         tr.className = "empty-row";
         var td = document.createElement("td");
-        td.colSpan = 4;
+        td.colSpan = 5;
         td.textContent = t("admin.emptyList");
         tr.appendChild(td);
         tableBody.appendChild(tr);
@@ -85,6 +135,9 @@ export async function renderRecordsPanel() {
         var tdEmail = document.createElement("td");
         tdEmail.className = "muted";
         tdEmail.textContent = s.parentEmail || t("detail.none");
+        var tdTeacher = document.createElement("td");
+        tdTeacher.className = "muted";
+        tdTeacher.textContent = teacherLabel(s.teacherEmail);
         var tdLevel = document.createElement("td");
         tdLevel.textContent = levelLabel(s.levelIndex);
         var tdAttendance = document.createElement("td");
@@ -92,6 +145,7 @@ export async function renderRecordsPanel() {
 
         tr.appendChild(tdName);
         tr.appendChild(tdEmail);
+        tr.appendChild(tdTeacher);
         tr.appendChild(tdLevel);
         tr.appendChild(tdAttendance);
         tableBody.appendChild(tr);
@@ -120,9 +174,11 @@ function detailRow(label, value) {
     return wrap;
 }
 
-function openStudentDetail(id) {
+async function openStudentDetail(id) {
     var s = students.find(function (x) { return x.id === id; });
     if (!s) return;
+    var admin = isAdminRole(state.role);
+    var teacherOptions = admin ? await listApprovedTeachers() : [];
     deletePending = null;
     detailCard.innerHTML = "";
     detailCard.dataset.kind = "student";
@@ -149,17 +205,38 @@ function openStudentDetail(id) {
     var rows = document.createElement("div");
     rows.className = "detail-rows";
 
-    var studentEmailWrap = document.createElement("div");
-    studentEmailWrap.className = "row";
-    var studentEmailK = document.createElement("div");
-    studentEmailK.className = "k";
-    studentEmailK.textContent = t("admin.studentEmailLabel");
-    var studentEmailInput = document.createElement("input");
-    studentEmailInput.type = "email";
-    studentEmailInput.value = s.studentEmail || "";
-    studentEmailWrap.appendChild(studentEmailK);
-    studentEmailWrap.appendChild(studentEmailInput);
-    rows.appendChild(studentEmailWrap);
+    var studentEmailInput = null;
+    if (admin) {
+        var studentEmailWrap = document.createElement("div");
+        studentEmailWrap.className = "row";
+        var studentEmailK = document.createElement("div");
+        studentEmailK.className = "k";
+        studentEmailK.textContent = t("admin.studentEmailLabel");
+        studentEmailInput = document.createElement("input");
+        studentEmailInput.type = "email";
+        studentEmailInput.value = s.studentEmail || "";
+        studentEmailWrap.appendChild(studentEmailK);
+        studentEmailWrap.appendChild(studentEmailInput);
+        rows.appendChild(studentEmailWrap);
+    } else {
+        rows.appendChild(detailRow(t("admin.studentEmailLabel"), s.studentEmail));
+    }
+
+    var teacherSelect = null;
+    if (admin) {
+        var teacherWrap = document.createElement("div");
+        teacherWrap.className = "row";
+        var teacherK = document.createElement("div");
+        teacherK.className = "k";
+        teacherK.textContent = t("admin.assignedTeacherLabel");
+        teacherSelect = document.createElement("select");
+        fillTeacherSelect(teacherSelect, teacherOptions, s.teacherEmail || "");
+        teacherWrap.appendChild(teacherK);
+        teacherWrap.appendChild(teacherSelect);
+        rows.appendChild(teacherWrap);
+    } else {
+        rows.appendChild(detailRow(t("admin.assignedTeacherLabel"), s.teacherEmail));
+    }
 
     var levelWrap = document.createElement("div");
     levelWrap.className = "row";
@@ -295,14 +372,18 @@ function openStudentDetail(id) {
     saveBtn.textContent = t("detail.save");
     saveBtn.addEventListener("click", async function () {
         saveBtn.disabled = true;
-        var result = await updateStudent(s.id, {
-            studentEmail: studentEmailInput.value.trim().toLowerCase(),
+        var fields = {
             levelIndex: Number(levelSelect.value),
             attendedSessions: Number(attInput.value) || 0,
             totalSessions: Number(totInput.value) || 0,
             homeworkCompleted: Number(hwcInput.value) || 0,
             homeworkAssigned: Number(hwaInput.value) || 0,
-        });
+        };
+        if (admin) {
+            fields.studentEmail = studentEmailInput.value.trim().toLowerCase();
+            if (teacherSelect) fields.teacherEmail = teacherSelect.value;
+        }
+        var result = await updateStudent(s.id, fields);
         saveBtn.disabled = false;
         if (result.ok) {
             toast(t("admin.savedToast"));
@@ -313,30 +394,33 @@ function openStudentDetail(id) {
         }
     });
 
-    var deleteBtn = document.createElement("button");
-    deleteBtn.type = "button";
-    deleteBtn.className = "btn btn-secondary";
-    deleteBtn.textContent = t("detail.delete");
-    deleteBtn.addEventListener("click", async function () {
-        if (deletePending !== s.id) {
-            deletePending = s.id;
-            deleteBtn.textContent = t("admin.confirmDelete");
-            return;
-        }
-        deleteBtn.disabled = true;
-        var result = await deleteStudent(s.id);
-        deleteBtn.disabled = false;
-        if (result.ok) {
-            toast(t("admin.deletedToast"));
-            renderRecordsPanel();
-            closeDetail();
-        } else {
-            toast(t("admin.savingFailedToast"));
-        }
-    });
-
     actions.appendChild(saveBtn);
-    actions.appendChild(deleteBtn);
+
+    if (admin) {
+        var deleteBtn = document.createElement("button");
+        deleteBtn.type = "button";
+        deleteBtn.className = "btn btn-secondary";
+        deleteBtn.textContent = t("detail.delete");
+        deleteBtn.addEventListener("click", async function () {
+            if (deletePending !== s.id) {
+                deletePending = s.id;
+                deleteBtn.textContent = t("admin.confirmDelete");
+                return;
+            }
+            deleteBtn.disabled = true;
+            var result = await deleteStudent(s.id);
+            deleteBtn.disabled = false;
+            if (result.ok) {
+                toast(t("admin.deletedToast"));
+                renderRecordsPanel();
+                closeDetail();
+            } else {
+                toast(t("admin.savingFailedToast"));
+            }
+        });
+        actions.appendChild(deleteBtn);
+    }
+
     detailCard.appendChild(actions);
 
     detailOverlay.hidden = false;
@@ -352,10 +436,12 @@ if (addForm) {
         var submitBtn = addForm.querySelector('button[type="submit"]');
         submitBtn.disabled = true;
         var studentEmail = (fd.get("studentEmail") || "").toString().trim().toLowerCase();
+        var teacherEmail = (fd.get("teacherEmail") || "").toString().trim().toLowerCase();
         var result = await addStudent({
             name: name,
             parentEmail: parentEmail,
             studentEmail: studentEmail,
+            teacherEmail: teacherEmail,
             branch: (fd.get("branch") || "").toString(),
             levelIndex: Number(fd.get("levelIndex")) || 1,
             attendedSessions: Number(fd.get("attendedSessions")) || 0,

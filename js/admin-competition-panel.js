@@ -1,6 +1,7 @@
 import { t, fmtDate } from "./i18n.js";
 import { toast } from "./toast.js";
 import { loadCompetitionRegistrations, updateCompetitionRegistration, deleteCompetitionRegistration } from "./competition-registrations.js";
+import { showLoadingRow } from "./loading-row.js";
 
 var tableBody = document.getElementById("competition-table-body");
 var filterSelect = document.getElementById("competition-filter-status");
@@ -23,6 +24,7 @@ function statusLabel(status) {
 
 export async function renderCompetitionPanel() {
     if (!tableBody) return;
+    showLoadingRow(tableBody, 5, t("admin.loading"));
     var all = await loadCompetitionRegistrations();
     var statusFilter = filterSelect ? filterSelect.value : "";
     regs = statusFilter ? all.filter(function (r) { return (r.status || "new") === statusFilter; }) : all;

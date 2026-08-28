@@ -1,6 +1,7 @@
 import { t } from "./i18n.js";
 import { toast } from "./toast.js";
 import { loadAllSlots, addSlot, deleteSlot } from "./trial-slots.js";
+import { showLoadingRow } from "./loading-row.js";
 
 var tableBody = document.getElementById("slots-table-body");
 var addForm = document.getElementById("add-slot-form");
@@ -19,6 +20,7 @@ function fmtSlotDate(iso) {
 
 export async function renderSlotsPanel() {
     if (!tableBody) return;
+    showLoadingRow(tableBody, 4, t("admin.loading"));
     var slots = await loadAllSlots();
     tableBody.innerHTML = "";
 

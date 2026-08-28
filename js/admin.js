@@ -7,8 +7,8 @@ import { auth, db } from "./firebase-init.js";
 import { state } from "./state.js";
 import { t, fmtDate, onLanguageChangeCallbacks } from "./i18n.js";
 import { toast } from "./toast.js";
-import { loadApplications, addApplicationDoc, updateApplicationDoc, deleteApplicationDoc } from "./applications.js";
-import { ROLE_SUPERADMIN, ROLE_ADMIN, ROLE_TEACHER, getCurrentRole } from "./roles.js";
+import { loadApplications, addApplicationDoc, updateApplicationDoc, deleteApplicationDoc, migrateOldApplications } from "./applications.js";
+import { ROLE_SUPERADMIN, ROLE_TEACHER, getCurrentRole, isAdminRole } from "./roles.js";
 import { renderTeachersPanel } from "./admin-teachers-panel.js";
 import { renderManagePanel } from "./admin-manage-panel.js";
 import { renderRecordsPanel } from "./admin-records-panel.js";
@@ -112,13 +112,14 @@ async function showAdminDashboard() {
     adminDash.hidden = false;
     state.adminOpen = true;
 
-    var isTeacherOnly = state.role !== ROLE_SUPERADMIN && state.role !== ROLE_ADMIN;
+    var isTeacherOnly = !isAdminRole(state.role);
     adminTabTeachers.hidden = isTeacherOnly;
     adminTabManageAdmins.hidden = state.role !== ROLE_SUPERADMIN;
-    adminTabRecords.hidden = isTeacherOnly;
+    adminTabRecords.hidden = false;
     adminTabSlots.hidden = isTeacherOnly;
     adminTabCompetition.hidden = isTeacherOnly;
-    adminTabs.hidden = isTeacherOnly;
+    adminTabs.hidden = false;
+    document.getElementById("admin-migrate-applications").hidden = isTeacherOnly;
     setPanel("students");
 
     await loadApplications();
@@ -127,8 +128,8 @@ async function showAdminDashboard() {
 
 async function afterVerifiedLogin() {
     var role = await getCurrentRole();
-    var isAdminRole = role === ROLE_SUPERADMIN || role === ROLE_ADMIN;
-    var modeMismatch = role && ((loginMode === "teacher" && isAdminRole) || (loginMode === "admin" && role === ROLE_TEACHER));
+    var roleIsAdmin = isAdminRole(role);
+    var modeMismatch = role && ((loginMode === "teacher" && roleIsAdmin) || (loginMode === "admin" && role === ROLE_TEACHER));
     if (!role || modeMismatch) {
         if (modeMismatch) {
             toast(t(loginMode === "teacher" ? "admin.wrongModeTeacher" : "admin.wrongModeAdmin"));
@@ -286,6 +287,20 @@ document.getElementById("admin-refresh").addEventListener("click", async functio
     await loadApplications();
     renderAdminDashboard();
     toast(t("admin.refreshedToast"));
+});
+
+document.getElementById("admin-migrate-applications").addEventListener("click", async function () {
+    var btn = document.getElementById("admin-migrate-applications");
+    btn.disabled = true;
+    var result = await migrateOldApplications();
+    btn.disabled = false;
+    if (result.ok) {
+        toast(t("admin.migrateDone").replace("{n}", result.count));
+        await loadApplications();
+        renderAdminDashboard();
+    } else {
+        toast(t("admin.savingFailedToast"));
+    }
 });
 
 function statusLabel(status) {
@@ -506,30 +521,33 @@ function openDetail(id) {
         }
     });
 
-    var deleteBtn = document.createElement("button");
-    deleteBtn.type = "button";
-    deleteBtn.className = "btn btn-secondary";
-    deleteBtn.textContent = t("detail.delete");
-    deleteBtn.addEventListener("click", async function () {
-        if (deletePending !== app.id) {
-            deletePending = app.id;
-            deleteBtn.textContent = t("admin.confirmDelete");
-            return;
-        }
-        deleteBtn.disabled = true;
-        var result = await deleteApplicationDoc(app.id);
-        deleteBtn.disabled = false;
-        if (result.ok) {
-            toast(t("admin.deletedToast"));
-            renderAdminDashboard();
-            closeDetail();
-        } else {
-            toast(t("admin.savingFailedToast"));
-        }
-    });
-
     actions.appendChild(saveBtn);
-    actions.appendChild(deleteBtn);
+
+    if (isAdminRole(state.role)) {
+        var deleteBtn = document.createElement("button");
+        deleteBtn.type = "button";
+        deleteBtn.className = "btn btn-secondary";
+        deleteBtn.textContent = t("detail.delete");
+        deleteBtn.addEventListener("click", async function () {
+            if (deletePending !== app.id) {
+                deletePending = app.id;
+                deleteBtn.textContent = t("admin.confirmDelete");
+                return;
+            }
+            deleteBtn.disabled = true;
+            var result = await deleteApplicationDoc(app.id);
+            deleteBtn.disabled = false;
+            if (result.ok) {
+                toast(t("admin.deletedToast"));
+                renderAdminDashboard();
+                closeDetail();
+            } else {
+                toast(t("admin.savingFailedToast"));
+            }
+        });
+        actions.appendChild(deleteBtn);
+    }
+
     detailCard.appendChild(notesWrap);
     detailCard.appendChild(actions);
 

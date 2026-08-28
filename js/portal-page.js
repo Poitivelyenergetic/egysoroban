@@ -3,7 +3,7 @@ import "./theme.js";
 import "./mobile-nav.js";
 import {
     onAuthStateChanged, signInWithEmailAndPassword, signOut, sendEmailVerification,
-    sendPasswordResetEmail, createUserWithEmailAndPassword,
+    sendPasswordResetEmail, createUserWithEmailAndPassword, updateProfile,
 } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
 import { auth } from "./firebase-init.js";
 import { t, fmtDate, onLanguageChangeCallbacks } from "./i18n.js";
@@ -21,6 +21,7 @@ var dashboard = document.getElementById("portal-dashboard");
 var emailInput = document.getElementById("portal-email");
 var passwordInput = document.getElementById("portal-password");
 var loginError = document.getElementById("portal-login-error");
+var signupNameInput = document.getElementById("portal-signup-name");
 var signupEmailInput = document.getElementById("portal-signup-email");
 var signupPasswordInput = document.getElementById("portal-signup-password");
 var signupError = document.getElementById("portal-signup-error");
@@ -184,7 +185,12 @@ function renderStudentCard(s) {
 async function showDashboard(email) {
     gate.hidden = true; verifyScreen.hidden = true; dashboard.hidden = false;
     studentsWrap.innerHTML = "";
+    var loadingMsg = document.createElement("p");
+    loadingMsg.className = "section-lede";
+    loadingMsg.textContent = t("admin.loading");
+    studentsWrap.appendChild(loadingMsg);
     var students = await loadStudentsForAccount(email);
+    studentsWrap.innerHTML = "";
     if (students.length === 0) {
         var p = document.createElement("p");
         p.className = "section-lede";
@@ -243,8 +249,10 @@ signupForm.addEventListener("submit", async function (e) {
     var btn = signupForm.querySelector('button[type="submit"]');
     btn.disabled = true;
     try {
+        var name = signupNameInput.value.trim();
         var cred = await createUserWithEmailAndPassword(auth, signupEmailInput.value.trim(), signupPasswordInput.value);
-        try { await recordPortalAccount(signupRole, signupEmailInput.value.trim()); } catch (e3) { }
+        try { await updateProfile(cred.user, { displayName: name }); } catch (e4) { }
+        try { await recordPortalAccount(signupRole, signupEmailInput.value.trim(), name); } catch (e3) { }
         try { await sendEmailVerification(cred.user); } catch (e2) { }
         showVerify();
     } catch (err) {

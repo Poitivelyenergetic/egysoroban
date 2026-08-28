@@ -33,10 +33,17 @@ service cloud.firestore {
     // Student applications — anyone can submit one (the public apply form).
     // Only staff (admin, superadmin, or an approved teacher) can view or update
     // them; only admin/superadmin can delete one.
-    match /applications/{id} {
+    match /studentApplications/{id} {
       allow create: if true;
       allow read, update: if isStaff();
       allow delete: if isAdminOrSuper();
+    }
+
+    // applications/{id} is the old (pre-rename) collection name. Left
+    // read-only for staff so the one-time migration into studentApplications
+    // can run; no longer accepts new submissions.
+    match /applications/{id} {
+      allow read: if isStaff();
     }
 
     // Teacher applications — anyone can submit one (the public teach form).
@@ -89,16 +96,31 @@ service cloud.firestore {
     }
 
     // students/{id} holds a child's level, attendance, homework, and exam
-    // history. Only staff can create/edit it; a parent OR the student's own
-    // account (whichever email matches, via parentEmail or studentEmail) may
-    // read — never write — their own record. Firestore excludes non-matching
-    // documents from query results rather than erroring, so each account's
-    // query only ever returns records actually linked to it.
+    // history. Admin/superadmin have full access to every record (including
+    // assigning a teacher). An approved teacher may only read/update the
+    // records they've actually been assigned (teacherEmail == their email) —
+    // they can't create, delete, or touch another teacher's students. A
+    // parent OR the student's own account (whichever email matches, via
+    // parentEmail or studentEmail) may read — never write — their own
+    // record. Firestore excludes non-matching documents from query results
+    // rather than erroring, so each account's query only returns what it's
+    // actually linked to.
     match /students/{id} {
-      allow read: if isStaff()
+      allow read: if isAdminOrSuper()
+        || (isApprovedTeacher() && resource.data.teacherEmail == myEmail())
         || (isVerified() && resource.data.parentEmail == myEmail())
         || (isVerified() && resource.data.studentEmail == myEmail());
-      allow write: if isStaff();
+      allow create, delete: if isAdminOrSuper();
+      // A teacher's update may only touch the progress fields they're meant
+      // to fill out — never teacherEmail/parentEmail/studentEmail/name/branch,
+      // which would otherwise let them reassign themselves onto a different
+      // student, unassign themselves, or grant themselves permanent parent/
+      // student-style read access by setting studentEmail to their own email.
+      allow update: if isAdminOrSuper()
+        || (isApprovedTeacher() && resource.data.teacherEmail == myEmail()
+            && request.resource.data.diff(resource.data).affectedKeys().hasOnly(
+              ['levelIndex', 'attendedSessions', 'totalSessions', 'homeworkCompleted', 'homeworkAssigned', 'examHistory']
+            ));
     }
 
     // competitionRegistrations/{id} — anyone can submit one (the public

@@ -1,5 +1,5 @@
 import {
-    collection, getDocs, addDoc, updateDoc, deleteDoc, doc,
+    collection, getDocs, addDoc, setDoc, updateDoc, deleteDoc, doc,
 } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 import { db } from "./firebase-init.js";
 import { state } from "./state.js";
@@ -9,7 +9,7 @@ import { state } from "./state.js";
  * Reading, updating and deleting requires a signed-in admin — see
  * Firestore security rules in the Firebase console.
  */
-var applicationsCol = collection(db, "applications");
+var applicationsCol = collection(db, "studentApplications");
 
 export async function loadApplications() {
     if (!state.isAdmin) return;
@@ -36,7 +36,7 @@ export async function addApplicationDoc(app) {
 
 export async function updateApplicationDoc(id, fields) {
     try {
-        await updateDoc(doc(db, "applications", id), fields);
+        await updateDoc(doc(db, "studentApplications", id), fields);
         state.applications = state.applications.map(function (a) {
             return a.id === id ? Object.assign({}, a, fields) : a;
         });
@@ -48,9 +48,34 @@ export async function updateApplicationDoc(id, fields) {
 
 export async function deleteApplicationDoc(id) {
     try {
-        await deleteDoc(doc(db, "applications", id));
+        await deleteDoc(doc(db, "studentApplications", id));
         state.applications = state.applications.filter(function (a) { return a.id !== id; });
         return { ok: true };
+    } catch (err) {
+        return { ok: false, code: (err && err.code) || "upstream_error" };
+    }
+}
+
+/* One-time migration: copies every doc from the old "applications" collection
+   (the pre-rename name) into "studentApplications" under the same ID, so
+   nothing is lost or duplicated. Safe to run more than once — a doc ID
+   already present in studentApplications is skipped rather than overwritten,
+   so any status/notes an admin has since added there survive a re-run. The
+   old collection is left in place untouched as a backup; nothing is deleted. */
+export async function migrateOldApplications() {
+    try {
+        var oldSnap = await getDocs(collection(db, "applications"));
+        var newSnap = await getDocs(collection(db, "studentApplications"));
+        var existingIds = {};
+        newSnap.forEach(function (d) { existingIds[d.id] = true; });
+        var count = 0;
+        for (var i = 0; i < oldSnap.docs.length; i++) {
+            var d = oldSnap.docs[i];
+            if (existingIds[d.id]) continue;
+            await setDoc(doc(db, "studentApplications", d.id), d.data());
+            count++;
+        }
+        return { ok: true, count: count };
     } catch (err) {
         return { ok: false, code: (err && err.code) || "upstream_error" };
     }

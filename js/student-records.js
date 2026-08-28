@@ -17,6 +17,19 @@ export async function loadStudents() {
     }
 }
 
+export async function loadStudentsForTeacher(email) {
+    try {
+        var q = query(studentsCol, where("teacherEmail", "==", email.toLowerCase().trim()));
+        var snap = await getDocs(q);
+        var list = [];
+        snap.forEach(function (d) { list.push(Object.assign({ id: d.id }, d.data())); });
+        list.sort(function (a, b) { return (a.name || "").localeCompare(b.name || ""); });
+        return list;
+    } catch (e) {
+        return [];
+    }
+}
+
 /* Matches a signed-in account against either the parentEmail or studentEmail
    field, so the same account system serves both a parent's login and a
    student's own separate login. */
