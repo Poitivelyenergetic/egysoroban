@@ -1,5 +1,18 @@
 {
   "projects": {
     "default": "egysoroban-731cd"
-  }
+  },
+  "targets": {
+    "egysoroban-731cd": {
+      "hosting": {
+        "main": [
+          "egysoroban-731cd"
+        ],
+        "egysoroban": [
+          "egysoroban"
+        ]
+      }
+    }
+  },
+  "etags": {}
 }
