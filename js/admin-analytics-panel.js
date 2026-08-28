@@ -4,7 +4,7 @@ import { loadStudents } from "./student-records.js";
 import { loadApplications } from "./applications.js";
 import { loadPayments, periodKey, periodLabel, periodShortLabel, recentPeriods } from "./payments.js";
 import { BRANCHES, branchLabel } from "./branches.js";
-import { renderStatTiles, renderBarList, renderColumns, renderPie, pct, money } from "./admin-charts.js";
+import { renderStatTiles, renderBarList, renderColumns, renderPie, renderAreaLine, renderFunnel, pct, money } from "./admin-charts.js";
 import { loadCompetitionRegistrations } from "./competition-registrations.js";
 
 var tilesEl = document.getElementById("analytics-tiles");
@@ -94,7 +94,9 @@ export async function renderAnalyticsPanel() {
         var p = periodKey(a.submittedAt);
         if (appsByPeriod[p] != null) appsByPeriod[p]++;
     });
-    renderColumns(appsTrendEl, periods.map(function (p) {
+    /* A curve, because what matters here is whether enquiries are climbing or
+       falling — the shape between months, not each month's exact height. */
+    renderAreaLine(appsTrendEl, periods.map(function (p) {
         return { label: periodShortLabel(p, state.lang), value: appsByPeriod[p] };
     }), { emptyText: t("common.nothingYet") });
 
@@ -112,12 +114,16 @@ export async function renderAnalyticsPanel() {
         };
     }), { emptyText: t("common.nothingYet") });
 
-    /* ---- application pipeline ---- */
+    /* ---- application pipeline ----
+       A funnel rather than a bar list: these stages are a sequence a family
+       moves through, and the narrowing from enquiry to enrolment is the point.
+       Declined is kept last and tinted, since it's an exit rather than a step. */
     var statuses = ["new", "contacted", "enrolled", "declined"];
-    renderBarList(pipelineEl, statuses.map(function (s) {
+    renderFunnel(pipelineEl, statuses.map(function (s) {
         return {
             label: t("admin.status" + s.charAt(0).toUpperCase() + s.slice(1)),
             value: apps.filter(function (a) { return (a.status || "new") === s; }).length,
+            tone: s === "enrolled" ? "ok" : s === "declined" ? "danger" : "",
         };
     }), { emptyText: t("common.nothingYet") });
 
@@ -184,5 +190,8 @@ export async function renderAnalyticsPanel() {
             });
         }
     }
-    renderBarList(levelEl, byLevel, { emptyText: t("common.nothingYet") });
+    /* Levels are ordinal — 1 through 11 in order — so left-to-right columns
+       show the shape of the cohort moving up the program. A bar list would
+       have thrown that ordering away. */
+    renderColumns(levelEl, byLevel, { emptyText: t("common.nothingYet") });
 }

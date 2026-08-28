@@ -156,6 +156,45 @@ table.app-table { width: 100%; border-collapse: collapse; min-width: 760px; }
 }
 .admin-tabs-group[hidden] { display: none; }
 
+/* ============ Area line ============ */
+.line-plot { width: 100%; }
+.line-svg { width: 100%; height: 150px; display: block; overflow: visible; }
+.line-baseline { stroke: var(--line); stroke-width: 1; vector-effect: non-scaling-stroke; }
+.line-stroke {
+  fill: none; stroke: var(--jade); stroke-width: 2;
+  stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke;
+}
+.line-dot { fill: var(--jade); stroke: var(--paper-raised); stroke-width: 1.5; vector-effect: non-scaling-stroke; }
+.line-dot-last { fill: var(--brass); }
+.line-axis { display: flex; gap: 10px; margin-top: 10px; }
+.line-axis-label {
+  flex: 1; text-align: center; font-family: var(--font-mono); font-size: 0.7rem;
+  color: var(--ink-faint); display: flex; flex-direction: column; gap: 2px;
+}
+/* Charts whose x-axis is a sequence — months, levels — stay left-to-right in
+   both languages. An SVG plot can't mirror with `dir` the way a flex row does,
+   so letting these flip would put the curve and its own labels in opposite
+   orders. Each label still picks its own text direction via plaintext. */
+.line-axis, .column-plot { direction: ltr; }
+.line-axis-label, .column-label { unicode-bidi: plaintext; }
+.line-axis-value { color: var(--ink); font-size: 0.82rem; font-variant-numeric: tabular-nums; }
+
+/* ============ Funnel ============ */
+.funnel-row { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+.funnel-label { width: 104px; flex-shrink: 0; font-size: 0.84rem; color: var(--ink-soft); }
+.funnel-track { flex: 1; display: flex; justify-content: center; }
+.funnel-band {
+  height: 26px; border-radius: 6px; background: var(--jade);
+  transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.funnel-band.tone-ok { background: var(--ok); }
+.funnel-band.tone-danger { background: var(--danger); }
+.funnel-value {
+  width: 84px; flex-shrink: 0; text-align: end; font-family: var(--font-mono);
+  font-size: 0.78rem; color: var(--ink); font-variant-numeric: tabular-nums;
+}
+@media (max-width: 520px) { .funnel-label { width: 78px; font-size: 0.78rem; } }
+
 /* ============ Pie ============ */
 .pie-wrap { display: flex; align-items: center; gap: 26px; flex-wrap: wrap; }
 .pie-disc {

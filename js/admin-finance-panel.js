@@ -5,7 +5,7 @@ import { loadStudents, updateStudent } from "./student-records.js";
 import { loadPayments, addPayment, deletePayment, periodKey, periodLabel, periodShortLabel, recentPeriods } from "./payments.js";
 import { loadExpenses, addExpense, deleteExpense } from "./expenses.js";
 import { branchLabel } from "./branches.js";
-import { renderStatTiles, renderColumns, renderBarList, pct, money } from "./admin-charts.js";
+import { renderStatTiles, renderColumns, renderBarList, renderAreaLine, pct, money } from "./admin-charts.js";
 import { showLoadingRow } from "./loading-row.js";
 
 var tilesEl = document.getElementById("finance-tiles");
@@ -122,7 +122,10 @@ export async function renderFinancePanel() {
     payments.forEach(function (p) {
         if (revByPeriod[p.period] != null) revByPeriod[p.period] += Number(p.amount) || 0;
     });
-    renderColumns(trendEl, periods.map(function (p) {
+    /* The finance view is read for direction — is the academy growing — so the
+       trend is a curve here, while Analytics keeps columns for comparing one
+       month against another. Same numbers, different question. */
+    renderAreaLine(trendEl, periods.map(function (p) {
         return {
             label: periodShortLabel(p, state.lang),
             value: revByPeriod[p],
