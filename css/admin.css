@@ -48,11 +48,11 @@
 .summary-card.enrolled .num { color: var(--jade); }
 
 .admin-toolbar { display: flex; gap: 12px; margin-bottom: 18px; flex-wrap: wrap; align-items: center; }
-.admin-toolbar input[type="search"], .admin-toolbar select {
+.admin-toolbar input, .admin-toolbar select {
   font: inherit; padding: 0.6em 0.9em; border-radius: var(--radius-sm); border: 1px solid var(--line);
   background: var(--paper-raised); color: var(--ink);
 }
-.admin-toolbar input[type="search"] { flex: 1; min-width: 200px; }
+.admin-toolbar input[type="search"], .admin-toolbar input[type="text"] { flex: 1; min-width: 200px; }
 
 .app-table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--radius-md); background: var(--paper-raised); }
 table.app-table { width: 100%; border-collapse: collapse; min-width: 760px; }
@@ -84,6 +84,11 @@ table.app-table { width: 100%; border-collapse: collapse; min-width: 760px; }
 .detail-rows .row.full { grid-column: 1 / -1; }
 .detail-rows .row .k { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--ink-faint); font-family: var(--font-mono); margin-bottom: 3px; }
 .detail-rows .row .v { font-size: 0.95rem; }
+.detail-rows .row input, .detail-rows .row select {
+  font: inherit; width: 100%; padding: 0.6em 0.9em; border-radius: var(--radius-sm);
+  border: 1px solid var(--line); background: var(--paper); color: var(--ink);
+}
+.detail-rows .row input:focus, .detail-rows .row select:focus { border-color: var(--brass-strong); }
 .detail-actions { display: flex; gap: 10px; flex-wrap: wrap; border-top: 1px solid var(--line); padding-top: 20px; }
 .detail-actions select { font: inherit; padding: 0.6em 0.9em; border-radius: var(--radius-sm); border: 1px solid var(--line); background: var(--paper); color: var(--ink); }
 .detail-notes textarea { width: 100%; min-height: 80px; font: inherit; padding: 0.7em 0.9em; border-radius: var(--radius-sm); border: 1px solid var(--line); background: var(--paper); color: var(--ink); margin-top: 6px; }

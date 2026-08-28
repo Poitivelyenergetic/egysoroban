@@ -205,6 +205,23 @@ async function openStudentDetail(id) {
     var rows = document.createElement("div");
     rows.className = "detail-rows";
 
+    var parentEmailInput = null;
+    if (admin) {
+        var parentEmailWrap = document.createElement("div");
+        parentEmailWrap.className = "row";
+        var parentEmailK = document.createElement("div");
+        parentEmailK.className = "k";
+        parentEmailK.textContent = t("admin.parentEmailLabel");
+        parentEmailInput = document.createElement("input");
+        parentEmailInput.type = "email";
+        parentEmailInput.value = s.parentEmail || "";
+        parentEmailWrap.appendChild(parentEmailK);
+        parentEmailWrap.appendChild(parentEmailInput);
+        rows.appendChild(parentEmailWrap);
+    } else {
+        rows.appendChild(detailRow(t("admin.parentEmailLabel"), s.parentEmail));
+    }
+
     var studentEmailInput = null;
     if (admin) {
         var studentEmailWrap = document.createElement("div");
@@ -380,6 +397,7 @@ async function openStudentDetail(id) {
             homeworkAssigned: Number(hwaInput.value) || 0,
         };
         if (admin) {
+            fields.parentEmail = parentEmailInput.value.trim().toLowerCase();
             fields.studentEmail = studentEmailInput.value.trim().toLowerCase();
             if (teacherSelect) fields.teacherEmail = teacherSelect.value;
         }

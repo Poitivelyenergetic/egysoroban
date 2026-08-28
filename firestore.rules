@@ -12,13 +12,20 @@ service cloud.firestore {
     function myEmail() {
       return request.auth.token.email.lower();
     }
+    // One hardcoded exception so the dev/test admin account (which has no real
+    // inbox to click a verification link with) can still be used to test admin
+    // features. Still requires an admins/{email} doc to exist like any other
+    // admin — this only skips the email_verified check for this one address.
+    function isDevAdminException() {
+      return isSignedIn() && myEmail() == 'developer1-admin@egysoroban.com';
+    }
     function isSuperAdmin() {
-      return isVerified()
+      return (isVerified() || isDevAdminException())
         && exists(/databases/$(database)/documents/admins/$(myEmail()))
         && get(/databases/$(database)/documents/admins/$(myEmail())).data.role == 'superadmin';
     }
     function isAdminOrSuper() {
-      return isVerified()
+      return (isVerified() || isDevAdminException())
         && exists(/databases/$(database)/documents/admins/$(myEmail()));
     }
     function isApprovedTeacher() {
