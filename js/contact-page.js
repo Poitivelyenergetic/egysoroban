@@ -2,7 +2,6 @@ import "./i18n.js";
 import "./theme.js";
 import "./mobile-nav.js";
 import "./active-nav.js";
-import "./location-gate.js";
 import "./scroll-reveal.js";
 import { t, onLanguageChangeCallbacks } from "./i18n.js";
 
