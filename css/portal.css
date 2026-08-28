@@ -1,0 +1,30 @@
+/* ============ Parent portal ============ */
+#portal-gate, #portal-verify { max-width: 440px; margin: 0 auto; }
+#portal-gate .app-form, #portal-verify { background: var(--paper-raised); border: 1px solid var(--line); border-radius: var(--radius-lg); padding: 32px; box-shadow: var(--shadow-1); }
+#portal-gate .admin-hint { text-align: center; }
+#portal-gate .admin-forgot-link { display: block; margin: 14px auto 0; }
+
+.portal-student-card {
+  background: var(--paper-raised); border: 1px solid var(--line); border-radius: var(--radius-lg);
+  padding: 26px 24px; margin-bottom: 22px; box-shadow: var(--shadow-1);
+}
+.portal-student-card h3 { margin-bottom: 2px; }
+.portal-meta { color: var(--ink-soft); font-size: 0.86rem; margin-bottom: 18px; }
+.portal-stage-note { background: var(--brass-tint); color: var(--brass-strong); border-radius: var(--radius-sm); padding: 10px 14px; font-size: 0.86rem; margin-bottom: 18px; }
+.portal-progress-label { display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--ink-faint); font-family: var(--font-mono); margin-bottom: 6px; }
+.portal-progress-bar { height: 10px; border-radius: 999px; background: var(--paper-sunken); overflow: hidden; margin-bottom: 20px; }
+.portal-progress-fill { height: 100%; background: linear-gradient(90deg, var(--brass), var(--jade)); border-radius: 999px; transition: width 0.6s ease; }
+
+.portal-stats-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 20px; place-items: center; }
+@media (max-width: 480px) { .portal-stats-row { grid-template-columns: 1fr; } }
+.portal-donut-col { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.portal-donut { position: relative; display: inline-flex; align-items: center; justify-content: center; }
+.portal-donut svg circle { transition: stroke-dashoffset 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
+.portal-donut-center { position: absolute; font-family: var(--font-mono); font-weight: 700; font-size: 0.82rem; color: var(--ink); }
+.portal-donut-label { font-size: 0.76rem; color: var(--ink-faint); text-align: center; }
+
+.portal-exam-list { display: flex; flex-direction: column; gap: 8px; }
+.portal-exam-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; background: var(--paper-sunken); border-radius: var(--radius-sm); font-size: 0.86rem; }
+.portal-exam-row .badge { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em; padding: 0.2em 0.6em; border-radius: 999px; }
+.portal-exam-row .badge.passed { background: var(--ok-tint); color: var(--ok); }
+.portal-exam-row .badge.failed { background: var(--danger-tint); color: var(--danger); }

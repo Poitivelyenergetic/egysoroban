@@ -1,6 +1,7 @@
 import { state } from "./state.js";
 import { t } from "./i18n.js";
 import { addApplicationDoc } from "./applications.js";
+import { loadOpenSlots, bookSlot } from "./trial-slots.js";
 
 var ADMIN_EMAIL = "info@egysoroban.com";
 
@@ -38,6 +39,58 @@ function buildMailto(app) {
 
 var applyForm = document.getElementById("apply-form");
 var formStatus = document.getElementById("form-status");
+var branchSelect = document.getElementById("f-branch");
+var trialSlotList = document.getElementById("trial-slot-list");
+
+function fmtSlotDate(iso) {
+    var d = new Date(iso);
+    if (isNaN(d.getTime())) return iso;
+    return d.toLocaleString(undefined, { weekday: "short", month: "short", day: "numeric", hour: "numeric", minute: "2-digit" });
+}
+
+async function renderTrialSlots() {
+    if (!trialSlotList) return;
+    var branch = branchSelect.value;
+    trialSlotList.innerHTML = "";
+    if (!branch) {
+        var hint = document.createElement("p");
+        hint.className = "muted";
+        hint.textContent = t("apply.trialSlotHint");
+        trialSlotList.appendChild(hint);
+        return;
+    }
+    var open = await loadOpenSlots(branch);
+    if (open.length === 0) {
+        var none = document.createElement("p");
+        none.className = "muted";
+        none.textContent = t("apply.trialSlotNoneOpen");
+        trialSlotList.appendChild(none);
+        return;
+    }
+    open.forEach(function (slot) {
+        var label = document.createElement("label");
+        label.className = "trial-slot-option";
+        var input = document.createElement("input");
+        input.type = "radio";
+        input.name = "trialSlotId";
+        input.value = slot.id;
+        input.dataset.dateTime = slot.dateTime;
+        var text = document.createElement("span");
+        text.textContent = fmtSlotDate(slot.dateTime);
+        var spots = document.createElement("span");
+        spots.className = "spots";
+        spots.textContent = (slot.capacity - slot.bookedCount) + " left";
+        label.appendChild(input);
+        label.appendChild(text);
+        label.appendChild(spots);
+        trialSlotList.appendChild(label);
+    });
+}
+
+if (branchSelect) {
+    branchSelect.addEventListener("change", renderTrialSlots);
+    renderTrialSlots();
+}
 
 function clearFormErrors() {
     applyForm.querySelectorAll(".field.has-error").forEach(function (f) { f.classList.remove("has-error"); });
@@ -84,8 +137,21 @@ if (applyForm) {
         var invalid = validateForm(fd);
         if (invalid) { invalid.focus(); return; }
 
+        var checkedSlot = applyForm.querySelector('input[name="trialSlotId"]:checked');
+        if (checkedSlot) {
+            var bookResult = await bookSlot(checkedSlot.value);
+            if (!bookResult.ok) {
+                formStatus.className = "form-status show warn";
+                formStatus.textContent = t("apply.trialSlotFullError");
+                await renderTrialSlots();
+                return;
+            }
+        }
+
         var app = {
             branch: (fd.get("branch") || "").toString(),
+            trialSlotId: checkedSlot ? checkedSlot.value : "",
+            trialDateTime: checkedSlot ? checkedSlot.dataset.dateTime : "",
             studentNameAr: (fd.get("studentNameAr") || "").toString().trim(),
             studentNameEn: (fd.get("studentNameEn") || "").toString().trim(),
             studentName: (fd.get("studentNameEn") || "").toString().trim(),

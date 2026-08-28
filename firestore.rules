@@ -74,6 +74,45 @@ service cloud.firestore {
       allow write: if isSignedIn() && myEmail() == email;
     }
 
+    // students/{id} holds a child's level, attendance, homework, and exam
+    // history. Only staff can create/edit it; a parent OR the student's own
+    // account (whichever email matches, via parentEmail or studentEmail) may
+    // read — never write — their own record. Firestore excludes non-matching
+    // documents from query results rather than erroring, so each account's
+    // query only ever returns records actually linked to it.
+    match /students/{id} {
+      allow read: if isStaff()
+        || (isVerified() && resource.data.parentEmail == myEmail())
+        || (isVerified() && resource.data.studentEmail == myEmail());
+      allow write: if isStaff();
+    }
+
+    // competitionRegistrations/{id} — anyone can submit one (the public
+    // competition registration form). Only staff can review/update; only
+    // admin/superadmin can delete one.
+    match /competitionRegistrations/{id} {
+      allow create: if true;
+      allow read, update: if isStaff();
+      allow delete: if isAdminOrSuper();
+    }
+
+    // trialSlots/{id} are bookable free-trial time slots shown on the public
+    // apply form. Anyone can read them to see availability. Only staff can
+    // create or remove a slot. Booking is a narrowly-scoped update: it may
+    // only increment bookedCount by exactly 1, and only while the slot is
+    // active and under capacity — this lets an anonymous visitor book safely
+    // without ever being able to overbook a slot or edit anything else.
+    match /trialSlots/{id} {
+      allow read: if true;
+      allow create, delete: if isStaff();
+      allow update: if isStaff() || (
+        resource.data.active == true &&
+        resource.data.bookedCount < resource.data.capacity &&
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['bookedCount']) &&
+        request.resource.data.bookedCount == resource.data.bookedCount + 1
+      );
+    }
+
     // Deny everything else by default.
     match /{document=**} {
       allow read, write: if false;

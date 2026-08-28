@@ -2,7 +2,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>News — Egysoroban</title>
+    <title>Competition Registration — Egysoroban</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="css/tokens.css?v=1787916869">
     <link rel="stylesheet" href="css/base.css?v=1787916869">
     <link rel="stylesheet" href="css/header.css?v=1787916869">
-    <link rel="stylesheet" href="css/news.css?v=1787916869">
+    <link rel="stylesheet" href="css/apply-form.css?v=1787916869">
     <link rel="stylesheet" href="css/footer.css?v=1787916869">
     <link rel="icon" type="image/png" href="assets/favicon.png?v=1787916869">
 </head>
@@ -52,33 +52,85 @@
 
     <main id="main">
 
-        <!-- ============ NEWS ============ -->
-        <section id="news">
-            <div class="container">
-                <p class="eyebrow" data-i18n="news.eyebrow">Latest updates</p>
-                <h2 class="section-title" data-i18n="news.title">Our news</h2>
-                <div class="news-grid">
-                    <div class="news-card">
-                        <span class="news-badge" data-i18n="news.n1Badge">Almost</span>
-                        <h3 data-i18n="news.n1Title">Diamond collections launching soon</h3>
-                        <p data-i18n="news.n1Body">Intensive preparations are underway to launch the Diamond Groups with an advanced training method that helps students reach the highest levels of professionalism in mental arithmetic.</p>
+        <!-- ============ COMPETITION REGISTRATION ============ -->
+        <section class="apply" id="competition">
+            <div class="container apply-wrap">
+                <div class="apply-side">
+                    <p class="eyebrow" data-i18n="comp.eyebrow">Competition registration</p>
+                    <h2 class="section-title" data-i18n="comp.title">Register for a competition</h2>
+                    <p class="section-lede" data-i18n="comp.lede">A lighter, faster sign-up just to enter your child
+                        in an upcoming competition — not the full academy enrollment.</p>
+                    <div class="bead-row" aria-hidden="true"><span class="bead"></span><span class="rod-line"></span>
                     </div>
-                    <div class="news-card">
-                        <span class="news-badge" data-i18n="news.n2Badge">Almost</span>
-                        <h3 data-i18n="news.n2Title">Preparations for free summer training</h3>
-                        <p data-i18n="news.n2Body">The academy is preparing free summer training programs exclusive to its students, to keep motivation high and skills improving through the summer break.</p>
-                    </div>
-                    <div class="news-card">
-                        <span class="news-badge" data-i18n="news.n3Badge">Summer 2026</span>
-                        <h3 data-i18n="news.n3Title">Preparing for the EGY SOROBAN Academy Summer Competition</h3>
-                        <p data-i18n="news.n3Body">Ongoing preparations to launch the academy's own competitions and challenges, fostering a spirit of competition and self-confidence among students.</p>
-                    </div>
-                    <div class="news-card">
-                        <span class="news-badge" data-i18n="news.n4Badge">June 2026</span>
-                        <h3 data-i18n="news.n4Title">WAPR International Mental Arithmetic Championship (2026)</h3>
-                        <p data-i18n="news.n4Body">The academy is preparing its champions for the WAPR International Championship (Season 2, June) as part of a strong international preparation plan.</p>
-                    </div>
+                    <ul>
+                        <li><span class="tick" aria-hidden="true">✓</span><span data-i18n="comp.b1">A branch
+                                representative confirms your spot within 24 hours</span></li>
+                        <li><span class="tick" aria-hidden="true">✓</span><span data-i18n="comp.b2">Already a full
+                                student? You can still register this way</span></li>
+                    </ul>
+                    <p class="section-lede" style="margin-top:24px;">
+                        <a href="apply.html" data-i18n="comp.wantFullTraining">Looking to join the full training
+                            programme instead? Apply here →</a>
+                    </p>
                 </div>
+
+                <form class="app-form" id="competition-form" novalidate="">
+                    <h3 class="form-section-title" data-i18n="comp.sectionTitle">Child &amp; competition</h3>
+                    <div class="form-grid">
+                        <div class="field full">
+                            <label for="c-competition" data-i18n="comp.fCompetition">Which competition?</label>
+                            <select id="c-competition" name="competition" required="">
+                                <option value="" data-i18n="apply.optSelect">Select one</option>
+                                <option value="summer-2026" data-i18n="comp.optSummer">EGY SOROBAN Academy Summer
+                                    Competition</option>
+                                <option value="wapr-2026" data-i18n="comp.optWapr">WAPR International Mental
+                                    Arithmetic Championship (2026)</option>
+                                <option value="other" data-i18n="apply.optOther">Other</option>
+                            </select>
+                            <span class="field-error" data-i18n="apply.errRequired">This field is required.</span>
+                        </div>
+                        <div class="field">
+                            <label for="c-student-name" data-i18n="comp.fStudentName">Child's full name</label>
+                            <input id="c-student-name" name="studentName" type="text" required="" autocomplete="off">
+                            <span class="field-error" data-i18n="apply.errRequired">This field is required.</span>
+                        </div>
+                        <div class="field">
+                            <label for="c-national-id" data-i18n="apply.fNationalId">National ID <span class="opt"
+                                    data-i18n="apply.optional">(optional)</span></label>
+                            <input id="c-national-id" name="nationalId" type="text" inputmode="numeric"
+                                maxlength="14" autocomplete="off" data-i18n-placeholder="apply.nationalIdHint">
+                            <span class="field-error" data-i18n="apply.errNationalId">Must be 14 digits, starting
+                                with 2 or 3.</span>
+                        </div>
+                        <div class="field">
+                            <label for="c-parent-name" data-i18n="apply.fParentName">Parent / guardian name</label>
+                            <input id="c-parent-name" name="parentName" type="text" required="" autocomplete="off">
+                            <span class="field-error" data-i18n="apply.errRequired">This field is required.</span>
+                        </div>
+                        <div class="field">
+                            <label for="c-phone" data-i18n="apply.fPhone">Contact number</label>
+                            <input id="c-phone" name="phone" type="tel" placeholder="01xxxxxxxxx" required=""
+                                autocomplete="off">
+                            <span class="field-error" data-i18n="apply.errRequired">This field is required.</span>
+                        </div>
+                        <div class="field full">
+                            <label for="c-email" data-i18n="apply.fEmail">Email address <span class="opt"
+                                    data-i18n="apply.optional">(optional)</span></label>
+                            <input id="c-email" name="email" type="email" autocomplete="off">
+                            <span class="field-error" data-i18n="apply.errEmail">Enter a valid email address.</span>
+                        </div>
+                        <div class="field full">
+                            <label for="c-notes" data-i18n="apply.fGoals">Notes <span class="opt"
+                                    data-i18n="apply.optional">(optional)</span></label>
+                            <textarea id="c-notes" name="notes"></textarea>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block" id="competition-submit"
+                        data-i18n="comp.submit">Register for competition</button>
+                    <p class="form-note" data-i18n="apply.privacyNote">Your details are only used to contact you
+                        about joining Egysoroban.</p>
+                    <div class="form-status" id="form-status"></div>
+                </form>
             </div>
         </section>
 
@@ -127,7 +179,7 @@
         </div>
     </footer>
 
-    <script type="module" src="js/news-page.js?v=1787916869"></script>
+    <script type="module" src="js/competition-page.js?v=1787916869"></script>
 
 </body>
 

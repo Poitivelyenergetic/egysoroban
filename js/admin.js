@@ -11,6 +11,9 @@ import { loadApplications, addApplicationDoc, updateApplicationDoc, deleteApplic
 import { ROLE_SUPERADMIN, ROLE_ADMIN, ROLE_TEACHER, getCurrentRole } from "./roles.js";
 import { renderTeachersPanel } from "./admin-teachers-panel.js";
 import { renderManagePanel } from "./admin-manage-panel.js";
+import { renderRecordsPanel } from "./admin-records-panel.js";
+import { renderSlotsPanel } from "./admin-slots-panel.js";
+import { renderCompetitionPanel } from "./admin-competition-panel.js";
 
 var adminOverlay = document.getElementById("admin-overlay");
 var adminGate = document.getElementById("admin-gate");
@@ -35,6 +38,9 @@ var adminFilterSelect = document.getElementById("admin-filter-status");
 var adminTabs = document.getElementById("admin-tabs");
 var adminTabTeachers = document.getElementById("admin-tab-teachers");
 var adminTabManageAdmins = document.getElementById("admin-tab-manage-admins");
+var adminTabRecords = document.getElementById("admin-tab-records");
+var adminTabSlots = document.getElementById("admin-tab-slots");
+var adminTabCompetition = document.getElementById("admin-tab-competition");
 var deletePending = null;
 var loginMode = null; // "teacher" | "admin"
 
@@ -90,6 +96,9 @@ function setPanel(name) {
     });
     if (name === "teachers") renderTeachersPanel();
     if (name === "manage-admins") renderManagePanel();
+    if (name === "records") renderRecordsPanel();
+    if (name === "slots") renderSlotsPanel();
+    if (name === "competition") renderCompetitionPanel();
 }
 if (adminTabs) {
     adminTabs.addEventListener("click", function (e) {
@@ -106,6 +115,9 @@ async function showAdminDashboard() {
     var isTeacherOnly = state.role !== ROLE_SUPERADMIN && state.role !== ROLE_ADMIN;
     adminTabTeachers.hidden = isTeacherOnly;
     adminTabManageAdmins.hidden = state.role !== ROLE_SUPERADMIN;
+    adminTabRecords.hidden = isTeacherOnly;
+    adminTabSlots.hidden = isTeacherOnly;
+    adminTabCompetition.hidden = isTeacherOnly;
     adminTabs.hidden = isTeacherOnly;
     setPanel("students");
 

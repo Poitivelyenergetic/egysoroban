@@ -2,7 +2,7 @@
 .news-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; margin-top: 36px; }
 @media (max-width: 760px) { .news-grid { grid-template-columns: 1fr; } }
 .news-card {
-  position: relative; background: var(--paper-raised); border: 1px solid var(--line); border-radius: var(--radius-md);
+  position: relative; background: var(--paper-raised); border-radius: var(--radius-md);
   padding: 20px 20px 22px;
 }
 .news-badge {

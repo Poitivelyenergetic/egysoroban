@@ -13,12 +13,14 @@ html { scroll-behavior: smooth; }
 .reveal-target.reveal-right { transform: translateX(56px) scale(0.94); }
 .reveal-target.in-view { opacity: 1; transform: none; }
 
-/* card lift-on-hover, shared across programs/journey/testimonials/instructors/about/why/mv/news cards */
-.stat-card, .benefit-card, .level-card, .journey-step, .instructor-card,
+/* flat, minimal cards — no border/shadow at rest, lift + shadow only on hover;
+   shared across programs/journey/testimonials/instructors/about/why/mv/news cards */
+.benefit-card, .level-card, .journey-step, .instructor-card,
 .quote-card, .mv-card, .news-card {
+  border: none; box-shadow: none;
   transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.28s cubic-bezier(0.16, 1, 0.3, 1);
 }
-.stat-card:hover, .benefit-card:hover, .level-card:hover, .journey-step:hover, .instructor-card:hover,
+.benefit-card:hover, .level-card:hover, .journey-step:hover, .instructor-card:hover,
 .quote-card:hover, .mv-card:hover, .news-card:hover {
   transform: translateY(-6px);
   box-shadow: var(--shadow-2);
@@ -49,7 +51,7 @@ body {
 [data-lang="ar"] { --font-display: var(--font-ar); --font-body: var(--font-ar); }
 img, svg { max-width: 100%; display: block; }
 a { color: inherit; }
-h1, h2, h3, h4 { font-family: var(--font-display); margin: 0 0 0.5em; text-wrap: balance; font-weight: 600; }
+h1, h2, h3, h4 { font-family: var(--font-display); margin: 0 0 0.5em; text-wrap: balance; font-weight: 700; }
 p { margin: 0 0 1em; }
 ul { margin: 0; padding: 0; }
 li { list-style: none; }

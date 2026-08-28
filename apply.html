@@ -7,14 +7,14 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
     <link
-        href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&amp;family=Manrope:wght@400;500;600;700;800&amp;family=Cairo:wght@400;500;600;700;800&amp;family=IBM+Plex+Mono:wght@400;500;600&amp;display=swap"
+        href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800;900&amp;family=Manrope:wght@400;500;600;700;800&amp;family=Cairo:wght@400;500;600;700;800&amp;family=IBM+Plex+Mono:wght@400;500;600&amp;display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="css/tokens.css?v=1787853880">
-    <link rel="stylesheet" href="css/base.css?v=1787853880">
-    <link rel="stylesheet" href="css/header.css?v=1787853880">
-    <link rel="stylesheet" href="css/apply-form.css?v=1787853880">
-    <link rel="stylesheet" href="css/footer.css?v=1787853880">
-    <link rel="icon" type="image/png" href="assets/favicon.png?v=1787853880">
+    <link rel="stylesheet" href="css/tokens.css?v=1787916869">
+    <link rel="stylesheet" href="css/base.css?v=1787916869">
+    <link rel="stylesheet" href="css/header.css?v=1787916869">
+    <link rel="stylesheet" href="css/apply-form.css?v=1787916869">
+    <link rel="stylesheet" href="css/footer.css?v=1787916869">
+    <link rel="icon" type="image/png" href="assets/favicon.png?v=1787916869">
 </head>
 
 <body>
@@ -24,9 +24,10 @@
     <header class="site-header">
         <div class="header-inner">
             <a class="brand" href="index.html">
-                <img class="brand-mark-img" src="assets/logo.png?v=1787853880" alt="Egysoroban Academy" width="40" height="40">
+                <img class="brand-mark-img" src="assets/logo.png?v=1787916869" alt="Egysoroban Academy" width="40" height="40">
                 <span class="brand-name">Egysoroban</span>
             </a>
+                <a class="home-btn" href="index.html" aria-label="Home"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 11.5 12 4l9 7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M5.5 10v9a1 1 0 0 0 1 1H9.5a1 1 0 0 0 1-1v-4a1 1 0 0 1 1-1h1a1 1 0 0 1 1 1v4a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-i18n="nav.home">Home</span></a>
             <nav class="main-nav" id="main-nav">
                 <a href="about.html" data-i18n="nav.about">About</a>
                 <a href="vision.html" data-i18n="nav.mv">Vision</a>
@@ -39,7 +40,6 @@
                 <a href="contact.html" data-i18n="nav.contact">Contact</a>
             </nav>
             <div class="header-actions">
-                <a class="home-btn" href="index.html" aria-label="Home"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 11.5 12 4l9 7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M5.5 10v9a1 1 0 0 0 1 1H9.5a1 1 0 0 0 1-1v-4a1 1 0 0 1 1-1h1a1 1 0 0 1 1 1v4a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-i18n="nav.home">Home</span></a>
                 <a href="apply.html" class="btn btn-primary btn-sm" data-i18n="nav.apply">Apply now</a>
                 <button class="lang-toggle" id="lang-toggle" type="button">عربي / EN</button>
                 <button class="theme-toggle" id="theme-toggle" type="button"
@@ -51,6 +51,48 @@
     </header>
 
     <main id="main">
+
+        <!-- ============ APPLY CHOOSER ============ -->
+        <section class="apply-chooser">
+            <div class="container">
+                <p class="eyebrow" data-i18n="applyChooser.eyebrow">Join EGY Soroban</p>
+                <h2 class="section-title" data-i18n="applyChooser.title">How would you like to register?</h2>
+                <div class="chooser-grid">
+                    <div class="chooser-card">
+                        <div class="chooser-icon" aria-hidden="true">
+                            <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
+                                <path d="M4 19V5a2 2 0 0 1 2-2h11a1 1 0 0 1 1 1v15" stroke="currentColor"
+                                    stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path>
+                                <path d="M6 22a2 2 0 0 1-2-2v0a2 2 0 0 1 2-2h12" stroke="currentColor"
+                                    stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path>
+                            </svg>
+                        </div>
+                        <h3 data-i18n="applyChooser.trainingTitle">Full Training</h3>
+                        <p data-i18n="applyChooser.trainingDesc">Enrol your child in the full soroban mental
+                            arithmetic programme. Have their ID, school details, and a parent's national ID ready.
+                        </p>
+                        <a href="#apply-form" class="btn btn-primary"
+                            data-i18n="applyChooser.trainingBtn">Register for training</a>
+                    </div>
+                    <div class="chooser-card">
+                        <div class="chooser-icon" aria-hidden="true">
+                            <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
+                                <path
+                                    d="M8 21h8M12 17v4M6 4h12v3a6 6 0 0 1-12 0V4Z" stroke="currentColor"
+                                    stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path>
+                                <path d="M6 5H4a2 2 0 0 0 0 4h2M18 5h2a2 2 0 0 1 0 4h-2" stroke="currentColor"
+                                    stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path>
+                            </svg>
+                        </div>
+                        <h3 data-i18n="applyChooser.compTitle">Competition</h3>
+                        <p data-i18n="applyChooser.compDesc">Register your child for an upcoming EGY Soroban
+                            competition. You'll need their ID and a contact number.</p>
+                        <a href="competition.html" class="btn btn-primary"
+                            data-i18n="applyChooser.compBtn">Register for competition</a>
+                    </div>
+                </div>
+            </div>
+        </section>
 
         <!-- ============ APPLY ============ -->
         <section class="apply" id="apply">
@@ -86,6 +128,14 @@
                                 <option value="online" data-i18n="apply.optOnline">Online</option>
                             </select>
                             <span class="field-error" data-i18n="apply.errRequired">This field is required.</span>
+                        </div>
+                        <div class="field full" id="trial-slot-field">
+                            <label data-i18n="apply.fTrialSlot">Pick a free trial time <span class="opt"
+                                    data-i18n="apply.optional">(optional)</span></label>
+                            <div id="trial-slot-list" class="trial-slot-list">
+                                <p class="muted" data-i18n="apply.trialSlotHint">Select a branch above to see open
+                                    trial times.</p>
+                            </div>
                         </div>
                         <div class="field">
                             <label for="f-student-name-ar" data-i18n="apply.fStudentNameAr">Child's Arabic name</label>
@@ -296,7 +346,7 @@
         <div class="container footer-grid">
             <div>
                 <div class="footer-brand">
-                    <img class="footer-brand-img" src="assets/logo.png?v=1787853880" alt="Egysoroban Academy" width="34" height="34">
+                    <img class="footer-brand-img" src="assets/logo.png?v=1787916869" alt="Egysoroban Academy" width="34" height="34">
                     <span>Egysoroban</span>
                 </div>
                 <p data-i18n="footer.blurb">Egypt's official AIAMA-member soroban academy — training children ages
@@ -315,6 +365,7 @@
                     <li><a href="faq.html" data-i18n="nav.faq">FAQ</a></li>
                     <li><a href="apply.html" data-i18n="nav.apply">Apply now</a></li>
                     <li><a href="teach.html" data-i18n="teacher.eyebrow">Join our team</a></li>
+                    <li><a href="portal.html" data-i18n="footer.parentPortal">Parent portal</a></li>
                 </ul>
             </div>
             <div class="footer-col">
@@ -331,7 +382,7 @@
         </div>
     </footer>
 
-    <script type="module" src="js/apply-page.js?v=1787853880"></script>
+    <script type="module" src="js/apply-page.js?v=1787916869"></script>
 
 </body>
 

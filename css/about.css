@@ -6,19 +6,25 @@
 .about-grid { display: grid; grid-template-columns: 0.95fr 1.05fr; gap: 64px; align-items: start; }
 @media (max-width: 860px) { .about-grid { grid-template-columns: 1fr; gap: 32px; } }
 .about-copy p { color: var(--ink-soft); font-size: 1.05rem; }
-.about-stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; margin-top: 36px; }
+.about-stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 22px 18px; margin-top: 36px; }
 .stat-card {
-  background: var(--paper-raised); border: 1px solid var(--line); border-radius: var(--radius-md);
-  padding: 22px 20px; box-shadow: var(--shadow-1);
+  display: flex; flex-direction: column; align-items: center; text-align: center; gap: 12px;
+  background: transparent; padding: 0;
 }
-.stat-card .num { font-family: var(--font-mono); font-size: 1.9rem; font-weight: 600; color: var(--brass-strong); font-variant-numeric: tabular-nums; }
-.stat-card .lbl { color: var(--ink-soft); font-size: 0.88rem; margin-top: 4px; }
+.stat-ring {
+  width: 92px; height: 92px; border-radius: 50%; border: 5px solid var(--brass-strong);
+  display: flex; align-items: center; justify-content: center; background: var(--paper-raised);
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.stat-card:hover .stat-ring { transform: translateY(-4px) scale(1.04); box-shadow: var(--shadow-2); }
+.stat-card .num { font-family: var(--font-mono); font-size: 1.5rem; font-weight: 700; color: var(--brass-strong); font-variant-numeric: tabular-nums; }
+.stat-card .lbl { color: var(--ink-soft); font-size: 0.86rem; max-width: 18ch; }
 
-.stat-card:nth-child(1) { background: var(--brass-tint); border-color: color-mix(in srgb, var(--brass) 35%, var(--line)); }
+.stat-card:nth-child(1) .stat-ring { border-color: var(--brass-strong); }
 .stat-card:nth-child(1) .num { color: var(--brass-strong); }
-.stat-card:nth-child(2) { background: var(--jade-tint); border-color: color-mix(in srgb, var(--jade) 35%, var(--line)); }
+.stat-card:nth-child(2) .stat-ring { border-color: var(--jade); }
 .stat-card:nth-child(2) .num { color: var(--jade); }
-.stat-card:nth-child(3) { background: var(--ok-tint); border-color: color-mix(in srgb, var(--ok) 35%, var(--line)); }
+.stat-card:nth-child(3) .stat-ring { border-color: var(--ok); }
 .stat-card:nth-child(3) .num { color: var(--ok); }
-.stat-card:nth-child(4) { background: var(--warn-tint); border-color: color-mix(in srgb, var(--warn) 35%, var(--line)); }
+.stat-card:nth-child(4) .stat-ring { border-color: var(--warn); }
 .stat-card:nth-child(4) .num { color: var(--warn); }

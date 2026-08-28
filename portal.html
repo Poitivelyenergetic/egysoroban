@@ -2,7 +2,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>News — Egysoroban</title>
+    <title>Parent Portal — Egysoroban</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
@@ -12,8 +12,11 @@
     <link rel="stylesheet" href="css/tokens.css?v=1787916869">
     <link rel="stylesheet" href="css/base.css?v=1787916869">
     <link rel="stylesheet" href="css/header.css?v=1787916869">
-    <link rel="stylesheet" href="css/news.css?v=1787916869">
+    <link rel="stylesheet" href="css/apply-form.css?v=1787916869">
+    <link rel="stylesheet" href="css/admin.css?v=1787916869">
+    <link rel="stylesheet" href="css/portal.css?v=1787916869">
     <link rel="stylesheet" href="css/footer.css?v=1787916869">
+    <link rel="stylesheet" href="css/toast.css?v=1787916869">
     <link rel="icon" type="image/png" href="assets/favicon.png?v=1787916869">
 </head>
 
@@ -51,37 +54,74 @@
     </header>
 
     <main id="main">
-
-        <!-- ============ NEWS ============ -->
-        <section id="news">
+        <section id="portal">
             <div class="container">
-                <p class="eyebrow" data-i18n="news.eyebrow">Latest updates</p>
-                <h2 class="section-title" data-i18n="news.title">Our news</h2>
-                <div class="news-grid">
-                    <div class="news-card">
-                        <span class="news-badge" data-i18n="news.n1Badge">Almost</span>
-                        <h3 data-i18n="news.n1Title">Diamond collections launching soon</h3>
-                        <p data-i18n="news.n1Body">Intensive preparations are underway to launch the Diamond Groups with an advanced training method that helps students reach the highest levels of professionalism in mental arithmetic.</p>
-                    </div>
-                    <div class="news-card">
-                        <span class="news-badge" data-i18n="news.n2Badge">Almost</span>
-                        <h3 data-i18n="news.n2Title">Preparations for free summer training</h3>
-                        <p data-i18n="news.n2Body">The academy is preparing free summer training programs exclusive to its students, to keep motivation high and skills improving through the summer break.</p>
-                    </div>
-                    <div class="news-card">
-                        <span class="news-badge" data-i18n="news.n3Badge">Summer 2026</span>
-                        <h3 data-i18n="news.n3Title">Preparing for the EGY SOROBAN Academy Summer Competition</h3>
-                        <p data-i18n="news.n3Body">Ongoing preparations to launch the academy's own competitions and challenges, fostering a spirit of competition and self-confidence among students.</p>
-                    </div>
-                    <div class="news-card">
-                        <span class="news-badge" data-i18n="news.n4Badge">June 2026</span>
-                        <h3 data-i18n="news.n4Title">WAPR International Mental Arithmetic Championship (2026)</h3>
-                        <p data-i18n="news.n4Body">The academy is preparing its champions for the WAPR International Championship (Season 2, June) as part of a strong international preparation plan.</p>
-                    </div>
+
+                <div id="portal-gate">
+                    <p class="eyebrow" data-i18n="portal.eyebrow">Parent portal</p>
+                    <h2 class="section-title" data-i18n="portal.title">Track your child's progress</h2>
+                    <p class="section-lede" data-i18n="portal.lede">Sign in with the email the academy has on file for
+                        you to see your child's level, attendance, and exam history.</p>
+
+                    <form id="portal-login-form" class="app-form">
+                        <div class="field">
+                            <label for="portal-email" data-i18n="admin.emailLabel">Email</label>
+                            <input id="portal-email" type="email" autocomplete="username" required="">
+                        </div>
+                        <div class="field">
+                            <label for="portal-password" data-i18n="admin.passwordLabel">Password</label>
+                            <input id="portal-password" type="password" autocomplete="current-password" required="">
+                        </div>
+                        <button type="submit" class="btn btn-jade btn-block" data-i18n="portal.loginBtn">Sign in</button>
+                        <button type="button" class="admin-forgot-link" id="portal-forgot-btn"
+                            data-i18n="admin.forgotPassword">Forgot password?</button>
+                        <p class="admin-error" id="portal-login-error" data-i18n="portal.loginError">That email or
+                            password isn't right.</p>
+                    </form>
+                    <button type="button" class="admin-forgot-link" id="portal-goto-signup"
+                        data-i18n="portal.gotoSignup">New here? Create a parent account</button>
+
+                    <form id="portal-signup-form" class="app-form" hidden="">
+                        <div class="field">
+                            <label for="portal-signup-email" data-i18n="admin.emailLabel">Email</label>
+                            <input id="portal-signup-email" type="email" autocomplete="username" required="">
+                        </div>
+                        <div class="field">
+                            <label for="portal-signup-password" data-i18n="admin.passwordLabel">Password</label>
+                            <input id="portal-signup-password" type="password" autocomplete="new-password"
+                                minlength="6" required="">
+                        </div>
+                        <button type="submit" class="btn btn-jade btn-block" data-i18n="portal.signupBtn">Create
+                            account</button>
+                        <p class="admin-error" id="portal-signup-error"></p>
+                    </form>
+                    <button type="button" class="admin-forgot-link" id="portal-goto-login" hidden=""
+                        data-i18n="portal.gotoLogin">Already have an account? Sign in</button>
+                    <p class="admin-hint" data-i18n="portal.hint">Use the same email your child's application was
+                        submitted with, so the academy can link your account to them.</p>
                 </div>
+
+                <div id="portal-verify" hidden="">
+                    <h2 class="section-title" data-i18n="admin.verifyTitle">Verify your email</h2>
+                    <p class="section-lede" style="margin-bottom:20px;" data-i18n="admin.verifyLede">We sent a
+                        verification link to your email. Click it, then press "I've verified" below.</p>
+                    <button type="button" class="btn btn-jade btn-block" id="portal-verify-check"
+                        data-i18n="admin.verifyCheckBtn">I've verified — continue</button>
+                    <button type="button" class="btn btn-secondary btn-block" id="portal-verify-resend"
+                        style="margin-top:10px;" data-i18n="admin.verifyResendBtn">Resend verification email</button>
+                    <button type="button" class="admin-forgot-link" id="portal-verify-signout"
+                        data-i18n="portal.notYouSignOut">Not you? Sign out</button>
+                </div>
+
+                <div id="portal-dashboard" hidden="">
+                    <p class="eyebrow" data-i18n="portal.eyebrow">Parent portal</p>
+                    <h2 class="section-title" data-i18n="portal.dashTitle">Your children</h2>
+                    <div id="portal-students" style="margin-top:28px;"></div>
+                    <button class="btn btn-secondary" id="portal-logout" data-i18n="admin.logout">Log out</button>
+                </div>
+
             </div>
         </section>
-
     </main>
 
     <footer class="site-footer">
@@ -127,7 +167,9 @@
         </div>
     </footer>
 
-    <script type="module" src="js/news-page.js?v=1787916869"></script>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+    <script type="module" src="js/portal-page.js?v=1787916869"></script>
 
 </body>
 
