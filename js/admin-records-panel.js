@@ -1,4 +1,5 @@
 import { t, fmtDate } from "./i18n.js";
+import { renderStatTiles } from "./admin-charts.js";
 import { toast } from "./toast.js";
 import { loadStudents, loadStudentsForTeacher, addStudent, updateStudent, addExamResult, deleteStudent } from "./student-records.js";
 import { loadPortalAccounts } from "./portal-accounts.js";
@@ -22,6 +23,7 @@ var signupsBody = document.getElementById("student-signups-body");
 var filterNotice = document.getElementById("students-filter-notice");
 var filterLabel = document.getElementById("students-filter-label");
 var filterClear = document.getElementById("students-filter-clear");
+var recordsStatTiles = document.getElementById("records-stat-tiles");
 var addStudentDetails = document.getElementById("add-student");
 var detailOverlay = document.getElementById("detail-overlay");
 var detailCard = document.getElementById("detail-card");
@@ -321,15 +323,6 @@ function levelLabel(levelIndex) {
     return t("portal.levelPrefix") + " " + n + "/11";
 }
 
-/* Narrows the roster to students with no teacher, and jumps to it. Called by
-   the Team panel's tile; exported so anything else that surfaces the same
-   number can reuse the one route rather than inventing another. */
-export function showUnassignedStudents() {
-    activeFilter = "unassigned";
-    if (state.openPanel) state.openPanel("records");
-    else renderRecordsPanel();
-}
-
 export function clearRecordsFilter() {
     activeFilter = null;
 }
@@ -339,6 +332,27 @@ function applyFilter(list) {
         return list.filter(function (s) { return !s.teacherEmail; });
     }
     return list;
+}
+
+/* The whole-academy "how many have no teacher" count belongs here, next to
+   the actual roster, rather than in the Team panel where the number was
+   previously stranded with no view of the students it describes. Admin-only:
+   a teacher's own view of this panel is already filtered to their own
+   students, so "unassigned" has no meaning inside it. */
+function renderRecordsStatTiles(admin) {
+    if (!recordsStatTiles) return;
+    if (!admin) { recordsStatTiles.innerHTML = ""; return; }
+    var unassigned = students.filter(function (s) { return !s.teacherEmail; }).length;
+    renderStatTiles(recordsStatTiles, [
+        {
+            label: t("team.unassignedStudents"), value: String(unassigned),
+            tone: unassigned > 0 ? "warn" : "", hint: unassigned > 0 ? t("team.unassignedHint") : "",
+            /* Already on the page the tile describes, so pressing it narrows the
+               table below rather than navigating anywhere. */
+            actionLabel: unassigned > 0 ? t("team.unassignedAction") : "",
+            onClick: unassigned > 0 ? function () { activeFilter = "unassigned"; renderRecordsPanel(); } : null,
+        },
+    ]);
 }
 
 function renderFilterNotice() {
@@ -386,6 +400,7 @@ export async function renderRecordsPanel() {
            the rules only let them assign a student to themselves. */
         renderStudentSignups([], false, myEmail);
     }
+    renderRecordsStatTiles(admin);
     renderFilterNotice();
     /* `students` stays the full roster — openStudentDetail() looks records up
        in it by id, and a filtered view must not make a record unopenable. Only

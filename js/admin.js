@@ -137,12 +137,6 @@ function setPanel(name) {
     if (name === "finance") renderFinancePanel();
     if (name === "dblimits") renderDbLimitsPanel();
 }
-/* Lets one panel hand you off to another — the Team panel's unassigned-students
-   tile jumps into Student records, for instance. Registered here rather than
-   exported, because every panel is imported by this file and importing back the
-   other way would close the loop. */
-state.openPanel = setPanel;
-
 if (adminTabs) {
     adminTabs.addEventListener("click", function (e) {
         var btn = e.target.closest(".admin-tab");
