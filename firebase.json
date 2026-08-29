@@ -10,21 +10,31 @@
         "firebase.json",
         "**/.*",
         "**/node_modules/**",
-        ".git/**"
+        ".git/**",
+        "functions/**",
+        "scripts/**",
+        "firestore.rules",
+        "**/*.md"
       ],
       "headers": [
         {
-          "//": "Firebase Hosting defaults every file to max-age=3600, so for an hour after each deploy a returning visitor kept running the previous JS and CSS. The ?v= stamp in the HTML was meant to prevent that, but it is one frozen constant that never changed, and the modules import each other by bare path ('./theme.js') with no stamp at all — so a changed module kept its old URL and was served from cache. That is why newly added buttons appeared but did nothing. These files carry ETags, so no-cache costs a cheap 304 revalidation and can never serve stale code.",
+          "//": "Firebase Hosting defaults every file to max-age=3600, so for an hour after each deploy a returning visitor kept running the previous JS and CSS. The ?v= stamp in the HTML was meant to prevent that, but it is one frozen constant that never changed, and the modules import each other by bare path ('./theme.js') with no stamp at all \u2014 so a changed module kept its old URL and was served from cache. That is why newly added buttons appeared but did nothing. These files carry ETags, so no-cache costs a cheap 304 revalidation and can never serve stale code.",
           "source": "**/*.@(js|css|html)",
           "headers": [
-            { "key": "Cache-Control", "value": "no-cache" }
+            {
+              "key": "Cache-Control",
+              "value": "no-cache"
+            }
           ]
         },
         {
           "//": "Content that does not change behaviour can still be cached hard.",
           "source": "**/*.@(jpg|jpeg|png|gif|svg|webp|avif|ico|woff|woff2|ttf|otf|mp4|webm)",
           "headers": [
-            { "key": "Cache-Control", "value": "public, max-age=31536000" }
+            {
+              "key": "Cache-Control",
+              "value": "public, max-age=31536000"
+            }
           ]
         }
       ]
@@ -36,21 +46,42 @@
         "firebase.json",
         "**/.*",
         "**/node_modules/**",
-        ".git/**"
+        ".git/**",
+        "functions/**",
+        "scripts/**",
+        "firestore.rules",
+        "**/*.md"
       ],
       "headers": [
         {
           "source": "**/*.@(js|css|html)",
           "headers": [
-            { "key": "Cache-Control", "value": "no-cache" }
+            {
+              "key": "Cache-Control",
+              "value": "no-cache"
+            }
           ]
         },
         {
           "source": "**/*.@(jpg|jpeg|png|gif|svg|webp|avif|ico|woff|woff2|ttf|otf|mp4|webm)",
           "headers": [
-            { "key": "Cache-Control", "value": "public, max-age=31536000" }
+            {
+              "key": "Cache-Control",
+              "value": "public, max-age=31536000"
+            }
           ]
         }
+      ]
+    }
+  ],
+  "functions": [
+    {
+      "source": "functions",
+      "codebase": "default",
+      "ignore": [
+        "node_modules",
+        ".git",
+        "*.local"
       ]
     }
   ]

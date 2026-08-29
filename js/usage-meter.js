@@ -116,6 +116,11 @@ export async function loadToday() {
             reads: (base.reads || 0) + pending.reads,
             writes: (base.writes || 0) + pending.writes,
             deletes: (base.deletes || 0) + pending.deletes,
+            /* Written by the scheduled function in functions/index.js, if it is
+               deployed. Google's own meters, so they also cover the console and
+               signed-out traffic that this browser cannot see. Absent until the
+               project is on Blaze and the function is running. */
+            server: base.server || null,
         };
     } catch (e) {
         return { day: todayKey(), reads: null, writes: null, deletes: null };
