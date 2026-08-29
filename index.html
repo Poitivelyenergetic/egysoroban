@@ -1204,6 +1204,27 @@
                         enrolled student's level, attendance and homework. A parent linked by email can view this
                         (read-only) from the Parent Portal.</p>
 
+                    <details class="manual-add" id="student-signups-details">
+                        <summary data-i18n="admin.signupsTitle">+ Student signups waiting for approval</summary>
+                        <p class="section-lede" data-i18n="admin.signupsLede" style="margin:14px 0;">Students
+                            already in the academy sign up here instead of filling in the application form. Assign
+                            each one to a teacher and accept them — that's what creates their student record.</p>
+                        <div class="app-table-wrap">
+                            <table class="app-table">
+                                <thead>
+                                    <tr>
+                                        <th data-i18n="admin.colName">Name</th>
+                                        <th data-i18n="admin.colEmail">Email</th>
+                                        <th data-i18n="admin.colSubmitted">Submitted</th>
+                                        <th data-i18n="admin.signupsAssignCol">Assign to</th>
+                                        <th data-i18n="admin.colActions">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="student-signups-body"></tbody>
+                            </table>
+                        </div>
+                    </details>
+
                     <details class="manual-add" id="portal-accounts-details">
                         <summary data-i18n="admin.portalAccountsTitle">+ Signed-up parent/student accounts</summary>
                         <p class="section-lede" data-i18n="admin.portalAccountsLede" style="margin:14px 0;">Everyone
@@ -1217,6 +1238,7 @@
                                         <th data-i18n="admin.colEmail">Email</th>
                                         <th data-i18n="admin.portalAccountsRoleCol">Signed up as</th>
                                         <th data-i18n="admin.colSubmitted">Submitted</th>
+                                        <th data-i18n="admin.colStatus">Status</th>
                                         <th data-i18n="admin.portalAccountsLinkedCol">Linked?</th>
                                     </tr>
                                 </thead>

@@ -10,7 +10,7 @@ import { auth } from "./firebase-init.js";
 import { t, fmtDate, onLanguageChangeCallbacks } from "./i18n.js";
 import { toast } from "./toast.js";
 import { loadStudentsForAccount } from "./student-records.js";
-import { recordPortalAccount } from "./portal-accounts.js";
+import { recordPortalAccount, loadOwnSignup } from "./portal-accounts.js";
 import { checkEnrolled } from "./enrolled-emails.js";
 
 var gate = document.getElementById("portal-gate");
@@ -51,8 +51,11 @@ function showSignupForm(role) {
     /* Say the requirement up front rather than only rejecting them after they
        have filled the whole form in. */
     if (signupNote) {
-        signupNote.hidden = role === "student";
-        if (role !== "student") signupNote.textContent = t("portal.signupParentHint");
+        /* Both roles get a note now. A student already in the academy needs
+           telling that this is the right door — they do not fill in the
+           application form, they sign up here and a teacher accepts them. */
+        signupNote.hidden = false;
+        signupNote.textContent = t(role === "student" ? "portal.signupStudentHint" : "portal.signupParentHint");
     }
     signupError.classList.remove("show");
 }
@@ -203,11 +206,26 @@ async function showDashboard(email) {
     if (students.length === 0) {
         var p = document.createElement("p");
         p.className = "section-lede";
-        p.textContent = t("portal.noStudents");
+        /* "No record linked" is true but unhelpful for a student who has just
+           signed up and is waiting to be accepted — it reads like something
+           went wrong. Ask their own signup row where they actually stand. */
+        p.textContent = await emptyStateMessage(email);
         studentsWrap.appendChild(p);
         return;
     }
     students.forEach(function (s) { studentsWrap.appendChild(renderStudentCard(s)); });
+}
+
+/* Only a student has a signup row, so a parent falls straight through to the
+   original wording. A lookup that fails is not evidence of anything either
+   way, and says the neutral thing rather than inventing a status. */
+async function emptyStateMessage(email) {
+    var res = await loadOwnSignup(email);
+    if (!res.ok || !res.signup) return t("portal.noStudents");
+    var status = res.signup.status;
+    if (status === "rejected") return t("portal.signupRejected");
+    if (status === "approved") return t("portal.noStudents");
+    return t("portal.signupPending");
 }
 
 onAuthStateChanged(auth, function (user) {
@@ -286,9 +304,14 @@ signupForm.addEventListener("submit", async function (e) {
         var name = signupNameInput.value.trim();
         var cred = await createUserWithEmailAndPassword(auth, signupEmailInput.value.trim(), signupPasswordInput.value);
         try { await updateProfile(cred.user, { displayName: name }); } catch (e4) { }
-        try { await recordPortalAccount(signupRole, signupEmailInput.value.trim(), name); } catch (e3) { }
+        /* For a student this row IS their place in the review queue, so a
+           failure here leaves a login nobody can see waiting. Worth saying out
+           loud rather than swallowing — they can retry from the dashboard,
+           which recreates it. */
+        var recorded = await recordPortalAccount(signupRole, signupEmailInput.value.trim(), name);
         try { await sendEmailVerification(cred.user); } catch (e2) { }
         showVerify();
+        if (!recorded.ok && signupRole === "student") toast(t("portal.signupQueueFailed"));
     } catch (err) {
         if (err && err.code === "auth/email-already-in-use") signupError.textContent = t("admin.signupEmailInUse");
         else if (err && err.code === "auth/weak-password") signupError.textContent = t("admin.signupWeakPassword");

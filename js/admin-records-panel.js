@@ -2,6 +2,10 @@ import { t, fmtDate } from "./i18n.js";
 import { toast } from "./toast.js";
 import { loadStudents, loadStudentsForTeacher, addStudent, updateStudent, addExamResult, deleteStudent } from "./student-records.js";
 import { loadPortalAccounts } from "./portal-accounts.js";
+import {
+    loadStudentSignups, approveSignup, rejectSignup, reopenSignup,
+    statusOf, STATUS_PENDING, STATUS_APPROVED, STATUS_REJECTED,
+} from "./student-signups.js";
 import { listApprovedTeachers, isAdminRole } from "./roles.js";
 import { syncEnrolledEmails } from "./enrolled-emails.js";
 import { BRANCHES } from "./branches.js";
@@ -13,6 +17,8 @@ var tableBody = document.getElementById("students-table-body");
 var addForm = document.getElementById("add-student-form");
 var addTeacherSelect = addForm ? addForm.querySelector('[name="teacherEmail"]') : null;
 var portalAccountsDetails = document.getElementById("portal-accounts-details");
+var signupsDetails = document.getElementById("student-signups-details");
+var signupsBody = document.getElementById("student-signups-body");
 var addStudentDetails = document.getElementById("add-student");
 var detailOverlay = document.getElementById("detail-overlay");
 var detailCard = document.getElementById("detail-card");
@@ -44,7 +50,7 @@ function fillTeacherSelect(selectEl, teachers, currentValue) {
 
 async function renderPortalAccounts(studentsList) {
     if (!portalAccountsBody) return;
-    showLoadingRow(portalAccountsBody, 5, t("admin.loading"));
+    showLoadingRow(portalAccountsBody, 6, t("admin.loading"));
     var accounts = await loadPortalAccounts();
     var linkedEmails = {};
     studentsList.forEach(function (s) {
@@ -56,7 +62,7 @@ async function renderPortalAccounts(studentsList) {
         var tr = document.createElement("tr");
         tr.className = "empty-row";
         var td = document.createElement("td");
-        td.colSpan = 5;
+        td.colSpan = 6;
         td.textContent = t("admin.emptyPortalAccounts");
         tr.appendChild(td);
         portalAccountsBody.appendChild(tr);
@@ -74,6 +80,48 @@ async function renderPortalAccounts(studentsList) {
         var tdDate = document.createElement("td");
         tdDate.className = "muted";
         tdDate.textContent = fmtDate(a.createdAt);
+
+        /* Only a student signup carries a review status. A parent's account is
+           gated at signup on already having a child here, so there is nothing
+           to review and an empty cell is the honest thing to show. */
+        var tdStatus = document.createElement("td");
+        if (a.role === "student") {
+            var status = statusOf(a);
+            var statusPill = document.createElement("span");
+            statusPill.className = "status-pill " + (
+                status === STATUS_APPROVED ? "enrolled"
+                    : status === STATUS_REJECTED ? "declined" : "new"
+            );
+            statusPill.textContent = t(
+                status === STATUS_APPROVED ? "admin.signupsStatusApproved"
+                    : status === STATUS_REJECTED ? "admin.signupsStatusRejected"
+                        : "admin.signupsStatusPending"
+            );
+            tdStatus.appendChild(statusPill);
+            /* A rejection made by mistake shuts a real student out of their own
+               progress page, so it has to be reversible without going near the
+               Firebase console. */
+            if (status === STATUS_REJECTED) {
+                var undo = document.createElement("button");
+                undo.type = "button";
+                undo.className = "btn btn-ghost btn-sm";
+                undo.style.marginTop = "6px";
+                undo.style.display = "block";
+                undo.textContent = t("admin.signupsReopen");
+                undo.addEventListener("click", async function () {
+                    undo.disabled = true;
+                    var res = await reopenSignup(a.email);
+                    if (res.ok) { toast(t("admin.signupsReopenedToast")); renderRecordsPanel(); return; }
+                    undo.disabled = false;
+                    toast(t("admin.savingFailedToast"));
+                });
+                tdStatus.appendChild(undo);
+            }
+        } else {
+            tdStatus.className = "muted";
+            tdStatus.textContent = t("detail.none");
+        }
+
         var tdLinked = document.createElement("td");
         var linked = !!linkedEmails[(a.email || "").toLowerCase()];
         var pill = document.createElement("span");
@@ -84,8 +132,178 @@ async function renderPortalAccounts(studentsList) {
         tr.appendChild(tdEmail);
         tr.appendChild(tdRole);
         tr.appendChild(tdDate);
+        tr.appendChild(tdStatus);
         tr.appendChild(tdLinked);
         portalAccountsBody.appendChild(tr);
+    });
+}
+
+function buildSelect(options, value, className) {
+    var sel = document.createElement("select");
+    if (className) sel.className = className;
+    options.forEach(function (o) {
+        var opt = document.createElement("option");
+        opt.value = o.value;
+        opt.textContent = o.label;
+        if (String(value) === String(o.value)) opt.selected = true;
+        sel.appendChild(opt);
+    });
+    return sel;
+}
+
+function signupsMessageRow(message) {
+    signupsBody.innerHTML = "";
+    var tr = document.createElement("tr");
+    tr.className = "empty-row";
+    var td = document.createElement("td");
+    td.colSpan = 5;
+    td.textContent = message;
+    tr.appendChild(td);
+    signupsBody.appendChild(tr);
+}
+
+/* The queue for students who are already in the academy.
+ *
+ * They don't apply — they create a portal login, which lands here as pending.
+ * A teacher or an admin picks their teacher, branch and level and accepts,
+ * and that is the moment their students/{id} record comes into existence.
+ *
+ * A teacher may only accept students onto their own roster; an admin may
+ * assign to anyone. That is enforced in the security rules, not just here —
+ * this only keeps the control honest about what will be permitted. */
+async function renderStudentSignups(teachers, admin, myEmail) {
+    if (!signupsBody) return;
+    showLoadingRow(signupsBody, 5, t("admin.loading"));
+
+    var res = await loadStudentSignups();
+    if (!res.ok) {
+        if (signupsDetails) signupsDetails.open = false;
+        signupsMessageRow(t("admin.signupsLoadFailed"));
+        return;
+    }
+
+    var pending = res.list.filter(function (a) { return statusOf(a) === STATUS_PENDING; });
+    /* Opened only when somebody is actually waiting. A queue nobody notices is
+       the same as no queue, and one that is always open is noise. */
+    if (signupsDetails) signupsDetails.open = pending.length > 0;
+
+    if (!pending.length) {
+        signupsMessageRow(t("admin.signupsEmpty"));
+        return;
+    }
+
+    /* Accepting means assigning, so with nobody to assign to there is nothing
+       useful to offer — say what to do instead of showing a dead control. */
+    if (admin && !teachers.length) {
+        signupsMessageRow(t("admin.signupsNoTeachers"));
+        return;
+    }
+
+    var teacherOptions = admin
+        ? teachers.map(function (te) {
+            return { value: te.email, label: te.name ? te.name + " (" + te.email + ")" : te.email };
+        })
+        : [{ value: myEmail, label: t("admin.signupsAssignSelf") }];
+
+    var branchOptions = BRANCHES.map(function (b) { return { value: b.id, label: b.label }; });
+    var levelOptions = [];
+    for (var i = 1; i <= 11; i++) levelOptions.push({ value: i, label: levelLabel(i) });
+
+    signupsBody.innerHTML = "";
+    pending.forEach(function (a) {
+        var tr = document.createElement("tr");
+        /* Rows in this table hold controls, so the table-wide row click that
+           opens a student's detail card must not fire here. */
+        tr.style.cursor = "default";
+
+        var tdName = document.createElement("td");
+        var nameInput = document.createElement("input");
+        nameInput.type = "text";
+        nameInput.value = a.name || "";
+        /* Students type their own name at signup, so let staff correct the
+           spelling before it becomes the record everyone reads. */
+        nameInput.setAttribute("aria-label", t("admin.colName"));
+        tdName.appendChild(nameInput);
+
+        var tdEmail = document.createElement("td");
+        tdEmail.className = "muted";
+        tdEmail.textContent = a.email;
+
+        var tdDate = document.createElement("td");
+        tdDate.className = "muted";
+        tdDate.textContent = fmtDate(a.createdAt);
+
+        var tdAssign = document.createElement("td");
+        var teacherSel = buildSelect(teacherOptions, admin ? "" : myEmail);
+        var branchSel = buildSelect(branchOptions, "");
+        var levelSel = buildSelect(levelOptions, 1);
+        teacherSel.setAttribute("aria-label", t("admin.assignedTeacherLabel"));
+        branchSel.setAttribute("aria-label", t("apply.fBranch"));
+        levelSel.setAttribute("aria-label", t("portal.levelLabel"));
+        [teacherSel, branchSel, levelSel].forEach(function (el) {
+            el.style.display = "block";
+            el.style.marginBottom = "6px";
+            tdAssign.appendChild(el);
+        });
+
+        var tdActions = document.createElement("td");
+        var accept = document.createElement("button");
+        accept.type = "button";
+        accept.className = "btn btn-jade btn-sm";
+        accept.textContent = t("admin.signupsAccept");
+        var reject = document.createElement("button");
+        reject.type = "button";
+        reject.className = "btn btn-ghost btn-sm";
+        reject.textContent = t("admin.signupsReject");
+        reject.style.marginTop = "6px";
+        accept.style.display = "block";
+        reject.style.display = "block";
+
+        accept.addEventListener("click", async function () {
+            var name = nameInput.value.trim();
+            if (!name) { nameInput.focus(); return; }
+            accept.disabled = true; reject.disabled = true;
+            var result = await approveSignup(a, {
+                name: name,
+                teacherEmail: teacherSel.value,
+                branch: branchSel.value,
+                levelIndex: Number(levelSel.value) || 1,
+            });
+            if (result.ok) {
+                toast(t("admin.signupsAcceptedToast"));
+                renderRecordsPanel();
+                return;
+            }
+            accept.disabled = false; reject.disabled = false;
+            /* The record exists but the signup still reads as waiting. Saying
+               "failed" would invite a second accept and a duplicate student,
+               so this case gets its own wording. */
+            toast(t(result.code === "record_created_not_marked"
+                ? "admin.signupsPartialToast"
+                : "admin.savingFailedToast"));
+        });
+
+        reject.addEventListener("click", async function () {
+            accept.disabled = true; reject.disabled = true;
+            var result = await rejectSignup(a.email);
+            if (result.ok) {
+                toast(t("admin.signupsRejectedToast"));
+                renderRecordsPanel();
+                return;
+            }
+            accept.disabled = false; reject.disabled = false;
+            toast(t("admin.savingFailedToast"));
+        });
+
+        tdActions.appendChild(accept);
+        tdActions.appendChild(reject);
+
+        tr.appendChild(tdName);
+        tr.appendChild(tdEmail);
+        tr.appendChild(tdDate);
+        tr.appendChild(tdAssign);
+        tr.appendChild(tdActions);
+        signupsBody.appendChild(tr);
     });
 }
 
@@ -98,9 +316,14 @@ function levelLabel(levelIndex) {
 export async function renderRecordsPanel() {
     if (!tableBody) return;
     var admin = isAdminRole(state.role);
+    var myEmail = ((auth.currentUser && auth.currentUser.email) || "").toLowerCase();
 
     if (portalAccountsDetails) portalAccountsDetails.hidden = !admin;
     if (addStudentDetails) addStudentDetails.hidden = !admin;
+    /* The signup queue stays visible to teachers as well as admins: the point
+       of it is that either can accept a student who is already in the academy
+       and take them onto their own roster. */
+    if (signupsDetails) signupsDetails.hidden = false;
 
     showLoadingRow(tableBody, 5, t("admin.loading"));
 
@@ -115,9 +338,12 @@ export async function renderRecordsPanel() {
         teacherNameByEmail = {};
         teachersForAdd.forEach(function (te) { teacherNameByEmail[te.email.toLowerCase()] = te.name || ""; });
         if (addTeacherSelect) fillTeacherSelect(addTeacherSelect, teachersForAdd, "");
+        renderStudentSignups(teachersForAdd, true, myEmail);
     } else {
-        var myEmail = (auth.currentUser && auth.currentUser.email || "").toLowerCase();
         students = await loadStudentsForTeacher(myEmail);
+        /* A teacher can't list the teachers collection, and doesn't need to:
+           the rules only let them assign a student to themselves. */
+        renderStudentSignups([], false, myEmail);
     }
     tableBody.innerHTML = "";
 

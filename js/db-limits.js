@@ -8,12 +8,16 @@ import { db } from "./firebase-init.js";
  *
  * Two honest limits on what this panel can be, both worth knowing:
  *
- * 1. It cannot show real consumption. How many reads and writes the project
- *    actually used today lives in Cloud Monitoring, which needs server
- *    credentials — a browser holding an ordinary admin login cannot reach it
- *    at any price. Document counts below are real (counted live); the daily
- *    read/write figures are a MODEL built from those counts and are labelled
- *    as estimates wherever they are shown.
+ * 1. The daily read and write figures here are the FALLBACK, used only for a
+ *    day with nothing recorded at all. Normally the panel shows what js/fs.js
+ *    and js/usage-meter.js actually measured — every operation this site
+ *    performed, including the reads the security rules themselves cost, which
+ *    are billed and easy to miss. That is a tight floor rather than the bill:
+ *    it cannot see the Firebase console, or a visitor who never signs in on
+ *    that browser. The true figure lives in Cloud Monitoring, which needs
+ *    server credentials no browser can safely hold — functions/index.js reads
+ *    it and the panel prefers it whenever it is there. Document counts below
+ *    are always real, counted live.
  *
  * 2. Prices move and vary by region. Every figure here was checked against the
  *    pages named below on the date in PRICING_CHECKED, and the panel links out

@@ -27,6 +27,11 @@ service cloud.firestore {
     // collection needed to migrate it. The app rewrites the stored value on
     // sight (migrateLegacyDeveloperRole); once no document holds 'superadmin'
     // any more, that half of this check can be dropped.
+    // NOTE FOR ANYONE EDITING THE HELPERS BELOW: every get()/exists() in a rule
+    // is a billed document read, and js/fs.js carries a table (RULE_READS) that
+    // transcribes how many each operation costs so the Database limits panel
+    // can report the real number. Adding or removing a lookup here makes that
+    // table wrong until it is updated to match.
     function isDeveloper() {
       return (isVerified() || isDevAdminException())
         && exists(/databases/$(database)/documents/admins/$(myEmail()))
@@ -106,23 +111,46 @@ service cloud.firestore {
     // lightweight registry so staff can see who signed up as what and link
     // them to the right students/{id} record. Anyone signed in may write only
     // their own entry; staff (or the account owner) may read it.
+    // The own-account check comes FIRST in each condition on purpose. || stops
+    // at the first true branch, and every isStaff() attempt costs a billed
+    // document read, so putting the cheap check first means the ordinary case
+    // — someone reading their own row — costs nothing at all.
     match /parentAccounts/{email} {
-      allow read: if isStaff() || (isSignedIn() && myEmail() == email);
+      allow read: if (isSignedIn() && myEmail() == email) || isStaff();
       allow write: if isSignedIn() && myEmail() == email;
     }
+
+    // studentAccounts/{email} is also the review queue for students who are
+    // already in the academy. They don't apply through the public form — they
+    // sign up here, and a teacher or admin then accepts them and assigns them
+    // to a teacher, which is what creates their students/{id} record.
+    //
+    // So the account holder may create their own row and correct their own
+    // name, but may never write the fields that decide the outcome. Without
+    // that split, signing up and being accepted would be the same action, and
+    // anyone could enrol themselves.
     match /studentAccounts/{email} {
-      allow read: if isStaff() || (isSignedIn() && myEmail() == email);
-      allow write: if isSignedIn() && myEmail() == email;
+      allow read: if (isSignedIn() && myEmail() == email) || isStaff();
+      allow create: if isSignedIn() && myEmail() == email
+        && request.resource.data.status == 'pending'
+        && !request.resource.data.keys().hasAny(
+             ['studentRecordId', 'teacherEmail', 'reviewedBy', 'reviewedAt']
+           );
+      allow update: if (isSignedIn() && myEmail() == email
+                        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['name']))
+        || isStaff();
+      allow delete: if isAdminOrDeveloper();
     }
 
     // students/{id} holds a child's level, attendance, homework, and exam
     // history. Admin/developer have full access to every record (including
     // assigning a teacher). An approved teacher may only read/update the
     // records they've actually been assigned (teacherEmail == their email) —
-    // they can't create, delete, or touch another teacher's students. A
+    // they can't delete one, or touch another teacher's students. A
     // parent OR the student's own account (whichever email matches, via
     // parentEmail or studentEmail) may read — never write — their own
-    // record. Firestore excludes non-matching documents from query results
+    // record. A teacher's one route to creating a record is accepting a
+    // signup; see the create rule below. Firestore excludes non-matching documents from query results
     // rather than erroring, so each account's query only returns what it's
     // actually linked to.
     match /students/{id} {
@@ -130,7 +158,18 @@ service cloud.firestore {
         || (isApprovedTeacher() && resource.data.teacherEmail == myEmail())
         || (isVerified() && resource.data.parentEmail == myEmail())
         || (isVerified() && resource.data.studentEmail == myEmail());
-      allow create, delete: if isAdminOrDeveloper();
+      // An admin creates any record. An approved teacher may create one only by
+      // accepting a signup that actually exists in studentAccounts, and only by
+      // assigning it to themselves — so a teacher can turn a real person who
+      // signed up into a student of theirs, but cannot invent students, and
+      // cannot hand work to a colleague who never agreed to it.
+      allow create: if isAdminOrDeveloper()
+        || (isApprovedTeacher()
+            && request.resource.data.teacherEmail == myEmail()
+            && request.resource.data.studentEmail is string
+            && request.resource.data.studentEmail != ''
+            && exists(/databases/$(database)/documents/studentAccounts/$(request.resource.data.studentEmail)));
+      allow delete: if isAdminOrDeveloper();
       // A teacher's update may only touch the progress fields they're meant
       // to fill out — never teacherEmail/parentEmail/studentEmail/name/branch,
       // which would otherwise let them reassign themselves onto a different

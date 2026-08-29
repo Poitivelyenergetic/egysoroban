@@ -1,5 +1,5 @@
 import {
-    doc, getDoc, getDocs, collection, setDoc, updateDoc, deleteDoc,
+    doc, getDoc, getDocs, collection, setDoc, updateDoc, deleteDoc, setViewerRole,
 } from "./fs.js";
 import { db, auth } from "./firebase-init.js";
 
@@ -33,21 +33,33 @@ export function isAdminRole(role) {
  */
 export async function getCurrentRole() {
     var user = auth.currentUser;
-    if (!user || !user.emailVerified || !user.email) return null;
+    if (!user || !user.emailVerified || !user.email) return remember(null);
     var email = user.email.toLowerCase();
     try {
         var adminSnap = await getDoc(doc(db, "admins", email));
         if (adminSnap.exists()) {
-            return normaliseRole(adminSnap.data().role) === ROLE_DEVELOPER ? ROLE_DEVELOPER : ROLE_ADMIN;
+            return remember(normaliseRole(adminSnap.data().role) === ROLE_DEVELOPER ? ROLE_DEVELOPER : ROLE_ADMIN);
         }
     } catch (e) { /* not an admin, or not yet permitted to read — fall through */ }
     try {
         var teacherSnap = await getDoc(doc(db, "teachers", email));
         if (teacherSnap.exists() && teacherSnap.data().status === "approved") {
-            return ROLE_TEACHER;
+            return remember(ROLE_TEACHER);
         }
     } catch (e) { /* not an approved teacher */ }
-    return null;
+    return remember(null);
+}
+
+/* Tells the Firestore wrapper who is asking, then hands the role back
+   unchanged. The security rules charge a different number of billed reads
+   depending on the caller's role — an admin is confirmed by one look at
+   admins/{them}, a teacher only after that look misses — so the usage meter
+   cannot price an operation correctly without knowing which one this is. Doing
+   it here means every caller of getCurrentRole() gets it for free, and a
+   sign-out clears it by passing null. */
+function remember(role) {
+    setViewerRole(role);
+    return role;
 }
 
 export async function listApprovedTeachers() {
