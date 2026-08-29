@@ -1,6 +1,7 @@
 import { t } from "./i18n.js";
 import { state } from "./state.js";
-import { renderStatTiles, renderBarList } from "./admin-charts.js";
+import { renderStatTiles, renderBarList, renderAreaLine } from "./admin-charts.js";
+import { loadToday, loadUsage, flush } from "./usage-meter.js";
 import { showLoadingRow } from "./loading-row.js";
 import {
     FREE_TIER, BLAZE_RATES, PRICING_CHECKED, PRICING_SOURCES,
@@ -14,6 +15,7 @@ var collectionsBody = document.getElementById("dblimits-collections-body");
 var limitsBody = document.getElementById("dblimits-limits-body");
 var pricingBody = document.getElementById("dblimits-pricing-body");
 var costEl = document.getElementById("dblimits-cost");
+var trendEl = document.getElementById("dblimits-trend");
 var checkedEl = document.getElementById("dblimits-checked");
 var sessionsInput = document.getElementById("dblimits-sessions");
 
@@ -51,11 +53,22 @@ export async function renderDbLimitsPanel() {
         { label: t("dblimits.projectedCost"), value: "…" },
     ]);
 
+    /* Push anything this session has done but not yet saved, so the panel
+       reports the session you are sitting in rather than the one before it. */
+    await flush();
+
     var counts = await countCollections();
+    var today = await loadToday();
+    var history = await loadUsage();
     var docs = totalDocs(counts);
     var storageGib = estimatedStorageGib(counts);
-    var dailyReads = estimateDailyReads(counts, staffSessions, 20);
-    var dailyWrites = estimateDailyWrites(counts, staffSessions);
+
+    /* Measured wherever there is a measurement; the model is only a fallback
+       for a day with nothing recorded yet, and is labelled differently so the
+       two are never confused for each other. */
+    var measured = today.reads != null;
+    var dailyReads = measured ? today.reads : estimateDailyReads(counts, staffSessions, 20);
+    var dailyWrites = measured ? today.writes : estimateDailyWrites(counts, staffSessions);
     var cost = projectMonthlyCost(dailyReads, dailyWrites);
 
     /* Collections this role can't list return null, not 0. Summing them as
@@ -75,9 +88,16 @@ export async function renderDbLimitsPanel() {
             hint: t("dblimits.of1gib"),
         },
         {
-            label: t("dblimits.estReads"), value: fmt(dailyReads),
-            hint: t("dblimits.estimateHint"),
+            label: measured ? t("dblimits.readsToday") : t("dblimits.estReads"),
+            value: fmt(dailyReads),
+            hint: measured ? t("dblimits.measuredHint") : t("dblimits.estimateHint"),
             tone: dailyReads > 50000 ? "danger" : dailyReads > 35000 ? "warn" : "ok",
+        },
+        {
+            label: measured ? t("dblimits.writesToday") : t("dblimits.estWrites"),
+            value: fmt(dailyWrites),
+            hint: measured ? t("dblimits.measuredHint") : t("dblimits.estimateHint"),
+            tone: dailyWrites > 20000 ? "danger" : dailyWrites > 14000 ? "warn" : "ok",
         },
         {
             label: t("dblimits.projectedCost"),
@@ -106,6 +126,20 @@ export async function renderDbLimitsPanel() {
             display: pctOfLimit(storageGib, 1) + "%",
         },
     ], { emptyText: t("common.nothingYet") });
+
+    /* ---- reads per day, measured ---- */
+    if (trendEl) {
+        var recent = history.slice(-7);
+        if (recent.length >= 2) {
+            renderAreaLine(trendEl, recent.map(function (d) {
+                return { label: (d.day || "").slice(5), value: Number(d.reads) || 0 };
+            }), { emptyText: t("dblimits.noHistory") });
+        } else {
+            /* One point is not a trend — say so rather than drawing a line
+               through a single day and implying a direction. */
+            trendEl.innerHTML = '<p class="chart-empty">' + t("dblimits.noHistory") + "</p>";
+        }
+    }
 
     /* ---- what is actually stored ---- */
     collectionsBody.innerHTML = "";

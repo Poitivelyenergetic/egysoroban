@@ -1,6 +1,6 @@
 import {
     collection, doc, getDocs, addDoc, deleteDoc,
-} from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
+} from "./fs.js";
 import { db, auth } from "./firebase-init.js";
 
 var expensesCol = collection(db, "expenses");

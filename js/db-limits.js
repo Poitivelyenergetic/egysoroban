@@ -1,6 +1,6 @@
 import {
     collection, getCountFromServer,
-} from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
+} from "./fs.js";
 import { db } from "./firebase-init.js";
 
 /* Free-tier quotas and upgrade pricing for the Firebase project behind this

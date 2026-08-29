@@ -1,6 +1,6 @@
 import {
     collection, getDocs, addDoc, setDoc, updateDoc, deleteDoc, doc,
-} from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
+} from "./fs.js";
 import { db } from "./firebase-init.js";
 import { state } from "./state.js";
 

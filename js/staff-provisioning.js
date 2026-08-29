@@ -2,7 +2,7 @@ import { initializeApp, deleteApp } from "https://www.gstatic.com/firebasejs/12.
 import {
     getAuth, createUserWithEmailAndPassword, sendEmailVerification, signOut, updateProfile,
 } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
-import { doc, setDoc } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
+import { doc, setDoc } from "./fs.js";
 import { db, auth, firebaseConfig } from "./firebase-init.js";
 import { ROLE_DEVELOPER, ROLE_ADMIN, ROLE_TEACHER } from "./roles.js";
 

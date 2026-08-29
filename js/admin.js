@@ -2,7 +2,7 @@ import {
     signInWithEmailAndPassword, signOut, sendEmailVerification, sendPasswordResetEmail,
     createUserWithEmailAndPassword, updateProfile,
 } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
-import { doc, setDoc } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
+import { doc, setDoc } from "./fs.js";
 import { auth, db } from "./firebase-init.js";
 import { state } from "./state.js";
 import { t, fmtDate, onLanguageChangeCallbacks } from "./i18n.js";

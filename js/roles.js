@@ -1,6 +1,6 @@
 import {
     doc, getDoc, getDocs, collection, setDoc, updateDoc, deleteDoc,
-} from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
+} from "./fs.js";
 import { db, auth } from "./firebase-init.js";
 
 export var ROLE_DEVELOPER = "developer";

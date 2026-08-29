@@ -1,6 +1,6 @@
 import {
     collection, doc, getDoc, getDocs, setDoc, deleteDoc,
-} from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
+} from "./fs.js";
 import { db } from "./firebase-init.js";
 
 var COL = "enrolledEmails";

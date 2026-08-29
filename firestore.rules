@@ -215,6 +215,24 @@ service cloud.firestore {
       allow write: if isAdminOrDeveloper();
     }
 
+    // usageDaily/{YYYY-MM-DD} is the app's own tally of the Firestore reads and
+    // writes it performs, accumulated with increment() so concurrent sessions
+    // add up instead of overwriting each other. It exists because Google's real
+    // meters live in Cloud Monitoring and need server credentials a browser
+    // will never have.
+    //
+    // Any signed-in account may add to it, not just staff: a parent opening the
+    // portal spends quota too, and excluding them would quietly under-report.
+    // The trade is that a signed-in user could inflate a counter — which has no
+    // security consequence, since nothing is gated on these numbers; they are a
+    // capacity gauge, not a permission. Reading is staff-only because the
+    // figures describe the whole project, and nothing may delete a day's record.
+    match /usageDaily/{day} {
+      allow read: if isStaff();
+      allow create, update: if isSignedIn();
+      allow delete: if false;
+    }
+
     // Deny everything else by default.
     match /{document=**} {
       allow read, write: if false;
