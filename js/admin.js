@@ -20,6 +20,7 @@ import { renderAnalyticsPanel } from "./admin-analytics-panel.js";
 import { renderCalendarPanel } from "./admin-calendar-panel.js";
 import { renderTeamPanel } from "./admin-team-panel.js";
 import { renderFinancePanel } from "./admin-finance-panel.js";
+import { renderDbLimitsPanel } from "./admin-db-limits-panel.js";
 
 var adminOverlay = document.getElementById("admin-overlay");
 var adminGate = document.getElementById("admin-gate");
@@ -52,6 +53,7 @@ var adminTabAnalytics = document.getElementById("admin-tab-analytics");
 var adminTabCalendar = document.getElementById("admin-tab-calendar");
 var adminTabTeam = document.getElementById("admin-tab-team");
 var adminTabFinance = document.getElementById("admin-tab-finance");
+var adminTabDbLimits = document.getElementById("admin-tab-dblimits");
 var adminNavGroupAdmin = document.getElementById("admin-nav-group-admin");
 var deletePending = null;
 var loginMode = null; // "teacher" | "admin"
@@ -133,6 +135,7 @@ function setPanel(name) {
     if (name === "calendar") renderCalendarPanel();
     if (name === "team") renderTeamPanel();
     if (name === "finance") renderFinancePanel();
+    if (name === "dblimits") renderDbLimitsPanel();
 }
 if (adminTabs) {
     adminTabs.addEventListener("click", function (e) {
@@ -159,6 +162,7 @@ async function showAdminDashboard() {
     adminTabAnalytics.hidden = isTeacherOnly;
     adminTabTeam.hidden = isTeacherOnly;
     adminTabFinance.hidden = isTeacherOnly;
+    adminTabDbLimits.hidden = isTeacherOnly;
     adminTabCalendar.hidden = false;
     adminNavGroupAdmin.hidden = isTeacherOnly;
     adminTabs.hidden = false;
