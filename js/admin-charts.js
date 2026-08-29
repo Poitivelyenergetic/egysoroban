@@ -16,14 +16,31 @@ function el(tag, className, text) {
     return node;
 }
 
+/* A tile may carry an onClick, which turns it into a real <button> rather than
+   a div wired to a click handler — so it is reachable by keyboard, announced as
+   a control, and gets a focus ring for free. Tiles without one stay plain
+   divs: making every number look pressable would be a lie about most of them. */
 export function renderStatTiles(container, tiles) {
     if (!container) return;
     container.innerHTML = "";
     tiles.forEach(function (tile) {
-        var card = el("div", "stat-tile" + (tile.tone ? " tone-" + tile.tone : ""));
+        var interactive = typeof tile.onClick === "function";
+        var classes = "stat-tile" + (tile.tone ? " tone-" + tile.tone : "")
+            + (interactive ? " stat-tile-action" : "");
+        var card = el(interactive ? "button" : "div", classes);
+        if (interactive) {
+            card.type = "button";
+            /* The label alone reads as a statistic, not a destination. The
+               action title says where pressing it goes. */
+            if (tile.actionLabel) card.title = tile.actionLabel;
+            card.addEventListener("click", tile.onClick);
+        }
         card.appendChild(el("div", "stat-tile-value", tile.value));
         card.appendChild(el("div", "stat-tile-label", tile.label));
         if (tile.hint) card.appendChild(el("div", "stat-tile-hint", tile.hint));
+        if (interactive && tile.actionLabel) {
+            card.appendChild(el("div", "stat-tile-action-hint", tile.actionLabel));
+        }
         container.appendChild(card);
     });
 }

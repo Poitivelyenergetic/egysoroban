@@ -13,7 +13,7 @@ import { syncEnrolledEmails } from "./enrolled-emails.js";
 import { ROLE_DEVELOPER, ROLE_ADMIN, ROLE_TEACHER, getCurrentRole, isAdminRole } from "./roles.js";
 import { renderTeachersPanel } from "./admin-teachers-panel.js";
 import { renderManagePanel } from "./admin-manage-panel.js";
-import { renderRecordsPanel } from "./admin-records-panel.js";
+import { renderRecordsPanel, clearRecordsFilter } from "./admin-records-panel.js";
 import { renderSlotsPanel } from "./admin-slots-panel.js";
 import { renderCompetitionPanel } from "./admin-competition-panel.js";
 import { renderAnalyticsPanel } from "./admin-analytics-panel.js";
@@ -137,10 +137,21 @@ function setPanel(name) {
     if (name === "finance") renderFinancePanel();
     if (name === "dblimits") renderDbLimitsPanel();
 }
+/* Lets one panel hand you off to another — the Team panel's unassigned-students
+   tile jumps into Student records, for instance. Registered here rather than
+   exported, because every panel is imported by this file and importing back the
+   other way would close the loop. */
+state.openPanel = setPanel;
+
 if (adminTabs) {
     adminTabs.addEventListener("click", function (e) {
         var btn = e.target.closest(".admin-tab");
-        if (btn) setPanel(btn.getAttribute("data-tab"));
+        if (!btn) return;
+        /* Reaching a panel from its own tab always means "show me everything";
+           only the tile that navigates here narrows the view. Without this a
+           filter set once would silently persist and look like missing data. */
+        clearRecordsFilter();
+        setPanel(btn.getAttribute("data-tab"));
     });
 }
 async function showAdminDashboard() {

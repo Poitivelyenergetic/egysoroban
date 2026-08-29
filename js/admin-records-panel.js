@@ -19,11 +19,19 @@ var addTeacherSelect = addForm ? addForm.querySelector('[name="teacherEmail"]') 
 var portalAccountsDetails = document.getElementById("portal-accounts-details");
 var signupsDetails = document.getElementById("student-signups-details");
 var signupsBody = document.getElementById("student-signups-body");
+var filterNotice = document.getElementById("students-filter-notice");
+var filterLabel = document.getElementById("students-filter-label");
+var filterClear = document.getElementById("students-filter-clear");
 var addStudentDetails = document.getElementById("add-student");
 var detailOverlay = document.getElementById("detail-overlay");
 var detailCard = document.getElementById("detail-card");
 var portalAccountsBody = document.getElementById("portal-accounts-table-body");
 var students = [];
+/* Set by whatever sent you here — the Team panel'''s unassigned-students tile,
+   today. Null means show everyone. Cleared whenever Student records is reached
+   from its own tab, so a filter can never quietly outlive the trip that set
+   it and make the roster look short. */
+var activeFilter = null;
 var deletePending = null;
 var teacherNameByEmail = {};
 
@@ -313,6 +321,39 @@ function levelLabel(levelIndex) {
     return t("portal.levelPrefix") + " " + n + "/11";
 }
 
+/* Narrows the roster to students with no teacher, and jumps to it. Called by
+   the Team panel's tile; exported so anything else that surfaces the same
+   number can reuse the one route rather than inventing another. */
+export function showUnassignedStudents() {
+    activeFilter = "unassigned";
+    if (state.openPanel) state.openPanel("records");
+    else renderRecordsPanel();
+}
+
+export function clearRecordsFilter() {
+    activeFilter = null;
+}
+
+function applyFilter(list) {
+    if (activeFilter === "unassigned") {
+        return list.filter(function (s) { return !s.teacherEmail; });
+    }
+    return list;
+}
+
+function renderFilterNotice() {
+    if (!filterNotice) return;
+    filterNotice.hidden = !activeFilter;
+    if (activeFilter && filterLabel) filterLabel.textContent = t("admin.filterUnassigned");
+}
+
+if (filterClear) {
+    filterClear.addEventListener("click", function () {
+        clearRecordsFilter();
+        renderRecordsPanel();
+    });
+}
+
 export async function renderRecordsPanel() {
     if (!tableBody) return;
     var admin = isAdminRole(state.role);
@@ -345,20 +386,27 @@ export async function renderRecordsPanel() {
            the rules only let them assign a student to themselves. */
         renderStudentSignups([], false, myEmail);
     }
+    renderFilterNotice();
+    /* `students` stays the full roster — openStudentDetail() looks records up
+       in it by id, and a filtered view must not make a record unopenable. Only
+       what gets drawn is narrowed. */
+    var visible = applyFilter(students);
     tableBody.innerHTML = "";
 
-    if (students.length === 0) {
+    if (visible.length === 0) {
         var tr = document.createElement("tr");
         tr.className = "empty-row";
         var td = document.createElement("td");
         td.colSpan = 5;
-        td.textContent = t("admin.emptyStudents");
+        /* "No students yet" would be wrong and alarming when the roster is
+           full and the filter simply matched nothing. */
+        td.textContent = activeFilter ? t("admin.filterNoMatches") : t("admin.emptyStudents");
         tr.appendChild(td);
         tableBody.appendChild(tr);
         return;
     }
 
-    students.forEach(function (s) {
+    visible.forEach(function (s) {
         var tr = document.createElement("tr");
         tr.addEventListener("click", function () { openStudentDetail(s.id); });
 

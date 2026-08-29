@@ -2,6 +2,7 @@ import { t } from "./i18n.js";
 import { state } from "./state.js";
 import { toast } from "./toast.js";
 import { loadStudents } from "./student-records.js";
+import { showUnassignedStudents } from "./admin-records-panel.js";
 import { listApprovedTeachers, listAdmins, isAdminRole, revokeTeacher, setTeacherSalary, ROLE_DEVELOPER } from "./roles.js";
 import { loadExpenses, addExpense } from "./expenses.js";
 import { periodKey, periodLabel } from "./payments.js";
@@ -130,6 +131,10 @@ export async function renderTeamPanel() {
         {
             label: t("team.unassignedStudents"), value: String(unassigned),
             tone: unassigned > 0 ? "warn" : "", hint: unassigned > 0 ? t("team.unassignedHint") : "",
+            /* Pressable only when there is something to go and look at. A tile
+               reading 0 that navigates to an empty list wastes the trip. */
+            actionLabel: unassigned > 0 ? t("team.unassignedAction") : "",
+            onClick: unassigned > 0 ? showUnassignedStudents : null,
         },
         {
             label: t("team.needsAttention"), value: String(needsAttention),

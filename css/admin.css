@@ -116,6 +116,16 @@
 }
 .admin-toolbar input[type="search"], .admin-toolbar input[type="text"] { flex: 1; min-width: 200px; }
 
+/* Says out loud that the table below is showing a subset. A filtered table that
+   looks identical to an unfiltered one is how a missing record gets reported as
+   a bug, so the way out sits inside the notice rather than somewhere else. */
+.filter-notice {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+  background: var(--jade-tint); border: 1px solid var(--jade); border-radius: var(--radius-md);
+  padding: 10px 14px; margin-bottom: 14px; font-size: 0.86rem; color: var(--ink);
+}
+.filter-notice[hidden] { display: none; }
+
 .app-table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--radius-md); background: var(--paper-raised); }
 table.app-table { width: 100%; border-collapse: collapse; min-width: 760px; }
 .app-table th, .app-table td { text-align: start; padding: 12px 16px; border-bottom: 1px solid var(--line); font-size: 0.88rem; vertical-align: top; }
@@ -240,6 +250,29 @@ table.app-table { width: 100%; border-collapse: collapse; min-width: 760px; }
 .stat-tile.tone-ok .stat-tile-value { color: var(--ok); }
 .stat-tile.tone-warn .stat-tile-value { color: var(--warn); }
 .stat-tile.tone-danger .stat-tile-value { color: var(--danger); }
+
+/* A tile that goes somewhere. It is a <button>, so the defaults have to be
+   undone before it can look like the tiles beside it — and it has to keep
+   looking like them, or the grid stops reading as one row of figures. What
+   marks it as pressable is the hover lift and the arrow on its hint, not a
+   different shape. */
+.stat-tile-action {
+  font: inherit; color: inherit; text-align: start; width: 100%; cursor: pointer;
+  appearance: none; -webkit-appearance: none;
+  transition: border-color 0.15s ease, transform 0.15s ease, background 0.15s ease;
+}
+.stat-tile-action:hover { border-color: var(--jade); transform: translateY(-2px); }
+.stat-tile-action:focus-visible { outline: 2px solid var(--jade); outline-offset: 2px; }
+.stat-tile-action-hint {
+  font-size: 0.72rem; color: var(--jade-strong); margin-top: 8px; font-weight: 600;
+}
+/* The arrow points along the reading direction, so it flips with the page. */
+.stat-tile-action-hint::after { content: " \2192"; }
+[dir="rtl"] .stat-tile-action-hint::after { content: " \2190"; }
+@media (prefers-reduced-motion: reduce) {
+  .stat-tile-action { transition: none; }
+  .stat-tile-action:hover { transform: none; }
+}
 
 /* ============ Chart cards ============ */
 .chart-grid {
