@@ -3,14 +3,28 @@ import {
 } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 import { db, auth } from "./firebase-init.js";
 
-export var ROLE_SUPERADMIN = "superadmin";
+export var ROLE_DEVELOPER = "developer";
 export var ROLE_ADMIN = "admin";
 export var ROLE_TEACHER = "teacher";
+
+/* The developer role was called "superadmin" until it was renamed, and that
+   string is still sitting in admins/{email} documents created before the
+   change. Every read normalises it to ROLE_DEVELOPER in getCurrentRole() and
+   listAdmins(), so this legacy value is known in exactly two places and the
+   rest of the app only ever sees "developer". The Firestore rules accept both
+   for the same reason — the rules have to keep honouring the old value until
+   the last document is migrated, or the rename would lock the existing
+   developer out of the one collection needed to fix it. */
+export var LEGACY_SUPERADMIN = "superadmin";
+
+export function normaliseRole(role) {
+    return role === LEGACY_SUPERADMIN ? ROLE_DEVELOPER : role;
+}
 
 var adminsCol = collection(db, "admins");
 
 export function isAdminRole(role) {
-    return role === ROLE_SUPERADMIN || role === ROLE_ADMIN;
+    return role === ROLE_DEVELOPER || role === ROLE_ADMIN;
 }
 
 /*
@@ -24,7 +38,7 @@ export async function getCurrentRole() {
     try {
         var adminSnap = await getDoc(doc(db, "admins", email));
         if (adminSnap.exists()) {
-            return adminSnap.data().role === ROLE_SUPERADMIN ? ROLE_SUPERADMIN : ROLE_ADMIN;
+            return normaliseRole(adminSnap.data().role) === ROLE_DEVELOPER ? ROLE_DEVELOPER : ROLE_ADMIN;
         }
     } catch (e) { /* not an admin, or not yet permitted to read — fall through */ }
     try {
@@ -83,7 +97,10 @@ export async function revokeTeacher(email) {
 export async function listAdmins() {
     var snap = await getDocs(adminsCol);
     var list = [];
-    snap.forEach(function (d) { list.push(Object.assign({ email: d.id }, d.data())); });
+    snap.forEach(function (d) {
+        var data = d.data();
+        list.push(Object.assign({ email: d.id }, data, { role: normaliseRole(data.role) }));
+    });
     list.sort(function (a, b) { return (a.email || "").localeCompare(b.email || ""); });
     return list;
 }
@@ -116,6 +133,26 @@ export async function removeAdminDoc(email) {
     try {
         await deleteDoc(doc(db, "admins", email));
         return { ok: true };
+    } catch (err) {
+        return { ok: false, code: (err && err.code) || "upstream_error" };
+    }
+}
+
+/* Rewrites any admins/{email} still holding the old "superadmin" string to
+   "developer". Runs when a developer opens Manage admins — they are the only
+   role the rules permit to write that collection, and the only one who can see
+   the panel. Idempotent, and writes nothing once every document is migrated. */
+export async function migrateLegacyDeveloperRole() {
+    try {
+        var snap = await getDocs(adminsCol);
+        var writes = [];
+        snap.forEach(function (d) {
+            if (d.data().role === LEGACY_SUPERADMIN) {
+                writes.push(updateDoc(doc(db, "admins", d.id), { role: ROLE_DEVELOPER }));
+            }
+        });
+        await Promise.all(writes);
+        return { ok: true, migrated: writes.length };
     } catch (err) {
         return { ok: false, code: (err && err.code) || "upstream_error" };
     }

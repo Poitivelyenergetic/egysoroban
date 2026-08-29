@@ -14,8 +14,11 @@ function mapFor(btn) {
     return block ? block.querySelector(".contact-map") : null;
 }
 
+/* Write into the label span, not the button — the button also holds the icon,
+   and setting textContent on it would delete the SVG. */
 function syncLabel(btn, map) {
-    btn.textContent = t(map.classList.contains("expanded") ? "home.mapClickCollapse" : "home.mapClickExpand");
+    var label = btn.querySelector("[data-map-label]") || btn;
+    label.textContent = t(map.classList.contains("expanded") ? "home.mapClickCollapse" : "home.mapClickExpand");
 }
 
 document.querySelectorAll("[data-map-toggle]").forEach(function (btn) {

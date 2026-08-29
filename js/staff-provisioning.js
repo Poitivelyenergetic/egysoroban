@@ -4,7 +4,7 @@ import {
 } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
 import { doc, setDoc } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 import { db, auth, firebaseConfig } from "./firebase-init.js";
-import { ROLE_SUPERADMIN, ROLE_ADMIN, ROLE_TEACHER } from "./roles.js";
+import { ROLE_DEVELOPER, ROLE_ADMIN, ROLE_TEACHER } from "./roles.js";
 
 /*
  * Creates a login for a new staff member without disturbing the admin who is
@@ -49,7 +49,7 @@ export async function provisionStaffAccount(details) {
 
     if (!email || !name) return { ok: false, code: "missing_fields" };
     if (password.length < 6) return { ok: false, code: "auth/weak-password" };
-    if (role !== ROLE_TEACHER && role !== ROLE_ADMIN && role !== ROLE_SUPERADMIN) {
+    if (role !== ROLE_TEACHER && role !== ROLE_ADMIN && role !== ROLE_DEVELOPER) {
         return { ok: false, code: "bad_role" };
     }
 

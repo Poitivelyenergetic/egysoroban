@@ -2,7 +2,7 @@ import { t } from "./i18n.js";
 import { state } from "./state.js";
 import { toast } from "./toast.js";
 import { loadStudents } from "./student-records.js";
-import { listApprovedTeachers, listAdmins, isAdminRole, revokeTeacher, setTeacherSalary, ROLE_SUPERADMIN } from "./roles.js";
+import { listApprovedTeachers, listAdmins, isAdminRole, revokeTeacher, setTeacherSalary, ROLE_DEVELOPER } from "./roles.js";
 import { loadExpenses, addExpense } from "./expenses.js";
 import { periodKey, periodLabel } from "./payments.js";
 import { money } from "./admin-charts.js";
@@ -76,12 +76,12 @@ function showPct(value) {
 export async function renderTeamPanel() {
     if (!tableBody) return;
 
-    /* Any admin can take on a teacher; only a superadmin can mint another
+    /* Any admin can take on a teacher; only a developer can mint another
        admin, which is also what the Firestore rules enforce on admins/{email}. */
     if (addStaffDetails) addStaffDetails.hidden = !isAdminRole(state.role);
     document.querySelectorAll(".staff-role-admin").forEach(function (opt) {
-        opt.hidden = state.role !== ROLE_SUPERADMIN;
-        opt.disabled = state.role !== ROLE_SUPERADMIN;
+        opt.hidden = state.role !== ROLE_DEVELOPER;
+        opt.disabled = state.role !== ROLE_DEVELOPER;
     });
 
     showLoadingRow(tableBody, 8, t("admin.loading"));
@@ -262,11 +262,11 @@ export async function renderTeamPanel() {
         });
     }
 
-    /* Admins and superadmins listed separately — they're staff too, but they
+    /* Admins and developers listed separately — they're staff too, but they
        aren't scored on teaching metrics they don't participate in. */
     if (staffBody) {
         showLoadingRow(staffBody, 2, t("admin.loading"));
-        /* Unlike its siblings, listAdmins() rethrows — only a superadmin may
+        /* Unlike its siblings, listAdmins() rethrows — only a developer may
            list the collection, so an ordinary admin opening Team would
            otherwise surface an unhandled permissions rejection. */
         var admins = [];
@@ -284,7 +284,7 @@ export async function renderTeamPanel() {
             admins.forEach(function (a) {
                 var tr = document.createElement("tr");
                 tr.appendChild(cell(a.email));
-                tr.appendChild(cell(a.role === "superadmin" ? t("admin.roleSuperadmin") : t("admin.roleAdmin")));
+                tr.appendChild(cell(a.role === ROLE_DEVELOPER ? t("admin.roleDeveloper") : t("admin.roleAdmin")));
                 staffBody.appendChild(tr);
             });
         }

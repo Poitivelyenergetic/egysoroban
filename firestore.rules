@@ -19,12 +19,23 @@ service cloud.firestore {
     function isDevAdminException() {
       return isSignedIn() && myEmail() == 'developer1-admin@egysoroban.com';
     }
-    function isSuperAdmin() {
+    // The top role is called "developer". It was "superadmin" until the rename,
+    // and documents created before that still carry the old string — so both
+    // are accepted here. This is not optional politeness: the rules are what
+    // permit writing admins/ at all, so rejecting the old value before the last
+    // document is migrated would lock the existing developer out of the one
+    // collection needed to migrate it. The app rewrites the stored value on
+    // sight (migrateLegacyDeveloperRole); once no document holds 'superadmin'
+    // any more, that half of this check can be dropped.
+    function isDeveloper() {
       return (isVerified() || isDevAdminException())
         && exists(/databases/$(database)/documents/admins/$(myEmail()))
-        && get(/databases/$(database)/documents/admins/$(myEmail())).data.role == 'superadmin';
+        && (
+          get(/databases/$(database)/documents/admins/$(myEmail())).data.role == 'developer'
+          || get(/databases/$(database)/documents/admins/$(myEmail())).data.role == 'superadmin'
+        );
     }
-    function isAdminOrSuper() {
+    function isAdminOrDeveloper() {
       return (isVerified() || isDevAdminException())
         && exists(/databases/$(database)/documents/admins/$(myEmail()));
     }
@@ -34,16 +45,16 @@ service cloud.firestore {
         && get(/databases/$(database)/documents/teachers/$(myEmail())).data.status == 'approved';
     }
     function isStaff() {
-      return isAdminOrSuper() || isApprovedTeacher();
+      return isAdminOrDeveloper() || isApprovedTeacher();
     }
 
     // Student applications — anyone can submit one (the public apply form).
-    // Only staff (admin, superadmin, or an approved teacher) can view or update
-    // them; only admin/superadmin can delete one.
+    // Only staff (admin, developer, or an approved teacher) can view or update
+    // them; only admin/developer can delete one.
     match /studentApplications/{id} {
       allow create: if true;
       allow read, update: if isStaff();
-      allow delete: if isAdminOrSuper();
+      allow delete: if isAdminOrDeveloper();
     }
 
     // applications/{id} is the old (pre-rename) collection name. Left
@@ -54,40 +65,40 @@ service cloud.firestore {
     }
 
     // Teacher applications — anyone can submit one (the public teach form).
-    // Only admin/superadmin can review, approve, or reject them.
+    // Only admin/developer can review, approve, or reject them.
     match /teacherApplications/{id} {
       allow create: if true;
-      allow read, update: if isAdminOrSuper();
-      allow delete: if isSuperAdmin();
+      allow read, update: if isAdminOrDeveloper();
+      allow delete: if isDeveloper();
     }
 
-    // admins/{email} grants admin or superadmin access. A signed-in user may
-    // read their own doc (to check their own role); only a superadmin may list
+    // admins/{email} grants admin or developer access. A signed-in user may
+    // read their own doc (to check their own role); only a developer may list
     // the whole collection or write to any doc (add/remove/promote admins).
     match /admins/{email} {
       allow get: if isSignedIn() && myEmail() == email;
-      allow list: if isSuperAdmin();
-      allow write: if isSuperAdmin();
+      allow list: if isDeveloper();
+      allow write: if isDeveloper();
     }
 
     // teachers/{email} grants teacher access once status == "approved". A
-    // signed-in user may read their own doc; admin/superadmin may read or
+    // signed-in user may read their own doc; admin/developer may read or
     // write any doc (approving a teacher application creates this doc).
     match /teachers/{email} {
       allow get: if isSignedIn() && myEmail() == email;
-      allow list: if isAdminOrSuper();
-      allow read: if isAdminOrSuper() || (isSignedIn() && myEmail() == email);
-      allow write: if isAdminOrSuper();
+      allow list: if isAdminOrDeveloper();
+      allow read: if isAdminOrDeveloper() || (isSignedIn() && myEmail() == email);
+      allow write: if isAdminOrDeveloper();
     }
 
     // staffProfiles/{email} holds the username/phone a staff member sets for
     // themselves when creating their login account. Anyone signed in may write
-    // their own profile; admin/superadmin may also write someone else's, which
+    // their own profile; admin/developer may also write someone else's, which
     // is what lets an admin fill in the name and phone when they create an
     // account on a new colleague's behalf.
     match /staffProfiles/{email} {
       allow read: if isSignedIn();
-      allow write: if (isSignedIn() && myEmail() == email) || isAdminOrSuper();
+      allow write: if (isSignedIn() && myEmail() == email) || isAdminOrDeveloper();
     }
 
     // parentAccounts/{email} and studentAccounts/{email} record which group a
@@ -105,7 +116,7 @@ service cloud.firestore {
     }
 
     // students/{id} holds a child's level, attendance, homework, and exam
-    // history. Admin/superadmin have full access to every record (including
+    // history. Admin/developer have full access to every record (including
     // assigning a teacher). An approved teacher may only read/update the
     // records they've actually been assigned (teacherEmail == their email) —
     // they can't create, delete, or touch another teacher's students. A
@@ -115,17 +126,17 @@ service cloud.firestore {
     // rather than erroring, so each account's query only returns what it's
     // actually linked to.
     match /students/{id} {
-      allow read: if isAdminOrSuper()
+      allow read: if isAdminOrDeveloper()
         || (isApprovedTeacher() && resource.data.teacherEmail == myEmail())
         || (isVerified() && resource.data.parentEmail == myEmail())
         || (isVerified() && resource.data.studentEmail == myEmail());
-      allow create, delete: if isAdminOrSuper();
+      allow create, delete: if isAdminOrDeveloper();
       // A teacher's update may only touch the progress fields they're meant
       // to fill out — never teacherEmail/parentEmail/studentEmail/name/branch,
       // which would otherwise let them reassign themselves onto a different
       // student, unassign themselves, or grant themselves permanent parent/
       // student-style read access by setting studentEmail to their own email.
-      allow update: if isAdminOrSuper()
+      allow update: if isAdminOrDeveloper()
         || (isApprovedTeacher() && resource.data.teacherEmail == myEmail()
             && request.resource.data.diff(resource.data).affectedKeys().hasOnly(
               ['levelIndex', 'attendedSessions', 'totalSessions', 'homeworkCompleted', 'homeworkAssigned', 'examHistory']
@@ -134,11 +145,11 @@ service cloud.firestore {
 
     // competitionRegistrations/{id} — anyone can submit one (the public
     // competition registration form). Only staff can review/update; only
-    // admin/superadmin can delete one.
+    // admin/developer can delete one.
     match /competitionRegistrations/{id} {
       allow create: if true;
       allow read, update: if isStaff();
-      allow delete: if isAdminOrSuper();
+      allow delete: if isAdminOrDeveloper();
     }
 
     // trialSlots/{id} are bookable free-trial time slots shown on the public
@@ -161,27 +172,27 @@ service cloud.firestore {
     // classes/{id} is the recurring weekly timetable (day of week + start time,
     // not a dated event). Any staff member may read it — a teacher needs to see
     // their own timetable, and the Calendar panel filters to their own classes
-    // client-side — but only admin/superadmin may schedule, edit, or cancel a
+    // client-side — but only admin/developer may schedule, edit, or cancel a
     // class, so a teacher can't assign themselves work or drop someone else's.
     match /classes/{id} {
       allow read: if isStaff();
-      allow create, update, delete: if isAdminOrSuper();
+      allow create, update, delete: if isAdminOrDeveloper();
     }
 
     // payments/{id} records one monthly-tuition payment against a student.
     // Financial records are admin-only in both directions: approved teachers
     // have no read access at all, and nothing here is ever public. Admins can
     // correct their own bookkeeping, deletion included — a mistyped payment
-    // has to be removable by the person who took it, not just a superadmin.
+    // has to be removable by the person who took it, not just a developer.
     match /payments/{id} {
-      allow read, create, update, delete: if isAdminOrSuper();
+      allow read, create, update, delete: if isAdminOrDeveloper();
     }
 
     // expenses/{id} records money going out — salaries, rent, materials. Even
     // more sensitive than payments (it exposes what staff are paid), so it is
     // admin-only in every direction and never readable by a teacher.
     match /expenses/{id} {
-      allow read, create, update, delete: if isAdminOrSuper();
+      allow read, create, update, delete: if isAdminOrDeveloper();
     }
 
     // enrolledEmails/{hash} answers one question for the Parent Portal signup
@@ -200,8 +211,8 @@ service cloud.firestore {
     // record; that remains enforced on students/ by the parentEmail match.
     match /enrolledEmails/{hash} {
       allow get: if true;
-      allow list: if isAdminOrSuper();
-      allow write: if isAdminOrSuper();
+      allow list: if isAdminOrDeveloper();
+      allow write: if isAdminOrDeveloper();
     }
 
     // Deny everything else by default.

@@ -34,17 +34,27 @@
    as an overlay it covered the pins and Google's own controls. */
 .contact-map-block { display: flex; flex-direction: column; gap: 12px; }
 
-/* The homepage expand control: a quiet line under the map rather than a button
-   over it. It has to be a real element outside the embed — a cross-origin
-   iframe swallows clicks, so the map can't be its own control. */
-.map-self-hint {
-  font-family: var(--font-mono); font-size: 0.72rem; color: var(--ink-faint);
-  margin: 0; text-align: center; background: none; border: none;
-  padding: 6px 10px; cursor: pointer; align-self: center; border-radius: 999px;
-  transition: color 0.15s ease, background 0.15s ease;
+/* The homepage expand control. It sits under the map, not on it — the embed is
+   a cross-origin iframe that swallows clicks, so the map can't be its own
+   control, and underneath keeps it clear of the pins.
+   It reads as a button on purpose: the first version was 11px muted grey with
+   no border or background, which looked like a caption and gave no sign it
+   could be clicked. */
+.map-expand-btn {
+  display: inline-flex; align-items: center; gap: 8px; align-self: center;
+  font-family: var(--font-body); font-size: 0.84rem; font-weight: 700;
+  color: var(--ink); background: var(--paper-raised);
+  border: 1px solid var(--line); border-radius: 999px;
+  padding: 9px 18px; cursor: pointer; margin: 0;
+  box-shadow: var(--shadow-1);
+  transition: border-color 0.18s ease, background 0.18s ease, transform 0.18s ease;
 }
-.map-self-hint:hover { color: var(--ink); background: var(--paper-sunken); }
-.map-self-hint:focus-visible { outline: 2px solid var(--jade); outline-offset: 2px; }
+.map-expand-btn:hover { border-color: var(--brass); background: var(--paper-sunken); transform: translateY(-1px); }
+.map-expand-btn:active { transform: translateY(0); }
+.map-expand-btn:focus-visible { outline: 2px solid var(--jade); outline-offset: 3px; }
+.map-expand-icon { color: var(--brass); flex-shrink: 0; transition: transform 0.25s ease; }
+/* Collapsed shows arrows pushing outward; expanded flips them inward. */
+.map-expand-btn[aria-expanded="true"] .map-expand-icon { transform: rotate(180deg); }
 .home-map-card {
   width: 100%; max-width: 268px;
   display: flex; flex-direction: column; align-items: flex-start; gap: 3px; text-align: start;

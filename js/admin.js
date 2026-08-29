@@ -10,7 +10,7 @@ import { toast } from "./toast.js";
 import { loadApplications, addApplicationDoc, updateApplicationDoc, deleteApplicationDoc, migrateOldApplications } from "./applications.js";
 import { addStudent, loadStudents } from "./student-records.js";
 import { syncEnrolledEmails } from "./enrolled-emails.js";
-import { ROLE_SUPERADMIN, ROLE_ADMIN, ROLE_TEACHER, getCurrentRole, isAdminRole } from "./roles.js";
+import { ROLE_DEVELOPER, ROLE_ADMIN, ROLE_TEACHER, getCurrentRole, isAdminRole } from "./roles.js";
 import { renderTeachersPanel } from "./admin-teachers-panel.js";
 import { renderManagePanel } from "./admin-manage-panel.js";
 import { renderRecordsPanel } from "./admin-records-panel.js";
@@ -110,7 +110,7 @@ function syncAdminCrumb() {
 function updateAdminRoleBadge() {
     var el = document.getElementById("admin-role-badge");
     if (!el) return;
-    var key = state.role === ROLE_SUPERADMIN ? "admin.roleSuperadmin"
+    var key = state.role === ROLE_DEVELOPER ? "admin.roleDeveloper"
         : state.role === ROLE_ADMIN ? "admin.roleAdmin" : "admin.roleTeacher";
     el.textContent = t(key);
 }
@@ -148,7 +148,7 @@ async function showAdminDashboard() {
 
     var isTeacherOnly = !isAdminRole(state.role);
     adminTabTeachers.hidden = isTeacherOnly;
-    adminTabManageAdmins.hidden = state.role !== ROLE_SUPERADMIN;
+    adminTabManageAdmins.hidden = state.role !== ROLE_DEVELOPER;
     adminTabRecords.hidden = false;
     adminTabSlots.hidden = isTeacherOnly;
     adminTabCompetition.hidden = isTeacherOnly;

@@ -23,6 +23,16 @@ html { scroll-behavior: smooth; }
    a scroll container and break the sticky header. */
 html, body { overflow-x: clip; }
 
+/* Arabic letters join to their neighbours. Any letter-spacing pulls those
+   joins apart and the word stops reading as a word — which is what made the
+   admin table headers, dates and eyebrow labels look broken in Arabic. The
+   site sets letter-spacing in 17 places for uppercase Latin labels, all of
+   which are wrong for Arabic, so it is cancelled once here for the whole
+   document rather than patched rule by rule. `data-lang` is set on <html> by
+   applyLanguage(). Uppercase is left alone: Arabic has no case, so
+   text-transform simply does nothing to it. */
+html[data-lang="ar"] * { letter-spacing: normal !important; }
+
 .reveal-target {
   opacity: 0; transform: translateY(48px) scale(0.94);
   transition: opacity 2.4s ease-out, transform 2.8s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -104,13 +114,63 @@ section { padding-block: 96px; }
 }
 [dir="rtl"] .eyebrow::before { order: 2; }
 
-[data-lang="ar"] .eyebrow,
-[data-lang="ar"] .level-card .age,
-[data-lang="ar"] .level-foot {
-  font-family: var(--font-ar);
-  text-transform: none;
-  letter-spacing: normal;
+/* Arabic readability, applied once for the whole document instead of patched
+   onto individual selectors (the old rule only covered three of them, and the
+   site has 43 places using --font-mono alone plus 17 with letter-spacing —
+   all wrong for Arabic, all invisible until you actually read the page in
+   Arabic and look closely). Three separate problems fixed together:
+     - Font: Cairo was wired to only those three selectors, so a mono-styled
+       or generic-sans element fell through to Manrope/system sans, which
+       shape Arabic poorly. Cairo now applies to every element in Arabic.
+     - Tracking: covered by the letter-spacing reset above this block —
+       Arabic joins letters, so any tracking breaks the joins.
+     - Size and contrast: the site's small uppercase micro-labels (sidebar
+       group headers, eyebrows, table headers) were sized and faded for
+       Latin capitals — a script with no lowercase to disambiguate from, so
+       small+faint still reads fine. Arabic has no case distinction to lean
+       on, so the same treatment came out too small and too low-contrast to
+       read, per the user's screenshots. Sized and lightened back up. */
+html[data-lang="ar"] {
+  /* Overriding the custom properties, not just setting font-family on <html>:
+     dozens of rules reference var(--font-mono)/var(--font-display) directly
+     with higher selector specificity than a bare html[...] rule, so plain
+     inheritance would lose to every one of them. Redefining the variables
+     themselves changes what every var(--font-mono) resolves to, with no
+     specificity fight, and needs no per-selector patch list.
+     --font-body is untouched: it already lists Cairo as its fallback
+     ("Manrope", "Cairo", ...), so a browser already picks Cairo's glyphs for
+     Arabic characters there per-character — that path was never broken.
+     --font-mono (IBM Plex Mono — no Arabic glyphs at all) and --font-display
+     (Barlow Condensed — same problem) are the two that fell through to a
+     generic system sans and needed the override. */
+  --font-mono: var(--font-ar);
+  --font-display: var(--font-ar);
 }
+html[data-lang="ar"] .eyebrow,
+html[data-lang="ar"] .level-card .age,
+html[data-lang="ar"] .level-foot {
+  text-transform: none;
+}
+html[data-lang="ar"] .admin-tabs-group,
+html[data-lang="ar"] .admin-sidebar-role,
+html[data-lang="ar"] .app-table th {
+  font-size: 0.86rem;
+}
+html[data-lang="ar"] .admin-tabs-group { color: rgba(255,255,255,0.72); }
+html[data-lang="ar"] .admin-sidebar-role { color: rgba(255,255,255,0.8); }
+
+/* --ink-faint is tuned for Latin micro-labels, where uppercase letterforms
+   stay identifiable even when dim. Arabic has no case to lean on and its
+   letterforms carry meaning in small marks — dots, hamzas — that disappear at
+   the same contrast, which is why the table headers and dates read as barely
+   visible. Raising the token once lifts every faint label in Arabic at the
+   same time, instead of hunting them down selector by selector. Latin text is
+   untouched: this only applies while the document is in Arabic. */
+html[data-lang="ar"] { --ink-faint: #5c6880; }
+@media (prefers-color-scheme: dark) {
+  html[data-lang="ar"]:not([data-theme="light"]) { --ink-faint: #a3b0c4; }
+}
+html[data-lang="ar"][data-theme="dark"] { --ink-faint: #a3b0c4; }
 
 h2.section-title { font-size: clamp(1.7rem, 1.2rem + 2vw, 2.5rem); }
 .section-lede { color: var(--ink-soft); font-size: 1.08rem; max-width: 62ch; }

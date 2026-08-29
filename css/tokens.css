@@ -37,8 +37,19 @@
   --maxw: 1140px;
   --font-display: "Barlow Condensed", "Cairo", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --font-body: "Manrope", "Cairo", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
-  --font-ar: "Cairo", "Manrope", -apple-system, sans-serif;
+  /* Cairo sits in the mono stack for the same reason it is in the display and
+     body stacks: IBM Plex Mono has no Arabic, so Arabic text in a mono-styled
+     element — the admin breadcrumb, chart labels, table values — fell through
+     to the generic `monospace`, which on Windows is Courier New and renders
+     Arabic disconnected and unreadable. Font fallback resolves per glyph, so
+     Latin and digits still get IBM Plex Mono and keep their tabular alignment;
+     only the Arabic glyphs come from Cairo. */
+  --font-mono: "IBM Plex Mono", "IBM Plex Sans Arabic", ui-monospace, SFMono-Regular, Menlo, monospace;
+  /* IBM Plex Sans Arabic is the purpose-built Arabic companion to the IBM Plex
+     Mono this site already uses, so the two share proportions and weight, and
+     it stays legible at the small sizes the admin UI uses — which is where
+     Cairo alone was reading as faint and mushy. Cairo remains as fallback. */
+  --font-ar: "IBM Plex Sans Arabic", "Cairo", "Manrope", -apple-system, sans-serif;
 }
 
 @media (prefers-color-scheme: dark) {
