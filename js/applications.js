@@ -12,7 +12,7 @@ import { state } from "./state.js";
 var applicationsCol = collection(db, "studentApplications");
 
 export async function loadApplications() {
-    if (!state.isAdmin) return;
+    if (!state.isSignedIn) return;
     try {
         var snap = await getDocs(applicationsCol);
         var list = [];

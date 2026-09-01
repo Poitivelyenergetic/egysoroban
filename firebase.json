@@ -18,7 +18,7 @@
       ],
       "headers": [
         {
-          "//": "Firebase Hosting defaults every file to max-age=3600, so for an hour after each deploy a returning visitor kept running the previous JS and CSS. The ?v= stamp in the HTML was meant to prevent that, but it is one frozen constant that never changed, and the modules import each other by bare path ('./theme.js') with no stamp at all \u2014 so a changed module kept its old URL and was served from cache. That is why newly added buttons appeared but did nothing. These files carry ETags, so no-cache costs a cheap 304 revalidation and can never serve stale code.",
+          "//": "Firebase Hosting defaults every file to max-age=3600, so for an hour after each deploy a returning visitor kept running the previous JS and CSS. The ?v= stamp in the HTML was meant to prevent that, but it is one frozen constant that never changed, and the modules import each other by bare path ('./theme.js') with no stamp at all — so a changed module kept its old URL and was served from cache. That is why newly added buttons appeared but did nothing. These files carry ETags, so no-cache costs a cheap 304 revalidation and can never serve stale code.",
           "source": "**/*.@(js|css|html)",
           "headers": [
             {
@@ -35,6 +35,15 @@
               "key": "Cache-Control",
               "value": "public, max-age=31536000"
             }
+          ]
+        },
+        {
+          "//": "Baseline hardening headers, applied to every response. No Content-Security-Policy here: the site loads the Firebase SDK from gstatic, talks to several *.googleapis.com/*.google-analytics.com endpoints, and embeds a Google Maps iframe on the contact page, so a CSP would need every one of those origins enumerated and verified live before it could ship without breaking sign-in or the map — worth doing, but as its own change, tested against the deployed site rather than guessed here.",
+          "source": "**",
+          "headers": [
+            { "key": "X-Content-Type-Options", "value": "nosniff" },
+            { "key": "X-Frame-Options", "value": "DENY" },
+            { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" }
           ]
         }
       ]
@@ -69,6 +78,14 @@
               "key": "Cache-Control",
               "value": "public, max-age=31536000"
             }
+          ]
+        },
+        {
+          "source": "**",
+          "headers": [
+            { "key": "X-Content-Type-Options", "value": "nosniff" },
+            { "key": "X-Frame-Options", "value": "DENY" },
+            { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" }
           ]
         }
       ]

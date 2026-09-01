@@ -179,7 +179,36 @@ async function showAdminDashboard() {
     renderAdminDashboard();
 }
 
+/* staffProfiles writes require a verified email (see firestore.rules) because
+   Firebase lets anyone register an account under an email they don't actually
+   own, and that email becomes theirs to write under immediately, before it's
+   confirmed. So the self-signup form below can't write this doc at signup
+   time — it remembers the profile here instead, and this writes it the moment
+   a verified session for that email is actually observed. Without it, a
+   teacher who signed themselves up would never appear in the approval queue,
+   since that queue is built entirely from staffProfiles docs. */
+var PENDING_STAFF_PROFILE_KEY = "egysoroban_pending_staff_profile";
+
+async function recordPendingStaffProfileIfAny() {
+    var user = auth.currentUser;
+    if (!user || !user.email) return;
+    var raw;
+    try { raw = localStorage.getItem(PENDING_STAFF_PROFILE_KEY); } catch (e) { return; }
+    if (!raw) return;
+    var pending;
+    try { pending = JSON.parse(raw); } catch (e) { pending = null; }
+    if (!pending || (pending.email || "").toLowerCase() !== user.email.toLowerCase()) return;
+    try {
+        await setDoc(doc(db, "staffProfiles", pending.email), {
+            username: pending.username, phone: pending.phone, email: pending.email,
+            createdAt: pending.createdAt,
+        }, { merge: true });
+        try { localStorage.removeItem(PENDING_STAFF_PROFILE_KEY); } catch (e) { }
+    } catch (e) { /* still not permitted, or a transient error — left for next retry */ }
+}
+
 async function afterVerifiedLogin() {
+    await recordPendingStaffProfileIfAny();
     var role = await getCurrentRole();
     // An admin using the "teacher" login button isn't a real mismatch — they
     // still get full admin access either way, since tab visibility is driven
@@ -193,7 +222,7 @@ async function afterVerifiedLogin() {
             adminUnauthorized.classList.add("show");
         }
         try { await signOut(auth); } catch (e) { }
-        state.isAdmin = false;
+        state.isSignedIn = false;
         state.role = null;
         showGate();
         return;
@@ -284,12 +313,15 @@ document.getElementById("admin-signup-form").addEventListener("submit", async fu
     try {
         var cred = await createUserWithEmailAndPassword(auth, email, password);
         try { await updateProfile(cred.user, { displayName: username }); } catch (e) { }
+        /* Can't write staffProfiles yet — it now requires a verified email,
+           and this account isn't verified until the link below is clicked.
+           recordPendingStaffProfileIfAny() writes it once that's confirmed. */
         try {
-            await setDoc(doc(db, "staffProfiles", email.toLowerCase()), {
+            localStorage.setItem(PENDING_STAFF_PROFILE_KEY, JSON.stringify({
                 username: username, phone: phone, email: email.toLowerCase(),
                 createdAt: new Date().toISOString(),
-            });
-        } catch (e) { /* profile collection may not be writable yet — non-fatal */ }
+            }));
+        } catch (e) { }
         try { await sendEmailVerification(cred.user); } catch (e) { }
         showVerifyScreen();
     } catch (err) {
@@ -334,7 +366,7 @@ document.getElementById("admin-verify-resend").addEventListener("click", async f
 document.getElementById("admin-logout").addEventListener("click", async function () {
     try { await signOut(auth); } catch (e) { }
     state.adminOpen = false;
-    state.isAdmin = false;
+    state.isSignedIn = false;
     state.role = null;
     closeAdminOverlay();
 });

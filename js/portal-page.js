@@ -33,6 +33,30 @@ var gotoLoginBtn = document.getElementById("portal-goto-login");
 var studentsWrap = document.getElementById("portal-students");
 var signupRole = null; // "parent" | "student"
 
+/* parentAccounts/studentAccounts writes require a verified email (see
+   firestore.rules) because Firebase lets anyone register an account under an
+   email they don't actually own, and that email becomes request.auth's before
+   it's confirmed. Verification can finish long after signup — a different
+   tab, a different session entirely — so the row can't be written at signup
+   time. Instead the intent is remembered here and the write is retried once
+   this browser actually observes a verified session for that email. */
+var PENDING_SIGNUP_KEY = "egysoroban_pending_portal_signup";
+
+async function recordPendingSignupIfAny(email) {
+    var raw;
+    try { raw = localStorage.getItem(PENDING_SIGNUP_KEY); } catch (e) { return; }
+    if (!raw) return;
+    var pending;
+    try { pending = JSON.parse(raw); } catch (e) { pending = null; }
+    if (!pending || (pending.email || "").toLowerCase() !== (email || "").toLowerCase()) return;
+    var result = await recordPortalAccount(pending.role, email, pending.name);
+    if (result.ok) {
+        try { localStorage.removeItem(PENDING_SIGNUP_KEY); } catch (e) { }
+    } else if (pending.role === "student") {
+        toast(t("portal.signupQueueFailed"));
+    }
+}
+
 function showGate() {
     gate.hidden = false; verifyScreen.hidden = true; dashboard.hidden = true;
     roleChoice.hidden = false; loginForm.hidden = true; signupForm.hidden = true;
@@ -228,9 +252,10 @@ async function emptyStateMessage(email) {
     return t("portal.signupPending");
 }
 
-onAuthStateChanged(auth, function (user) {
+onAuthStateChanged(auth, async function (user) {
     if (!user) { showGate(); return; }
     if (!user.emailVerified) { showVerify(); return; }
+    await recordPendingSignupIfAny(user.email);
     showDashboard(user.email);
 });
 
@@ -302,16 +327,20 @@ signupForm.addEventListener("submit", async function (e) {
 
     try {
         var name = signupNameInput.value.trim();
-        var cred = await createUserWithEmailAndPassword(auth, signupEmailInput.value.trim(), signupPasswordInput.value);
+        var email = signupEmailInput.value.trim();
+        var cred = await createUserWithEmailAndPassword(auth, email, signupPasswordInput.value);
         try { await updateProfile(cred.user, { displayName: name }); } catch (e4) { }
-        /* For a student this row IS their place in the review queue, so a
-           failure here leaves a login nobody can see waiting. Worth saying out
-           loud rather than swallowing — they can retry from the dashboard,
-           which recreates it. */
-        var recorded = await recordPortalAccount(signupRole, signupEmailInput.value.trim(), name);
+        /* The parentAccounts/studentAccounts row can't be written yet — it
+           requires a verified email, and this account isn't verified until
+           the link below is clicked. Remember the intent so it's written the
+           moment a verified session for this email is actually observed. */
+        try {
+            localStorage.setItem(PENDING_SIGNUP_KEY, JSON.stringify({
+                role: signupRole, name: name, email: email.toLowerCase(),
+            }));
+        } catch (e5) { }
         try { await sendEmailVerification(cred.user); } catch (e2) { }
         showVerify();
-        if (!recorded.ok && signupRole === "student") toast(t("portal.signupQueueFailed"));
     } catch (err) {
         if (err && err.code === "auth/email-already-in-use") signupError.textContent = t("admin.signupEmailInUse");
         else if (err && err.code === "auth/weak-password") signupError.textContent = t("admin.signupWeakPassword");
@@ -328,6 +357,7 @@ document.getElementById("portal-verify-check").addEventListener("click", async f
         await user.reload();
         if (user.emailVerified) {
             await user.getIdToken(true);
+            await recordPendingSignupIfAny(user.email);
             showDashboard(user.email);
         } else {
             toast(t("admin.verifyLede"));

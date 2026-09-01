@@ -97,27 +97,38 @@ service cloud.firestore {
     }
 
     // staffProfiles/{email} holds the username/phone a staff member sets for
-    // themselves when creating their login account. Anyone signed in may write
-    // their own profile; admin/developer may also write someone else's, which
-    // is what lets an admin fill in the name and phone when they create an
-    // account on a new colleague's behalf.
+    // themselves when creating their login account. A verified account may
+    // write its own profile (see the note on parentAccounts/studentAccounts
+    // above — the same unverified-email-squatting risk applies here); admin/
+    // developer may also write someone else's, which is what lets an admin
+    // fill in the name and phone when they create an account on a new
+    // colleague's behalf.
     match /staffProfiles/{email} {
       allow read: if isSignedIn();
-      allow write: if (isSignedIn() && myEmail() == email) || isAdminOrDeveloper();
+      allow write: if (isVerified() && myEmail() == email) || isAdminOrDeveloper();
     }
 
     // parentAccounts/{email} and studentAccounts/{email} record which group a
     // self-signed-up Parent Portal account belongs to (chosen at signup) — a
     // lightweight registry so staff can see who signed up as what and link
-    // them to the right students/{id} record. Anyone signed in may write only
-    // their own entry; staff (or the account owner) may read it.
+    // them to the right students/{id} record. A verified account may write
+    // only its own entry; staff (or the account owner) may read it.
+    // Write requires isVerified(), not just isSignedIn(): Firebase lets anyone
+    // register an account under an email string they don't actually own, and
+    // that email becomes request.auth.token.email immediately, before it's
+    // confirmed. Without this, an unverified signup could write a row under
+    // someone else's real address — squatting it ahead of the real owner, or
+    // (for studentAccounts, which has no enrolled-email precheck at all)
+    // flooding the staff review queue under arbitrary addresses. Requiring
+    // verification means the write can't land until the signer has proven
+    // they actually control that inbox.
     // The own-account check comes FIRST in each condition on purpose. || stops
     // at the first true branch, and every isStaff() attempt costs a billed
     // document read, so putting the cheap check first means the ordinary case
     // — someone reading their own row — costs nothing at all.
     match /parentAccounts/{email} {
       allow read: if (isSignedIn() && myEmail() == email) || isStaff();
-      allow write: if isSignedIn() && myEmail() == email;
+      allow write: if isVerified() && myEmail() == email;
     }
 
     // studentAccounts/{email} is also the review queue for students who are
@@ -131,12 +142,12 @@ service cloud.firestore {
     // anyone could enrol themselves.
     match /studentAccounts/{email} {
       allow read: if (isSignedIn() && myEmail() == email) || isStaff();
-      allow create: if isSignedIn() && myEmail() == email
+      allow create: if isVerified() && myEmail() == email
         && request.resource.data.status == 'pending'
         && !request.resource.data.keys().hasAny(
              ['studentRecordId', 'teacherEmail', 'reviewedBy', 'reviewedAt']
            );
-      allow update: if (isSignedIn() && myEmail() == email
+      allow update: if (isVerified() && myEmail() == email
                         && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['name']))
         || isStaff();
       allow delete: if isAdminOrDeveloper();
