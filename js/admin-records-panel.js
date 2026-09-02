@@ -447,8 +447,9 @@ export async function renderRecordsPanel() {
     });
 }
 
-/* backdrop click and Escape-to-close are already wired globally in admin.js
-   against the same #detail-overlay element; no need to duplicate them here. */
+/* backdrop click and Escape-to-close are already wired globally in
+   admin-dashboard.js against the same #detail-overlay element; no need to
+   duplicate them here. */
 function closeDetail() {
     detailOverlay.hidden = true;
     detailCard.innerHTML = "";

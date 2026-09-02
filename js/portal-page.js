@@ -9,9 +9,22 @@ import {
 import { auth } from "./firebase-init.js";
 import { t, fmtDate, onLanguageChangeCallbacks } from "./i18n.js";
 import { toast } from "./toast.js";
-import { loadStudentsForAccount } from "./student-records.js";
-import { recordPortalAccount, loadOwnSignup } from "./portal-accounts.js";
 import { checkEnrolled } from "./enrolled-emails.js";
+
+/* student-records.js and portal-accounts.js only ever run once a visitor is
+   signed in and verified (see showDashboard/recordPendingSignupIfAny below),
+   so they're fetched lazily instead of shipping on every signed-out visit to
+   this page. */
+var studentRecordsModule = null;
+function loadStudentRecordsModule() {
+    if (!studentRecordsModule) studentRecordsModule = import("./student-records.js");
+    return studentRecordsModule;
+}
+var portalAccountsModule = null;
+function loadPortalAccountsModule() {
+    if (!portalAccountsModule) portalAccountsModule = import("./portal-accounts.js");
+    return portalAccountsModule;
+}
 
 var gate = document.getElementById("portal-gate");
 var loginForm = document.getElementById("portal-login-form");
@@ -49,7 +62,8 @@ async function recordPendingSignupIfAny(email) {
     var pending;
     try { pending = JSON.parse(raw); } catch (e) { pending = null; }
     if (!pending || (pending.email || "").toLowerCase() !== (email || "").toLowerCase()) return;
-    var result = await recordPortalAccount(pending.role, email, pending.name);
+    var accountsMod = await loadPortalAccountsModule();
+    var result = await accountsMod.recordPortalAccount(pending.role, email, pending.name);
     if (result.ok) {
         try { localStorage.removeItem(PENDING_SIGNUP_KEY); } catch (e) { }
     } else if (pending.role === "student") {
@@ -225,7 +239,8 @@ async function showDashboard(email) {
     loadingMsg.className = "section-lede";
     loadingMsg.textContent = t("admin.loading");
     studentsWrap.appendChild(loadingMsg);
-    var students = await loadStudentsForAccount(email);
+    var recordsMod = await loadStudentRecordsModule();
+    var students = await recordsMod.loadStudentsForAccount(email);
     studentsWrap.innerHTML = "";
     if (students.length === 0) {
         var p = document.createElement("p");
@@ -244,7 +259,8 @@ async function showDashboard(email) {
    original wording. A lookup that fails is not evidence of anything either
    way, and says the neutral thing rather than inventing a status. */
 async function emptyStateMessage(email) {
-    var res = await loadOwnSignup(email);
+    var accountsMod = await loadPortalAccountsModule();
+    var res = await accountsMod.loadOwnSignup(email);
     if (!res.ok || !res.signup) return t("portal.noStudents");
     var status = res.signup.status;
     if (status === "rejected") return t("portal.signupRejected");

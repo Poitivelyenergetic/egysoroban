@@ -211,7 +211,7 @@ export async function loadUsage() {
 
 /* Reading usageDaily is gated on isStaff(), which checks admins/{me} first and
    only consults teachers/{me} when that misses. The Database limits tab is
-   hidden from teachers (see admin.js), so the only callers of these two
+   hidden from teachers (see admin-dashboard.js), so the only callers of these two
    functions are admins and developers, who always match on the first lookup.
    Exactly one billed read, not an average. */
 function staffRuleReads() {
