@@ -1,0 +1,12 @@
+{
+  "name": "egysoroban-site",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build.js"
+  },
+  "devDependencies": {
+    "esbuild": "^0.24.0",
+    "sharp": "^0.35.4"
+  }
+}

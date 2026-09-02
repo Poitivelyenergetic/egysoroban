@@ -2,24 +2,34 @@
   "firestore": {
     "rules": "firestore.rules"
   },
+  "emulators": {
+    "firestore": {
+      "port": 8080
+    },
+    "ui": {
+      "enabled": false
+    },
+    "singleProjectMode": true
+  },
   "hosting": [
     {
       "target": "main",
-      "public": ".",
-      "ignore": [
-        "firebase.json",
-        "**/.*",
-        "**/node_modules/**",
-        ".git/**",
-        "functions/**",
-        "scripts/**",
-        "firestore.rules",
-        "**/*.md"
-      ],
+      "public": "dist",
+      "predeploy": ["npm run build"],
       "headers": [
         {
-          "//": "Firebase Hosting defaults every file to max-age=3600, so for an hour after each deploy a returning visitor kept running the previous JS and CSS. The ?v= stamp in the HTML was meant to prevent that, but it is one frozen constant that never changed, and the modules import each other by bare path ('./theme.js') with no stamp at all — so a changed module kept its old URL and was served from cache. That is why newly added buttons appeared but did nothing. These files carry ETags, so no-cache costs a cheap 304 revalidation and can never serve stale code.",
-          "source": "**/*.@(js|css|html)",
+          "//": "dist/js and dist/css filenames are content-hashed by the build (scripts/build.js) — a changed file always gets a new URL, so these can be cached forever without ever risking stale code.",
+          "source": "**/*.@(js|css)",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "public, max-age=31536000, immutable"
+            }
+          ]
+        },
+        {
+          "//": "HTML references the hashed JS/CSS filenames, so it must always be revalidated — caching it would freeze the site on old bundle references.",
+          "source": "**/*.html",
           "headers": [
             {
               "key": "Cache-Control",
@@ -50,20 +60,20 @@
     },
     {
       "target": "egysoroban",
-      "public": ".",
-      "ignore": [
-        "firebase.json",
-        "**/.*",
-        "**/node_modules/**",
-        ".git/**",
-        "functions/**",
-        "scripts/**",
-        "firestore.rules",
-        "**/*.md"
-      ],
+      "public": "dist",
+      "predeploy": ["npm run build"],
       "headers": [
         {
-          "source": "**/*.@(js|css|html)",
+          "source": "**/*.@(js|css)",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "public, max-age=31536000, immutable"
+            }
+          ]
+        },
+        {
+          "source": "**/*.html",
           "headers": [
             {
               "key": "Cache-Control",
