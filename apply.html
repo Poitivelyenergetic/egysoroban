@@ -4,6 +4,14 @@
     <meta charset="utf-8">
     <title>Apply — Egysoroban</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Apply to EGY Soroban Academy's soroban mental arithmetic program, or register for an upcoming competition. A branch representative replies within 24 hours.">
+    <link rel="canonical" href="https://egysoroban.web.app/apply.html">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Apply to EGY Soroban Academy">
+    <meta property="og:description" content="Apply to EGY Soroban Academy's soroban mental arithmetic program, or register for an upcoming competition. A branch representative replies within 24 hours.">
+    <meta property="og:image" content="https://egysoroban.web.app/assets/og-image.jpg">
+    <meta property="og:url" content="https://egysoroban.web.app/apply.html">
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"EducationalOrganization","name":"EGY Soroban Academy","alternateName":"Egysoroban","url":"https://egysoroban.web.app/","logo":"https://egysoroban.web.app/assets/logo.png","image":"https://egysoroban.web.app/assets/og-image.jpg","telephone":"+20 120 819 8100","email":"info@egysoroban.com","address":{"@type":"PostalAddress","addressLocality":"Al-Mansoura","addressCountry":"EG"},"sameAs":["https://www.instagram.com/sorobanegy","https://www.facebook.com/share/1HhkmkXW1g/","https://youtube.com/@egysorobanacademy"]}</script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
     <link
@@ -164,8 +172,8 @@
                             <span class="field-error" data-i18n="apply.errNationalId">Must be 14 digits, starting with
                                 2 or 3.</span>
                         </div>
-                        <div class="field">
-                            <label data-i18n="apply.fGender">Gender</label>
+                        <fieldset class="field">
+                            <legend data-i18n="apply.fGender">Gender</legend>
                             <div class="radio-row">
                                 <label><input type="radio" name="gender" value="male" required=""> <span
                                         data-i18n="apply.optMale">Male</span></label>
@@ -173,19 +181,7 @@
                                         data-i18n="apply.optFemale">Female</span></label>
                             </div>
                             <span class="field-error" data-i18n="apply.errRequired">This field is required.</span>
-                        </div>
-                        <div class="field">
-                            <label data-i18n="apply.fReligion">Religion</label>
-                            <div class="radio-row">
-                                <label><input type="radio" name="religion" value="muslim" required=""> <span
-                                        data-i18n="apply.optMuslim">Muslim</span></label>
-                                <label><input type="radio" name="religion" value="christian"> <span
-                                        data-i18n="apply.optChristian">Christian</span></label>
-                                <label><input type="radio" name="religion" value="other"> <span
-                                        data-i18n="apply.optOther">Other</span></label>
-                            </div>
-                            <span class="field-error" data-i18n="apply.errRequired">This field is required.</span>
-                        </div>
+                        </fieldset>
                         <div class="field">
                             <label for="f-nationality" data-i18n="apply.fNationality">Nationality</label>
                             <select id="f-nationality" name="nationality">
@@ -261,8 +257,8 @@
                             <input id="f-school-name" name="schoolName" type="text" required="" autocomplete="off">
                             <span class="field-error" data-i18n="apply.errRequired">This field is required.</span>
                         </div>
-                        <div class="field">
-                            <label data-i18n="apply.fSchoolType">School type</label>
+                        <fieldset class="field">
+                            <legend data-i18n="apply.fSchoolType">School type</legend>
                             <div class="radio-row">
                                 <label><input type="radio" name="schoolType" value="arabic" required=""> <span
                                         data-i18n="apply.optSchoolArabic">Arabic</span></label>
@@ -272,7 +268,7 @@
                                         data-i18n="apply.optSchoolInternational">International</span></label>
                             </div>
                             <span class="field-error" data-i18n="apply.errRequired">This field is required.</span>
-                        </div>
+                        </fieldset>
                         <div class="field">
                             <label for="f-grade" data-i18n="apply.fGrade">Grade / school year</label>
                             <input id="f-grade" name="grade" type="text" required="" autocomplete="off">
@@ -334,6 +330,14 @@
                             <textarea id="f-goals" name="goals" placeholder=""></textarea>
                         </div>
                     </div>
+                    <div class="field consent-field">
+                        <label class="consent-row"><input type="checkbox" name="consent" required="">
+                            <span><span data-i18n="apply.consentLabel">I agree to the</span>
+                                <a href="privacy.html" target="_blank" rel="noopener"
+                                    data-i18n="apply.consentLinkText">privacy policy</a></span></label>
+                        <span class="field-error" data-i18n="apply.errConsent">You must agree to the privacy policy to
+                            continue.</span>
+                    </div>
                     <button type="submit" class="btn btn-primary btn-block" id="apply-submit"
                         data-i18n="apply.submit">Submit application</button>
                     <p class="form-note" data-i18n="apply.privacyNote">Your details are only used to contact you about
@@ -349,7 +353,7 @@
         <div class="container footer-grid">
             <div>
                 <div class="footer-brand">
-                    <img class="footer-brand-img" src="assets/logo.png?v=1787994508" alt="Egysoroban Academy" width="34" height="34">
+                    <img class="footer-brand-img" src="assets/logo.png?v=1787994508" alt="Egysoroban Academy" width="34" height="34" loading="lazy">
                     <span>Egysoroban</span>
                 </div>
                 <p data-i18n="footer.blurb">Egypt's official AIAMA-member soroban academy — training children ages
@@ -369,12 +373,13 @@
                     <li><a href="apply.html" data-i18n="nav.apply">Apply now</a></li>
                     <li><a href="teach.html" data-i18n="teacher.eyebrow">Join our team</a></li>
                     <li><a href="portal.html" data-i18n="footer.parentPortal">Sign in</a></li>
+                    <li><a href="privacy.html" data-i18n="footer.privacy">Privacy Policy</a></li>
                 </ul>
             </div>
             <div class="footer-col">
                 <h4 data-i18n="footer.contact">Contact</h4>
                 <ul>
-                    <li>+20 120 819 8100</li>
+                    <li><bdi dir="ltr">+20 120 819 8100</bdi></li>
                     <li>info@egysoroban.com</li>
                     <li data-i18n="contact.branchesValue">Al-Mansoura, Egypt</li>
                 </ul>
