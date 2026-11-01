@@ -14,7 +14,10 @@
 html { scroll-behavior: smooth; }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  * { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; }
+  * {
+    animation-duration: 0.001ms !important; animation-delay: 0s !important; animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important; transition-delay: 0s !important;
+  }
 }
 /* The reveal animations start elements 56px to the side of where they land, so
    every not-yet-revealed .reveal-right hung past the right edge and gave the
@@ -33,12 +36,22 @@ html, body { overflow-x: clip; }
    text-transform simply does nothing to it. */
 html[data-lang="ar"] * { letter-spacing: normal !important; }
 
+/* Scroll reveals: short, ease-out, small travel. The offset lives in two custom
+   properties so left/right can flip under RTL without a second set of
+   transform rules fighting .in-view on specificity. The transition only applies
+   until scroll-reveal.js adds .revealed — after that the element's own hover
+   transition (cards) takes over, instead of inheriting this one and its delay. */
 .reveal-target {
-  opacity: 0; transform: translateY(48px) scale(0.94);
-  transition: opacity 2.4s ease-out, transform 2.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+  --reveal-x: 0px; --reveal-y: 14px;
+  opacity: 0; transform: translate(var(--reveal-x), var(--reveal-y));
 }
-.reveal-target.reveal-left { transform: translateX(-56px) scale(0.94); }
-.reveal-target.reveal-right { transform: translateX(56px) scale(0.94); }
+.reveal-target:not(.revealed) {
+  transition: opacity 0.3s ease-out, transform 0.38s cubic-bezier(0.2, 0.7, 0.2, 1), box-shadow 0.28s ease;
+}
+.reveal-target.reveal-left { --reveal-x: -14px; --reveal-y: 0px; }
+.reveal-target.reveal-right { --reveal-x: 14px; --reveal-y: 0px; }
+[dir="rtl"] .reveal-target.reveal-left { --reveal-x: 14px; }
+[dir="rtl"] .reveal-target.reveal-right { --reveal-x: -14px; }
 .reveal-target.in-view { opacity: 1; transform: none; }
 
 /* flat, minimal cards — no border/shadow at rest, lift + shadow only on hover;
@@ -54,15 +67,16 @@ html[data-lang="ar"] * { letter-spacing: normal !important; }
   box-shadow: var(--shadow-2);
 }
 
-/* hero load-in: staggered fade-up on page load */
-@keyframes heroFadeUp { from { opacity: 0; transform: translateY(40px) scale(0.96); } to { opacity: 1; transform: none; } }
-.hero-intro { opacity: 0; animation: heroFadeUp 2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
-.hero .eyebrow.hero-intro { animation-delay: 0.15s; }
-.hero .hero-title.hero-intro { animation-delay: 0.45s; }
-.hero .hero-sub.hero-intro { animation-delay: 0.8s; }
-.hero .hero-ctas.hero-intro { animation-delay: 1.15s; }
-.hero .hero-meta.hero-intro { animation-delay: 1.5s; }
-.hero .hero-carousel.hero-intro { animation-delay: 0.85s; }
+/* hero load-in: short staggered fade-up on page load — 0.4s each, last one
+   starts at 0.2s, so the whole entrance is done in about 0.6s */
+@keyframes heroFadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+.hero-intro { opacity: 0; animation: heroFadeUp 0.4s cubic-bezier(0.2, 0.7, 0.2, 1) forwards; }
+.hero .eyebrow.hero-intro { animation-delay: 0s; }
+.hero .hero-title.hero-intro { animation-delay: 0.05s; }
+.hero .hero-sub.hero-intro { animation-delay: 0.1s; }
+.hero .hero-carousel.hero-intro { animation-delay: 0.1s; }
+.hero .hero-ctas.hero-intro { animation-delay: 0.15s; }
+.hero .hero-meta.hero-intro { animation-delay: 0.2s; }
 @media (prefers-reduced-motion: reduce) {
   .hero-intro { opacity: 1; animation: none; }
 }
@@ -193,7 +207,10 @@ h2.section-title { font-size: clamp(1.7rem, 1.2rem + 2vw, 2.5rem); }
   transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1),
     background 0.2s ease, filter 0.2s ease, border-color 0.2s ease;
 }
-.btn:active { transform: translateY(0) scale(0.97); }
+/* Doubled class on purpose: the hover rules below (and header.css's
+   `.header-actions .btn-*:hover`) set a lift transform at equal specificity, so
+   a plain `.btn:active` lost to them on desktop and the press never showed. */
+.btn.btn:not([disabled]):active { transform: translateY(0) scale(0.97); box-shadow: none; transition-duration: 0.09s; }
 .btn-primary { background: var(--brass); color: #1b1304; }
 .btn-primary:hover {
   background: var(--brass-strong); transform: translateY(-2px); filter: brightness(1.05);
@@ -210,6 +227,67 @@ h2.section-title { font-size: clamp(1.7rem, 1.2rem + 2vw, 2.5rem); }
 .btn-block { width: 100%; }
 .btn-sm { padding: 0.55em 1em; font-size: 0.82rem; }
 .btn[disabled] { opacity: 0.55; cursor: not-allowed; }
+
+/* Quick press feedback on the header's small controls and nav links. Written
+   as `.site-header …` so it outranks header.css's own rules, which load after
+   this file and would otherwise overwrite the transition list. */
+.site-header .main-nav a { transition: background 0.2s ease, color 0.2s ease, transform 0.15s cubic-bezier(0.2, 0.7, 0.2, 1); }
+.site-header .main-nav a:active { transform: scale(0.96); }
+.site-header .lang-toggle, .site-header .theme-toggle, .site-header .nav-toggle {
+  transition: transform 0.15s cubic-bezier(0.2, 0.7, 0.2, 1), border-color 0.15s ease, color 0.15s ease, background 0.15s ease;
+}
+.site-header .lang-toggle:active, .site-header .theme-toggle:active, .site-header .nav-toggle:active { transform: scale(0.94); }
+@media (max-width: 860px) {
+  /* Stacked mobile menu rows are full-width bars; shrinking them looks odd,
+     so they get a soft tint instead. */
+  .site-header .main-nav a:active { transform: none; background: rgba(255,255,255,0.1); }
+}
+
+/* ============ Skeleton loaders (admin panels) ============ */
+.skeleton {
+  display: block; border-radius: 6px;
+  background: linear-gradient(90deg, var(--paper-sunken) 25%, color-mix(in srgb, var(--paper-sunken) 50%, var(--paper-raised)) 50%, var(--paper-sunken) 75%);
+  background-size: 200% 100%;
+  animation: skeletonShimmer 1.3s ease-in-out infinite;
+}
+@keyframes skeletonShimmer { from { background-position: 100% 0; } to { background-position: -100% 0; } }
+.skeleton-value { height: 28px; }
+.skeleton-label { height: 12px; margin-top: 10px; }
+.skeleton-line { height: 12px; }
+.skeleton-block { height: 150px; width: 100%; border-radius: var(--radius-sm); }
+.skeleton-bar-row { display: flex; align-items: center; gap: 12px; margin-bottom: 9px; }
+.skeleton-bar-row:last-child { margin-bottom: 0; }
+.skeleton-bar-row .skeleton-line { flex-shrink: 0; }
+.skeleton-bar { height: 10px; border-radius: 999px; }
+.skeleton-row td { padding-block: 14px; }
+@media (prefers-reduced-motion: reduce) { .skeleton { animation: none; } }
+
+/* ============ Chart entrance (admin) ============ */
+/* admin-charts.js puts .chart-animate on a chart container the first time it
+   goes from empty/loading to drawn. Bars grow from their starting edge (which
+   mirrors under RTL because they size with width/height, not transforms), the
+   trend line is wiped in, the donut fades and turns into place. ~0.5s, with a
+   per-item delay from --i capped in JS. */
+@keyframes chartGrowX { from { width: 0; } }
+@keyframes chartGrowY { from { height: 0; } }
+@keyframes chartFade { from { opacity: 0; } }
+@keyframes chartWipe { from { clip-path: inset(-12px 100% -12px -12px); } to { clip-path: inset(-12px -12px -12px -12px); } }
+@keyframes chartDonut { from { opacity: 0; transform: scale(0.88) rotate(-30deg); } }
+.chart-animate .bar-row-fill, .chart-animate .funnel-band {
+  animation: chartGrowX 0.5s cubic-bezier(0.2, 0.7, 0.2, 1) both; animation-delay: calc(var(--i, 0) * 45ms);
+}
+.chart-animate .column-bar {
+  animation: chartGrowY 0.5s cubic-bezier(0.2, 0.7, 0.2, 1) both; animation-delay: calc(var(--i, 0) * 45ms);
+}
+.chart-animate .column-value, .chart-animate .bar-row-value, .chart-animate .funnel-value,
+.chart-animate .pie-legend, .chart-animate .line-axis {
+  animation: chartFade 0.4s ease-out 0.15s both;
+}
+.chart-animate .line-svg { animation: chartWipe 0.6s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+.chart-animate .pie-disc { animation: chartDonut 0.55s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+@media (prefers-reduced-motion: reduce) {
+  .chart-animate * { animation: none !important; }
+}
 
 /* ============ Floating WhatsApp button ============ */
 /* Fixed to the viewport so it stays reachable at any scroll position. Kept

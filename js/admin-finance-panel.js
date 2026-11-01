@@ -5,8 +5,10 @@ import { loadStudents, updateStudent } from "./student-records.js";
 import { loadPayments, addPayment, deletePayment, periodKey, periodLabel, periodShortLabel, recentPeriods } from "./payments.js";
 import { loadExpenses, addExpense, deleteExpense } from "./expenses.js";
 import { branchLabel } from "./branches.js";
-import { renderStatTiles, renderColumns, renderBarList, renderAreaLine, pct, money } from "./admin-charts.js";
-import { showLoadingRow } from "./loading-row.js";
+import {
+    renderStatTiles, renderColumns, renderBarList, renderAreaLine, pct, money,
+    renderStatTilesSkeleton, renderChartSkeleton, renderTableSkeleton,
+} from "./admin-charts.js";
 
 var tilesEl = document.getElementById("finance-tiles");
 var periodSelect = document.getElementById("finance-period");
@@ -57,12 +59,17 @@ function fillPeriodSelect() {
 export async function renderFinancePanel() {
     if (!tableBody) return;
     fillPeriodSelect();
-    showLoadingRow(tableBody, 6, t("admin.loading"));
     /* Same reasoning as the analytics panel: show the shape of the page before
-       the network call, so a stalled read never renders as an empty screen. */
-    [trendEl, branchEl].forEach(function (node) {
-        if (node) node.innerHTML = '<p class="chart-empty">' + t("admin.loading") + "</p>";
-    });
+       the network call, so a stalled read never renders as an empty screen.
+       Skeletons rather than a line of "Loading…" text, so the layout holds its
+       size and the numbers can count up into place when the data arrives. */
+    var loadingText = t("admin.loading");
+    renderStatTilesSkeleton(tilesEl, 8, loadingText);
+    renderChartSkeleton(trendEl, "block", loadingText);
+    renderChartSkeleton(branchEl, "bars", loadingText);
+    renderTableSkeleton(tableBody, 6, 5, loadingText);
+    renderTableSkeleton(historyBody, 6, 2, loadingText);
+    renderTableSkeleton(expensesBody, 6, 2, loadingText);
 
     var students = await loadStudents();
     var payments = await loadPayments();
@@ -150,6 +157,8 @@ export async function renderFinancePanel() {
     }
 
     tableBody.innerHTML = "";
+    tableBody.removeAttribute("aria-busy");
+    tableBody.removeAttribute("aria-label");
     if (!rows.length) {
         var tr = document.createElement("tr");
         tr.className = "empty-row";
@@ -277,6 +286,8 @@ export async function renderFinancePanel() {
 function renderHistory(rows) {
     if (!historyBody) return;
     historyBody.innerHTML = "";
+    historyBody.removeAttribute("aria-busy");
+    historyBody.removeAttribute("aria-label");
     if (!rows.length) {
         var tr = document.createElement("tr");
         tr.className = "empty-row";
@@ -358,6 +369,8 @@ var expenseDeletePending = null;
 function renderExpenses(rows) {
     if (!expensesBody) return;
     expensesBody.innerHTML = "";
+    expensesBody.removeAttribute("aria-busy");
+    expensesBody.removeAttribute("aria-label");
     if (!rows.length) {
         var tr = document.createElement("tr");
         tr.className = "empty-row";

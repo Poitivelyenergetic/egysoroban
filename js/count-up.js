@@ -6,12 +6,16 @@ function initCountUp() {
 
     function animate(el) {
         var target = parseInt(el.getAttribute("data-count"), 10) || 0;
+        /* "Years of experience" is counted from the founding year, so it stays
+           right every January instead of needing someone to bump it by hand. */
+        var since = parseInt(el.getAttribute("data-count-since"), 10);
+        if (since) target = new Date().getFullYear() - since;
         var suffix = el.getAttribute("data-suffix") || "+";
         if (reduceMotion) {
             el.textContent = target + suffix;
             return;
         }
-        var duration = 1400;
+        var duration = 900;
         var start = null;
         function step(ts) {
             if (start === null) start = ts;

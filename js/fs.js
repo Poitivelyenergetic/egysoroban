@@ -120,8 +120,11 @@ var Z = [0, 0, 0];
 var C = [1, 3, 2];
 
 var RULE_READS = {
-    studentApplications: { get: S, list: S, create: Z, update: S, delete: A },
-    applications: { get: S, list: S },
+    /* studentApplications: admin-only to read or change. A public submission
+       passes on its shape alone and costs nothing; an admin's hand-typed one
+       fails that check and pays for admins/{me}. */
+    studentApplications: { get: A, list: A, create: [1, 0, 0], update: A, delete: A },
+    applications: { get: A, list: A },
     teacherApplications: { get: A, list: A, create: Z, update: A, delete: A },
     /* admins: only `allow get: isSignedIn() && own` matches a single-document
        read, and it looks nothing up. Listing needs isDeveloper(). */
@@ -130,10 +133,10 @@ var RULE_READS = {
        broader `read`. Which is evaluated first is not specified, so this counts
        the dearer path rather than assuming the cheap one wins. */
     teachers: { get: A, list: A, create: A, update: A, delete: A },
-    /* staffProfiles: reading needs only a signed-in token. Writing your own is
-       free; writing a colleague's falls through to isAdminOrDeveloper(), which
-       is what the `self` entry below distinguishes. */
-    staffProfiles: { get: Z, list: Z, create: A, update: A, delete: A, self: Z },
+    /* staffProfiles: your own row is free to read or write; anyone else's, and
+       listing them all, falls through to isAdminOrDeveloper(), which is what
+       the `self` entry below distinguishes. */
+    staffProfiles: { get: A, list: A, create: A, update: A, delete: A, self: Z },
     /* parentAccounts / studentAccounts: the rules test the own-account case
        first, so the owner pays nothing and only a staff member reaching into
        someone else's row pays for isStaff(). studentAccounts doubles as the
@@ -162,9 +165,6 @@ var viewerRole = null;
 export function setViewerRole(role) { viewerRole = role || null; }
 
 function roleIndex() {
-    /* Tested before emailVerified on purpose: the rules carry one hardcoded
-       exception for the dev admin account, which has no verified inbox but is
-       an admin all the same and still pays for the lookup. */
     if (viewerRole === "developer" || viewerRole === "admin") return 0;
     if (viewerRole === "teacher") return 1;
     var user = auth.currentUser;

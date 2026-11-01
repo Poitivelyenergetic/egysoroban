@@ -1,5 +1,5 @@
 import { state } from "./state.js";
-import { t } from "./i18n.js";
+import { t, onLanguageChangeCallbacks } from "./i18n.js";
 import { addApplicationDoc } from "./applications.js";
 import { loadOpenSlots, bookSlot } from "./trial-slots.js";
 
@@ -45,12 +45,22 @@ var trialSlotList = document.getElementById("trial-slot-list");
 function fmtSlotDate(iso) {
     var d = new Date(iso);
     if (isNaN(d.getTime())) return iso;
-    return d.toLocaleString(undefined, { weekday: "short", month: "short", day: "numeric", hour: "numeric", minute: "2-digit" });
+    var locale = state.lang === "ar" ? "ar-EG" : "en-GB";
+    return d.toLocaleString(locale, { weekday: "short", month: "short", day: "numeric", hour: "numeric", minute: "2-digit" });
 }
+
+/* Each render loads slots asynchronously, so a newer render (branch change,
+   language switch, post-submit refresh) can start before an older one ends.
+   Only the latest render is allowed to draw the list. */
+var slotRenderSeq = 0;
 
 async function renderTrialSlots() {
     if (!trialSlotList) return;
+    var seq = ++slotRenderSeq;
     var branch = branchSelect.value;
+    /* Keep the parent's pick when the list is redrawn (e.g. on a language switch). */
+    var picked = trialSlotList.querySelector('input[name="trialSlotId"]:checked');
+    var pickedId = picked ? picked.value : "";
     trialSlotList.innerHTML = "";
     if (!branch) {
         var hint = document.createElement("p");
@@ -60,6 +70,8 @@ async function renderTrialSlots() {
         return;
     }
     var open = await loadOpenSlots(branch);
+    if (seq !== slotRenderSeq) return;
+    trialSlotList.innerHTML = "";
     if (open.length === 0) {
         var none = document.createElement("p");
         none.className = "muted";
@@ -75,11 +87,12 @@ async function renderTrialSlots() {
         input.name = "trialSlotId";
         input.value = slot.id;
         input.dataset.dateTime = slot.dateTime;
+        if (slot.id === pickedId) input.checked = true;
         var text = document.createElement("span");
         text.textContent = fmtSlotDate(slot.dateTime);
         var spots = document.createElement("span");
         spots.className = "spots";
-        spots.textContent = (slot.capacity - slot.bookedCount) + " left";
+        spots.textContent = t("apply.trialSlotLeft").replace("{n}", String(slot.capacity - slot.bookedCount));
         label.appendChild(input);
         label.appendChild(text);
         label.appendChild(spots);
@@ -90,6 +103,7 @@ async function renderTrialSlots() {
 if (branchSelect) {
     branchSelect.addEventListener("change", renderTrialSlots);
     renderTrialSlots();
+    onLanguageChangeCallbacks.push(renderTrialSlots);
 }
 
 function clearFormErrors() {
@@ -209,6 +223,9 @@ if (applyForm) {
                 formStatus.appendChild(copyLink);
             }
             applyForm.reset();
+            /* The booked seat changed the slot counts, and reset() clears the
+               branch without firing "change", so redraw the slot list. */
+            renderTrialSlots();
         } else {
             formStatus.className = "form-status show warn";
             formStatus.innerHTML = "";

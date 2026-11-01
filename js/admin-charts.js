@@ -16,14 +16,158 @@ function el(tag, className, text) {
     return node;
 }
 
+function reducedMotion() {
+    return !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+}
+
+/* ---- motion helpers -------------------------------------------------------
+   Charts animate in once, when they go from "nothing drawn yet" (empty, a
+   loading placeholder or a skeleton) to "drawn". A re-render over an existing
+   chart (e.g. a filter flip) just swaps in place with no replay. The animation
+   itself is pure CSS (.chart-animate in base.css), switched on by one class on
+   the container, so none of the drawing code below had to change shape. */
+var DRAWN_SELECTOR = ".bar-row, .column-plot, .line-plot, .funnel-row, .pie-wrap";
+
+function beginChart(container) {
+    var wasDrawn = !!container.querySelector(DRAWN_SELECTOR);
+    container.removeAttribute("aria-busy");
+    container.classList.remove("chart-animate");
+    container.innerHTML = "";
+    return !wasDrawn && !reducedMotion();
+}
+
+function finishChart(container, animate) {
+    if (animate) container.classList.add("chart-animate");
+}
+
+/* Per-item stagger, capped so a long list never drags. */
+function stagger(node, i) {
+    node.style.setProperty("--i", Math.min(i, 8));
+}
+
+/* ---- count-up -------------------------------------------------------------
+   js/count-up.js only scans for [data-count] elements once at page load and
+   handles bare integers with a suffix, so it can't be pointed at tiles that are
+   built later and carry values like "12,500 EGP" or "45%". This is the same
+   idea, kept small: split the text into prefix / number / suffix, ease the
+   number, and always land on the exact original string. */
+function parseCountable(text) {
+    var m = /^(\D*?)(\d[\d,]*(?:\.\d+)?)(\D*)$/.exec(String(text).trim());
+    if (!m) return null;
+    var raw = m[2];
+    var target = parseFloat(raw.replace(/,/g, ""));
+    if (!isFinite(target) || target <= 0) return null;
+    return {
+        prefix: m[1], suffix: m[3], target: target,
+        grouped: raw.indexOf(",") !== -1,
+        decimals: raw.indexOf(".") !== -1 ? raw.split(".")[1].length : 0,
+    };
+}
+
+function countUp(node, finalText) {
+    var parsed = parseCountable(finalText);
+    if (!parsed) return;
+    var duration = 550;
+    var start = null;
+    function format(n) {
+        var fixed = n.toFixed(parsed.decimals);
+        if (parsed.grouped) {
+            fixed = Number(fixed).toLocaleString("en-EG", {
+                minimumFractionDigits: parsed.decimals, maximumFractionDigits: parsed.decimals,
+            });
+        }
+        return parsed.prefix + fixed + parsed.suffix;
+    }
+    node.textContent = format(0);
+    function step(ts) {
+        if (start === null) start = ts;
+        var progress = Math.min((ts - start) / duration, 1);
+        var eased = 1 - Math.pow(1 - progress, 3);
+        if (progress < 1) {
+            node.textContent = format(parsed.target * eased);
+            requestAnimationFrame(step);
+        } else {
+            node.textContent = finalText;
+        }
+    }
+    requestAnimationFrame(step);
+}
+
+/* ---- skeletons ------------------------------------------------------------
+   Shapes only, no text, so nothing here needs translating. aria-busy marks the
+   region as loading for assistive tech; the render functions clear it. */
+function skeleton(className, width) {
+    var node = el("span", "skeleton " + className);
+    if (width) node.style.width = width;
+    return node;
+}
+
+export function renderStatTilesSkeleton(container, count, label) {
+    if (!container) return;
+    container.innerHTML = "";
+    container.setAttribute("aria-busy", "true");
+    if (label) container.setAttribute("aria-label", label);
+    for (var i = 0; i < (count || 4); i++) {
+        var card = el("div", "stat-tile stat-tile-skeleton");
+        card.appendChild(skeleton("skeleton-value", "58%"));
+        card.appendChild(skeleton("skeleton-label", "82%"));
+        container.appendChild(card);
+    }
+}
+
+/* kind: "bars" for list-style charts, anything else for a single block (a
+   trend line or columns). */
+export function renderChartSkeleton(container, kind, label) {
+    if (!container) return;
+    container.innerHTML = "";
+    container.setAttribute("aria-busy", "true");
+    if (label) container.setAttribute("aria-label", label);
+    if (kind === "bars") {
+        ["92%", "68%", "46%", "30%"].forEach(function (w) {
+            var row = el("div", "skeleton-bar-row");
+            row.appendChild(skeleton("skeleton-line", "28%"));
+            row.appendChild(skeleton("skeleton-bar", w));
+            container.appendChild(row);
+        });
+    } else {
+        container.appendChild(skeleton("skeleton-block"));
+    }
+}
+
+export function renderTableSkeleton(tbody, colSpan, rowCount, label) {
+    if (!tbody) return;
+    tbody.innerHTML = "";
+    tbody.setAttribute("aria-busy", "true");
+    if (label) tbody.setAttribute("aria-label", label);
+    var widths = ["70%", "45%", "55%", "40%", "60%", "35%"];
+    for (var r = 0; r < (rowCount || 4); r++) {
+        var tr = el("tr", "skeleton-row");
+        for (var c = 0; c < colSpan; c++) {
+            var td = el("td");
+            td.appendChild(skeleton("skeleton-line", widths[(r + c) % widths.length]));
+            tr.appendChild(td);
+        }
+        tbody.appendChild(tr);
+    }
+}
+
 /* A tile may carry an onClick, which turns it into a real <button> rather than
    a div wired to a click handler — so it is reachable by keyboard, announced as
    a control, and gets a focus ring for free. Tiles without one stay plain
    divs: making every number look pressable would be a lie about most of them. */
 export function renderStatTiles(container, tiles) {
     if (!container) return;
+    /* Numbers count up only where the tile previously showed no number — a
+       placeholder, a skeleton or nothing — never when the same figures are just
+       being redrawn. */
+    var previous = Array.prototype.map.call(container.querySelectorAll(".stat-tile-value"), function (n) {
+        return n.textContent;
+    });
+    var animate = !reducedMotion();
+    container.removeAttribute("aria-busy");
+    container.removeAttribute("aria-label");
     container.innerHTML = "";
-    tiles.forEach(function (tile) {
+    tiles.forEach(function (tile, index) {
         var interactive = typeof tile.onClick === "function";
         var classes = "stat-tile" + (tile.tone ? " tone-" + tile.tone : "")
             + (interactive ? " stat-tile-action" : "");
@@ -35,7 +179,9 @@ export function renderStatTiles(container, tiles) {
             if (tile.actionLabel) card.title = tile.actionLabel;
             card.addEventListener("click", tile.onClick);
         }
-        card.appendChild(el("div", "stat-tile-value", tile.value));
+        var valueNode = el("div", "stat-tile-value", tile.value);
+        card.appendChild(valueNode);
+        if (animate && !/\d/.test(previous[index] || "")) countUp(valueNode, String(tile.value));
         card.appendChild(el("div", "stat-tile-label", tile.label));
         if (tile.hint) card.appendChild(el("div", "stat-tile-hint", tile.hint));
         if (interactive && tile.actionLabel) {
@@ -50,15 +196,16 @@ export function renderStatTiles(container, tiles) {
 export function renderBarList(container, items, options) {
     if (!container) return;
     var opts = options || {};
-    container.innerHTML = "";
+    var animate = beginChart(container);
     if (!items.length) {
         container.appendChild(el("p", "chart-empty", opts.emptyText || ""));
         return;
     }
     var max = items.reduce(function (m, it) { return Math.max(m, Number(it.value) || 0); }, 0);
-    items.forEach(function (it) {
+    items.forEach(function (it, i) {
         var value = Number(it.value) || 0;
         var row = el("div", "bar-row");
+        stagger(row, i);
         row.appendChild(el("div", "bar-row-label", it.label));
 
         var track = el("div", "bar-row-track");
@@ -71,6 +218,7 @@ export function renderBarList(container, items, options) {
         row.appendChild(el("div", "bar-row-value", it.display != null ? it.display : String(value)));
         container.appendChild(row);
     });
+    finishChart(container, animate);
 }
 
 /* Vertical columns — used only for time series, where left-to-right order
@@ -78,16 +226,17 @@ export function renderBarList(container, items, options) {
 export function renderColumns(container, items, options) {
     if (!container) return;
     var opts = options || {};
-    container.innerHTML = "";
+    var animate = beginChart(container);
     if (!items.length) {
         container.appendChild(el("p", "chart-empty", opts.emptyText || ""));
         return;
     }
     var max = items.reduce(function (m, it) { return Math.max(m, Number(it.value) || 0); }, 0);
     var plot = el("div", "column-plot");
-    items.forEach(function (it) {
+    items.forEach(function (it, i) {
         var value = Number(it.value) || 0;
         var col = el("div", "column-item");
+        stagger(col, i);
         col.title = it.label + ": " + (it.display != null ? it.display : value);
 
         var barWrap = el("div", "column-bar-wrap");
@@ -101,6 +250,7 @@ export function renderColumns(container, items, options) {
         plot.appendChild(col);
     });
     container.appendChild(plot);
+    finishChart(container, animate);
 }
 
 /* A trend over time, drawn as a smooth area line — the one job where the shape
@@ -133,7 +283,7 @@ function smoothPath(points) {
 export function renderAreaLine(container, items, options) {
     if (!container) return;
     var opts = options || {};
-    container.innerHTML = "";
+    var animate = beginChart(container);
     /* Two points minimum: a curve through one point has no shape to read, and
        smoothPath returns "" for it, which would build a path starting with a
        lineto instead of a moveto — invalid, and silently blank. */
@@ -238,6 +388,7 @@ export function renderAreaLine(container, items, options) {
         axis.appendChild(cell);
     });
     container.appendChild(axis);
+    finishChart(container, animate);
 }
 
 /* An ordered pipeline: each stage is a subset of the one before it, so the
@@ -246,16 +397,17 @@ export function renderAreaLine(container, items, options) {
 export function renderFunnel(container, items, options) {
     if (!container) return;
     var opts = options || {};
-    container.innerHTML = "";
+    var animate = beginChart(container);
     var total = items.reduce(function (sum, it) { return sum + (Number(it.value) || 0); }, 0);
     if (!total) {
         container.appendChild(el("p", "chart-empty", opts.emptyText || ""));
         return;
     }
     var max = items.reduce(function (m, it) { return Math.max(m, Number(it.value) || 0); }, 0);
-    items.forEach(function (it) {
+    items.forEach(function (it, i) {
         var value = Number(it.value) || 0;
         var row = el("div", "funnel-row");
+        stagger(row, i);
         row.appendChild(el("div", "funnel-label", it.label));
         var track = el("div", "funnel-track");
         var band = el("div", "funnel-band" + (it.tone ? " tone-" + it.tone : ""));
@@ -266,6 +418,7 @@ export function renderFunnel(container, items, options) {
         row.appendChild(el("div", "funnel-value", value + " · " + pct(value, total) + "%"));
         container.appendChild(row);
     });
+    finishChart(container, animate);
 }
 
 /* Part-to-whole. Unlike the bar/column helpers above, the slices here DO carry
@@ -278,7 +431,7 @@ export function renderFunnel(container, items, options) {
 export function renderPie(container, items, options) {
     if (!container) return;
     var opts = options || {};
-    container.innerHTML = "";
+    var animate = beginChart(container);
 
     var total = items.reduce(function (sum, it) { return sum + (Number(it.value) || 0); }, 0);
     if (!total) {
@@ -323,6 +476,7 @@ export function renderPie(container, items, options) {
     });
     wrap.appendChild(legend);
     container.appendChild(wrap);
+    finishChart(container, animate);
 }
 
 export function renderChartCard(title, subtitle) {

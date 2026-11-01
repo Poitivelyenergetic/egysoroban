@@ -3,6 +3,7 @@ import {
 } from "./fs.js";
 import { db } from "./firebase-init.js";
 import { state } from "./state.js";
+import { isAdminRole } from "./roles.js";
 
 /*
  * Public visitors may only create applications (the apply form).
@@ -12,7 +13,7 @@ import { state } from "./state.js";
 var applicationsCol = collection(db, "studentApplications");
 
 export async function loadApplications() {
-    if (!state.isAdmin) return;
+    if (!state.isAdmin || !isAdminRole(state.role)) return;
     try {
         var snap = await getDocs(applicationsCol);
         var list = [];

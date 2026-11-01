@@ -12,12 +12,44 @@ service cloud.firestore {
     function myEmail() {
       return request.auth.token.email.lower();
     }
-    // One hardcoded exception so the dev/test admin account (which has no real
-    // inbox to click a verification link with) can still be used to test admin
-    // features. Still requires an admins/{email} doc to exist like any other
-    // admin — this only skips the email_verified check for this one address.
-    function isDevAdminException() {
-      return isSignedIn() && myEmail() == 'developer1-admin@egysoroban.com';
+    // A public form submission must look like one: every field a short string,
+    // only the fields that form actually sends, and status/source fixed at the
+    // values a new submission has. Without this, `create: if true` let anyone
+    // write a submission pre-marked "enrolled" or linked to a student record,
+    // or stuff a document with megabytes of junk.
+    function textOk(d, k, max) {
+      return !(k in d) || (d[k] is string && d[k].size() <= max);
+    }
+    function validStudentApplication(d) {
+      return d.keys().hasOnly([
+          'branch', 'trialSlotId', 'trialDateTime', 'studentNameAr', 'studentNameEn',
+          'studentName', 'dob', 'nationalId', 'gender', 'religion', 'nationality',
+          'grade', 'parentName', 'relationship', 'phone', 'email', 'occupation',
+          'address', 'governorate', 'city', 'schoolName', 'schoolType', 'program',
+          'experience', 'hobbies', 'medical', 'dietary', 'heard', 'goals',
+          'status', 'notes', 'source', 'submittedAt'])
+        && d.status == 'new' && d.source == 'public' && d.notes == ''
+        && textOk(d, 'studentName', 120) && textOk(d, 'studentNameAr', 120)
+        && textOk(d, 'studentNameEn', 120) && textOk(d, 'parentName', 120)
+        && textOk(d, 'phone', 40) && textOk(d, 'email', 200) && textOk(d, 'nationalId', 20)
+        && textOk(d, 'address', 500) && textOk(d, 'experience', 2000)
+        && textOk(d, 'hobbies', 2000) && textOk(d, 'medical', 2000)
+        && textOk(d, 'dietary', 2000) && textOk(d, 'goals', 2000);
+    }
+    function validCompetitionRegistration(d) {
+      return d.keys().hasOnly([
+          'competition', 'studentName', 'nationalId', 'parentName', 'phone',
+          'email', 'notes', 'status', 'submittedAt'])
+        && d.status == 'new'
+        && textOk(d, 'studentName', 120) && textOk(d, 'parentName', 120)
+        && textOk(d, 'phone', 40) && textOk(d, 'email', 200)
+        && textOk(d, 'nationalId', 20) && textOk(d, 'notes', 2000);
+    }
+    function validTeacherApplication(d) {
+      return d.keys().hasOnly(['name', 'email', 'phone', 'experience', 'notes', 'status', 'submittedAt'])
+        && d.status == 'new'
+        && textOk(d, 'name', 120) && textOk(d, 'phone', 40) && textOk(d, 'email', 200)
+        && textOk(d, 'experience', 2000) && textOk(d, 'notes', 2000);
     }
     // The top role is called "developer". It was "superadmin" until the rename,
     // and documents created before that still carry the old string — so both
@@ -33,7 +65,7 @@ service cloud.firestore {
     // can report the real number. Adding or removing a lookup here makes that
     // table wrong until it is updated to match.
     function isDeveloper() {
-      return (isVerified() || isDevAdminException())
+      return isVerified()
         && exists(/databases/$(database)/documents/admins/$(myEmail()))
         && (
           get(/databases/$(database)/documents/admins/$(myEmail())).data.role == 'developer'
@@ -41,7 +73,7 @@ service cloud.firestore {
         );
     }
     function isAdminOrDeveloper() {
-      return (isVerified() || isDevAdminException())
+      return isVerified()
         && exists(/databases/$(database)/documents/admins/$(myEmail()));
     }
     function isApprovedTeacher() {
@@ -53,12 +85,14 @@ service cloud.firestore {
       return isAdminOrDeveloper() || isApprovedTeacher();
     }
 
-    // Student applications — anyone can submit one (the public apply form).
-    // Only staff (admin, developer, or an approved teacher) can view or update
-    // them; only admin/developer can delete one.
+    // Student applications — anyone can submit one (the public apply form), as
+    // long as it has the shape of one; an admin may also type one in by hand.
+    // Only admin/developer can view, update or delete them: they hold a child's
+    // national ID, religion, medical notes and home address, which no teacher
+    // needs before the child is enrolled and assigned to them.
     match /studentApplications/{id} {
-      allow create: if true;
-      allow read, update: if isStaff();
+      allow create: if validStudentApplication(request.resource.data) || isAdminOrDeveloper();
+      allow read, update: if isAdminOrDeveloper();
       allow delete: if isAdminOrDeveloper();
     }
 
@@ -66,13 +100,13 @@ service cloud.firestore {
     // read-only for staff so the one-time migration into studentApplications
     // can run; no longer accepts new submissions.
     match /applications/{id} {
-      allow read: if isStaff();
+      allow read: if isAdminOrDeveloper();
     }
 
     // Teacher applications — anyone can submit one (the public teach form).
     // Only admin/developer can review, approve, or reject them.
     match /teacherApplications/{id} {
-      allow create: if true;
+      allow create: if validTeacherApplication(request.resource.data);
       allow read, update: if isAdminOrDeveloper();
       allow delete: if isDeveloper();
     }
@@ -100,9 +134,12 @@ service cloud.firestore {
     // themselves when creating their login account. Anyone signed in may write
     // their own profile; admin/developer may also write someone else's, which
     // is what lets an admin fill in the name and phone when they create an
-    // account on a new colleague's behalf.
+    // account on a new colleague's behalf. Reading is the owner's own row or an
+    // admin: anyone can create a login with the public API key, so "signed in"
+    // alone would hand every staff member's personal phone to a stranger.
     match /staffProfiles/{email} {
-      allow read: if isSignedIn();
+      allow get: if (isSignedIn() && myEmail() == email) || isAdminOrDeveloper();
+      allow list: if isAdminOrDeveloper();
       allow write: if (isSignedIn() && myEmail() == email) || isAdminOrDeveloper();
     }
 
@@ -159,16 +196,19 @@ service cloud.firestore {
         || (isVerified() && resource.data.parentEmail == myEmail())
         || (isVerified() && resource.data.studentEmail == myEmail());
       // An admin creates any record. An approved teacher may create one only by
-      // accepting a signup that actually exists in studentAccounts, and only by
-      // assigning it to themselves — so a teacher can turn a real person who
-      // signed up into a student of theirs, but cannot invent students, and
-      // cannot hand work to a colleague who never agreed to it.
+      // accepting a signup that actually exists in studentAccounts and is still
+      // waiting for review, and only by assigning it to themselves — so a
+      // teacher can turn a real person who signed up into a student of theirs,
+      // but cannot invent students, and cannot hand work to a colleague who
+      // never agreed to it. parentEmail must be blank: whoever it names gains
+      // read access, so only an admin may link a parent.
       allow create: if isAdminOrDeveloper()
         || (isApprovedTeacher()
             && request.resource.data.teacherEmail == myEmail()
+            && request.resource.data.get('parentEmail', '') == ''
             && request.resource.data.studentEmail is string
             && request.resource.data.studentEmail != ''
-            && exists(/databases/$(database)/documents/studentAccounts/$(request.resource.data.studentEmail)));
+            && get(/databases/$(database)/documents/studentAccounts/$(request.resource.data.studentEmail)).data.status == 'pending');
       allow delete: if isAdminOrDeveloper();
       // A teacher's update may only touch the progress fields they're meant
       // to fill out — never teacherEmail/parentEmail/studentEmail/name/branch,
@@ -186,7 +226,7 @@ service cloud.firestore {
     // competition registration form). Only staff can review/update; only
     // admin/developer can delete one.
     match /competitionRegistrations/{id} {
-      allow create: if true;
+      allow create: if validCompetitionRegistration(request.resource.data);
       allow read, update: if isStaff();
       allow delete: if isAdminOrDeveloper();
     }
@@ -268,7 +308,21 @@ service cloud.firestore {
     // figures describe the whole project, and nothing may delete a day's record.
     match /usageDaily/{day} {
       allow read: if isStaff();
-      allow create, update: if isSignedIn();
+      // Only the meter's own fields, and counters may only grow — so a signed-in
+      // user can't wipe or rewrite a day's figures, only add to them. (The
+      // comment above about inflating a counter still holds.)
+      allow create: if isSignedIn()
+        && request.resource.data.keys().hasOnly(['reads', 'writes', 'deletes', 'day', 'updatedAt'])
+        && request.resource.data.day == day;
+      // The scheduled function adds a `server` summary with admin credentials,
+      // which bypass these rules; a browser may leave it in place but not touch it.
+      allow update: if isSignedIn()
+        && request.resource.data.diff(resource.data).affectedKeys()
+             .hasOnly(['reads', 'writes', 'deletes', 'day', 'updatedAt'])
+        && request.resource.data.day == day
+        && request.resource.data.get('reads', 0) >= resource.data.get('reads', 0)
+        && request.resource.data.get('writes', 0) >= resource.data.get('writes', 0)
+        && request.resource.data.get('deletes', 0) >= resource.data.get('deletes', 0);
       allow delete: if false;
     }
 

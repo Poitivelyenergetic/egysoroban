@@ -156,6 +156,10 @@ async function showAdminDashboard() {
 
     var isTeacherOnly = !isAdminRole(state.role);
     adminTabTeachers.hidden = isTeacherOnly;
+    // Applications carry a child's national ID, religion, medical notes and
+    // home address, so the rules keep them admin-only; a teacher works from
+    // the student records they've been assigned instead.
+    document.querySelector('.admin-tab[data-tab="students"]').hidden = isTeacherOnly;
     adminTabManageAdmins.hidden = state.role !== ROLE_DEVELOPER;
     adminTabRecords.hidden = false;
     adminTabSlots.hidden = isTeacherOnly;
@@ -173,7 +177,7 @@ async function showAdminDashboard() {
     adminTabs.hidden = false;
     document.getElementById("admin-migrate-applications").hidden = isTeacherOnly;
     updateAdminRoleBadge();
-    setPanel("students");
+    setPanel(isTeacherOnly ? "records" : "students");
 
     await loadApplications();
     renderAdminDashboard();
@@ -325,7 +329,7 @@ document.getElementById("admin-verify-resend").addEventListener("click", async f
     if (!user) return;
     try {
         await sendEmailVerification(user);
-        toast(t("admin.verifyResendBtn"));
+        toast(t("admin.verifyResentToast"));
     } catch (e) {
         toast(t("admin.savingFailedToast"));
     }
