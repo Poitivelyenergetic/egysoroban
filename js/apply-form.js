@@ -14,7 +14,6 @@ function buildMailto(app, to, subjectPrefix) {
         "Date of birth: " + (app.dob || "—"),
         "National ID: " + (app.nationalId || "—"),
         "Gender: " + (app.gender || "—"),
-        "Religion: " + (app.religion || "—"),
         "Nationality: " + (app.nationality || "—"),
         "Grade: " + (app.grade || "—"),
         "Parent/guardian: " + (app.parentName || "—"),
@@ -115,7 +114,7 @@ function markFieldError(input) {
 }
 function validateForm(fd) {
     var required = [
-        "branch", "studentNameAr", "studentNameEn", "dob", "gender", "religion",
+        "branch", "studentNameAr", "studentNameEn", "dob", "gender",
         "parentName", "relationship", "phone", "email",
         "address", "governorate", "city", "schoolName", "schoolType", "grade",
     ];
@@ -136,6 +135,11 @@ function validateForm(fd) {
     if (nationalIdVal && !/^[23]\d{13}$/.test(nationalIdVal)) {
         markFieldError(nationalIdInput);
         if (!firstInvalid) firstInvalid = nationalIdInput;
+    }
+    var consentInput = applyForm.querySelector('[name="consent"]');
+    if (consentInput && !consentInput.checked) {
+        markFieldError(consentInput);
+        if (!firstInvalid) firstInvalid = consentInput;
     }
     return firstInvalid;
 }
@@ -172,7 +176,6 @@ if (applyForm) {
             dob: (fd.get("dob") || "").toString(),
             nationalId: (fd.get("nationalId") || "").toString().trim(),
             gender: (fd.get("gender") || "").toString(),
-            religion: (fd.get("religion") || "").toString(),
             nationality: (fd.get("nationality") || "").toString(),
             grade: (fd.get("grade") || "").toString().trim(),
             parentName: (fd.get("parentName") || "").toString().trim(),

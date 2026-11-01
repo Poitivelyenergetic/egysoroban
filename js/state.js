@@ -2,7 +2,7 @@ export var state = {
     lang: "en",
     applications: [],
     adminOpen: false,
-    isAdmin: false,
+    isSignedIn: false,
     role: null,
 };
 

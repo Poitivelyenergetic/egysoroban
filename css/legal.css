@@ -1,0 +1,8 @@
+/* ============ Legal / policy pages ============ */
+.legal-content { max-width: 68ch; margin-top: 28px; }
+.legal-content h3 { font-size: 1.1rem; margin: 2em 0 0.5em; }
+.legal-content h3:first-child { margin-top: 0; }
+.legal-content p { color: var(--ink-soft); line-height: 1.65; }
+.legal-content ul { list-style: disc; padding-inline-start: 1.4em; margin: 0 0 1em; }
+.legal-content li { color: var(--ink-soft); line-height: 1.6; margin-bottom: 0.5em; }
+.legal-updated { color: var(--ink-faint); font-size: 0.86rem; font-family: var(--font-mono); margin-top: 10px; }

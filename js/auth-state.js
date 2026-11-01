@@ -3,5 +3,5 @@ import { auth } from "./firebase-init.js";
 import { state } from "./state.js";
 
 onAuthStateChanged(auth, function (user) {
-    state.isAdmin = !!user;
+    state.isSignedIn = !!user;
 });

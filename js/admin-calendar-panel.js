@@ -108,9 +108,18 @@ export async function renderCalendarPanel() {
     gridEl.appendChild(loading);
 
     var classes = await loadClasses();
-    var teachers = await listApprovedTeachers();
+    /* Firestore denies `list` on teachers/ to a teacher-only account, so
+       fetching the whole directory here would always come back empty for
+       them. They only ever see their own classes anyway — just label those
+       with their own display name instead of round-tripping for nothing. */
+    var myEmailEarly = (auth.currentUser && auth.currentUser.email || "").toLowerCase();
+    var teachers = admin ? await listApprovedTeachers() : [];
     teacherNameByEmail = {};
-    teachers.forEach(function (te) { teacherNameByEmail[te.email.toLowerCase()] = te.name || ""; });
+    if (admin) {
+        teachers.forEach(function (te) { teacherNameByEmail[te.email.toLowerCase()] = te.name || ""; });
+    } else if (myEmailEarly) {
+        teacherNameByEmail[myEmailEarly] = (auth.currentUser && auth.currentUser.displayName) || "";
+    }
     teacherList = teachers;
 
     if (admin && teacherSelect) {
@@ -134,7 +143,7 @@ export async function renderCalendarPanel() {
         });
     }
 
-    var myEmail = (auth.currentUser && auth.currentUser.email || "").toLowerCase();
+    var myEmail = myEmailEarly;
     /* Teachers only ever see their own timetable; admins can narrow to theirs. */
     var mineOnly = !admin || (mineOnlyToggle && mineOnlyToggle.checked);
     var visible = mineOnly

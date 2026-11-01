@@ -31,9 +31,9 @@ House rules
       with a pre-filled message. Live site has none; competitors lead with it.
 - [ ] **"Find your child's level" quiz** built on the try-it flash challenge,
       ending in the trial booking.
-- [ ] **Privacy policy + terms (formal Arabic + English)** and a consent
-      checkbox on the forms — they collect a child's national ID, religion and
-      medical notes (Egypt PDPL 151/2020).
+- [x] Privacy policy + consent checkbox (done 2026-09-02).
+- [ ] **Terms and conditions page** (formal Arabic + English), linked next to
+      the privacy policy.
 - [ ] **Split sensitive application fields** (national ID, religion, medical,
       address) into an admin-only subcollection, so teachers can get a slim
       read-only view of new applicants again if the academy wants that.
@@ -43,13 +43,14 @@ House rules
 
 ## Next
 
-- [ ] Move the staff console off the homepage into staff.html (homepage
-      currently loads ~3,000 lines of admin code and ~1,000 lines of admin HTML
-      for every parent).
+- [x] Staff console code only loads when a staff member opens it (done 2026-09-02).
+- [ ] The ~1,000 lines of console HTML still ship inside index.html — move it
+      into a template the console injects on open.
 - [ ] Inline head script that sets theme, lang and dir before paint (stops the
       dark→light and English→Arabic flash).
-- [ ] Image diet: WebP + srcset, fingerprinted filenames, drop ~4.7 MB of
-      unused PNGs from deploys, trim fonts and combine the 23 stylesheets.
+- [x] WebP gallery, bundled/minified JS and one CSS bundle via esbuild (done 2026-09-02).
+- [ ] Image diet, part 2: srcset sizes, drop the ~4.7 MB of unused PNGs from
+      assets/, trim font weights.
 - [ ] Accessible dialogs (role=dialog, focus trap) and keyboard-friendly
       application rows; link every label to its input; fix light-theme
       contrast tokens and focus ring.
@@ -81,9 +82,23 @@ House rules
   championship tallies before the site states them as fact.
 - Which teachers should see new applications, if any.
 
+## How this repo works now
+
+- `npm run build` (runs automatically before `firebase deploy`) bundles every
+  `js/*-page.js` entry and all CSS into hashed files under `dist/`, which is
+  what Firebase Hosting serves. A new page needs a matching `js/<page>-page.js`.
+- Rules tests: `cd tests && npm test` (Firestore emulator; needs Java). On
+  Windows the emulator can be left running after a run — if the port is
+  taken, point a scratch firebase.json at another port.
+- Work happens in THIS folder only. The "- Copy" folder was where the
+  2026-09-01/02 work happened; it is now merged here and should be retired.
+
 ## Log
 
-- 2026-11-01 — Round 1. Locked down Firestore rules (staff phones and child
+- 2026-09-01/02 — (from the "- Copy" folder) verified-email writes, admin
+  dashboard lazy-loaded, rules tests, esbuild pipeline, WebP gallery, privacy
+  policy + consent, SEO metadata, a11y and copy fixes.
+- 2026-11-01 — Round 1, merged on top of the above. Locked down Firestore rules (staff phones and child
   application data were readable too widely; public forms now validated; dev
   verification backdoor removed; usage meter can only grow) with 24 emulator
   tests. All pages: doctype, SEO head tags, sitemap, robots, 404, schema.org,

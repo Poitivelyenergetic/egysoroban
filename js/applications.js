@@ -13,7 +13,7 @@ import { isAdminRole } from "./roles.js";
 var applicationsCol = collection(db, "studentApplications");
 
 export async function loadApplications() {
-    if (!state.isAdmin || !isAdminRole(state.role)) return;
+    if (!state.isSignedIn || !isAdminRole(state.role)) return;
     try {
         var snap = await getDocs(applicationsCol);
         var list = [];
