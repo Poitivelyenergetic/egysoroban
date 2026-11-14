@@ -10,6 +10,7 @@ import { auth } from "./firebase-init.js";
 import { t, fmtDate, onLanguageChangeCallbacks } from "./i18n.js";
 import { toast } from "./toast.js";
 import { checkEnrolled } from "./enrolled-emails.js";
+import { renderLiveBox, clearLiveTimers } from "./portal-live.js";
 
 /* student-records.js and portal-accounts.js only ever run once a visitor is
    signed in and verified (see showDashboard/recordPendingSignupIfAny below),
@@ -174,6 +175,8 @@ function renderStudentCard(s) {
     meta.textContent = s.branch || "";
     card.appendChild(meta);
 
+    if (s.classId) card.appendChild(renderLiveBox(s));
+
     var levelIndex = Number(s.levelIndex) || 1;
     var stage = stageInfoForLevel(levelIndex);
     var stageNote = document.createElement("div");
@@ -234,6 +237,7 @@ function renderStudentCard(s) {
 
 async function showDashboard(email) {
     gate.hidden = true; verifyScreen.hidden = true; dashboard.hidden = false;
+    clearLiveTimers();
     studentsWrap.innerHTML = "";
     var loadingMsg = document.createElement("p");
     loadingMsg.className = "section-lede";

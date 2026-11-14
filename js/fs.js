@@ -149,6 +149,12 @@ var RULE_READS = {
        nothing; one by a signed-in visitor pays the isStaff() attempt first. */
     trialSlots: { get: Z, list: Z, create: S, update: S, delete: S },
     classes: { get: S, list: S, create: A, update: A, delete: A },
+    /* classRooms: a family opening their own class passes on the email-hash
+       check, which reads nothing — hence the 0. Staff fail that check and pay
+       for isStaff(). A teacher setting the link or going live pays the same
+       as C: admins miss, teachers hit, then one look at classes/{id} to prove
+       the class is theirs. */
+    classRooms: { get: [1, 2, 0], list: S, create: C, update: C, delete: A },
     payments: { get: A, list: A, create: A, update: A, delete: A },
     expenses: { get: A, list: A, create: A, update: A, delete: A },
     enrolledEmails: { get: Z, list: A, create: A, update: A, delete: A },

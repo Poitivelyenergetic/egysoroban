@@ -269,6 +269,53 @@ service cloud.firestore {
       allow create, update, delete: if isAdminOrDeveloper();
     }
 
+    // classRooms/{classId} is the online side of classes/{classId}: the video
+    // room link, whether the teacher has the class live right now, a copy of
+    // the schedule, and which families may join. It is a separate document
+    // because classes/ stays staff-only — families must never see teacher
+    // emails, capacity, or who else is enrolled.
+    //
+    // Families are listed as memberKeys: the same salted SHA-256 email key
+    // js/enrolled-emails.js uses, so the document never holds a readable
+    // address, yet the rules can check "is the signed-in email one of them"
+    // by hashing it the same way. A family member can only `get` a room they
+    // already know the id of (from their own child's students/ record); only
+    // staff may list rooms. The membership check comes first and costs no
+    // document read, so a family opening their own class is free.
+    //
+    // An approved teacher may only set the link and go live/off-air on a
+    // class that is theirs — never the members or the schedule, which an
+    // admin manages. Every link must be a Daily room (https://<team>.daily.co/
+    // <room>), so nothing else can ever end up inside the page's video frame.
+    function roomKey(email) {
+      return hashing.sha256('egysoroban:' + email).toHexString().lower();
+    }
+    function validRoom(d) {
+      return (!('roomUrl' in d) || d.roomUrl == ''
+              || (d.roomUrl is string && d.roomUrl.size() <= 200
+                  && d.roomUrl.matches('https://[a-z0-9-]+[.]daily[.]co/[A-Za-z0-9_-]+')))
+        && (!('live' in d) || d.live is bool)
+        && (!('memberKeys' in d) || (d.memberKeys is list && d.memberKeys.size() <= 60));
+    }
+    function teachesClass(classId) {
+      return isApprovedTeacher()
+        && get(/databases/$(database)/documents/classes/$(classId)).data.teacherEmail == myEmail();
+    }
+    match /classRooms/{classId} {
+      allow get: if (isVerified() && roomKey(myEmail()) in resource.data.get('memberKeys', []))
+        || isStaff();
+      allow list: if isStaff();
+      allow create: if validRoom(request.resource.data) && (
+        isAdminOrDeveloper()
+        || (teachesClass(classId)
+            && request.resource.data.keys().hasOnly(['roomUrl', 'live', 'liveChangedAt'])));
+      allow update: if validRoom(request.resource.data) && (
+        isAdminOrDeveloper()
+        || (teachesClass(classId)
+            && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['roomUrl', 'live', 'liveChangedAt'])));
+      allow delete: if isAdminOrDeveloper();
+    }
+
     // payments/{id} records one monthly-tuition payment against a student.
     // Financial records are admin-only in both directions: approved teachers
     // have no read access at all, and nothing here is ever public. Admins can

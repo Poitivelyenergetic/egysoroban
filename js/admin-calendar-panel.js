@@ -6,6 +6,11 @@ import { loadAllSlots } from "./trial-slots.js";
 import { listApprovedTeachers, isAdminRole } from "./roles.js";
 import { BRANCHES, branchLabel } from "./branches.js";
 import { auth } from "./firebase-init.js";
+import {
+    loadRooms, setRoomLive, setRoomLink, saveRoomForClass, syncRoomSchedule, deleteRoom, isDailyUrl, isLive,
+} from "./class-rooms.js";
+import { openClassroom } from "./classroom.js";
+import { loadStudents, updateStudent } from "./student-records.js";
 
 var detailOverlay = document.getElementById("detail-overlay");
 var detailCard = document.getElementById("detail-card");
@@ -19,6 +24,7 @@ var mineOnlyToggle = document.getElementById("calendar-mine-only");
 var slotsListEl = document.getElementById("calendar-trial-slots");
 
 var teacherNameByEmail = {};
+var roomsById = {};
 
 /* Day names come from the browser's own locale data keyed off a known Sunday,
    so the column headers read correctly in Arabic without a second word list. */
@@ -107,7 +113,9 @@ export async function renderCalendarPanel() {
     loading.textContent = t("admin.loading");
     gridEl.appendChild(loading);
 
-    var classes = await loadClasses();
+    var loaded = await Promise.all([loadClasses(), loadRooms()]);
+    var classes = loaded[0];
+    roomsById = loaded[1];
     /* Firestore denies `list` on teachers/ to a teacher-only account, so
        fetching the whole directory here would always come back empty for
        them. They only ever see their own classes anyway — just label those
@@ -192,6 +200,39 @@ export async function renderCalendarPanel() {
             where.textContent = branchLabel(c.branch);
             card.appendChild(where);
 
+            /* Online room controls: an admin on any class, a teacher on their
+               own (a teacher only ever sees their own, see `visible` above). */
+            var room = roomsById[c.id] || null;
+            var live = isLive(room);
+            if (room && room.roomUrl) {
+                var badges = document.createElement("div");
+                badges.className = "class-card-badges";
+                var badge = document.createElement("span");
+                badge.className = "room-badge" + (live ? " is-live" : "");
+                if (live) {
+                    var dot = document.createElement("span");
+                    dot.className = "live-dot";
+                    dot.setAttribute("aria-hidden", "true");
+                    badge.appendChild(dot);
+                }
+                badge.appendChild(document.createTextNode(t(live ? "room.badgeLive" : "room.badgeOnline")));
+                badges.appendChild(badge);
+                card.appendChild(badges);
+
+                var goLive = document.createElement("button");
+                goLive.type = "button";
+                goLive.className = "class-card-golive";
+                goLive.textContent = t(live ? "room.rejoinBtn" : "room.goLiveBtn");
+                goLive.addEventListener("click", function () { startClass(c, room, goLive); });
+                card.appendChild(goLive);
+            }
+            var roomBtn = document.createElement("button");
+            roomBtn.type = "button";
+            roomBtn.className = "class-card-room";
+            roomBtn.textContent = t("room.manageBtn");
+            roomBtn.addEventListener("click", function () { openRoomDialog(c); });
+            card.appendChild(roomBtn);
+
             if (admin) {
                 var edit = document.createElement("button");
                 edit.type = "button";
@@ -207,6 +248,7 @@ export async function renderCalendarPanel() {
                 del.addEventListener("click", async function () {
                     del.disabled = true;
                     var result = await deleteClass(c.id);
+                    if (result.ok && roomsById[c.id]) await deleteRoom(c.id);
                     if (result.ok) {
                         toast(t("admin.deletedToast"));
                         renderCalendarPanel();
@@ -375,7 +417,7 @@ export function openClassDetail(c) {
             return;
         }
         saveBtn.disabled = true;
-        var result = await updateClass(c.id, {
+        var fields = {
             dayOfWeek: Number(daySel.value) || 0,
             startTime: timeInput.value,
             durationMins: Number(durInput.value) || 60,
@@ -383,7 +425,10 @@ export function openClassDetail(c) {
             teacherEmail: teacherSel.value,
             levelIndex: Number(levelInput.value) || 1,
             capacity: Number(capInput.value) || 10,
-        });
+        };
+        var result = await updateClass(c.id, fields);
+        /* Families read the time from the room's own copy, so keep it in step. */
+        if (result.ok && roomsById[c.id]) await syncRoomSchedule(Object.assign({ id: c.id }, fields));
         saveBtn.disabled = false;
         if (result.ok) {
             toast(t("admin.savedToast"));
@@ -398,4 +443,188 @@ export function openClassDetail(c) {
     detailCard.appendChild(actions);
 
     detailOverlay.hidden = false;
+}
+
+/* ---------- Online classroom ---------- */
+
+/* Going live is what lets families in outside the 10-minute early window and
+   shows them "Live now". Leaving the room takes the class off air again. */
+async function startClass(c, room, btn) {
+    btn.disabled = true;
+    var res = await setRoomLive(c.id, true);
+    btn.disabled = false;
+    if (!res.ok) { toast(t("admin.savingFailedToast")); return; }
+    toast(t("room.liveToast"));
+    openClassroom({
+        url: room.roomUrl,
+        title: (levelLabel(c.levelIndex) || t("calendar.classFallbackTitle")) + " · " + fmtTime(c.startTime, state.lang),
+        leaveLabel: t("room.endBtn"),
+        onLeave: async function () {
+            var off = await setRoomLive(c.id, false);
+            toast(off.ok ? t("room.endedToast") : t("admin.savingFailedToast"));
+            renderCalendarPanel();
+        },
+    });
+    renderCalendarPanel();
+}
+
+function closeDetail() { detailOverlay.hidden = true; detailCard.innerHTML = ""; }
+
+/* One dialog for both roles. A teacher sets the link for their own class; an
+   admin also ticks which students belong to it, which is what decides whose
+   portal shows the Join button. */
+export async function openRoomDialog(c) {
+    if (!detailCard || !detailOverlay) return;
+    var admin = isAdminRole(state.role);
+    var room = roomsById[c.id] || {};
+    detailCard.innerHTML = "";
+    detailCard.dataset.kind = "room";
+
+    var head = document.createElement("div");
+    head.className = "detail-head";
+    var h3 = document.createElement("h3");
+    h3.textContent = t("room.dialogTitle") + " — " + (levelLabel(c.levelIndex) || t("calendar.classFallbackTitle"));
+    var closeBtn = document.createElement("button");
+    closeBtn.className = "icon-btn";
+    closeBtn.type = "button";
+    closeBtn.setAttribute("aria-label", t("detail.close"));
+    closeBtn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>';
+    closeBtn.addEventListener("click", closeDetail);
+    head.appendChild(h3);
+    head.appendChild(closeBtn);
+    detailCard.appendChild(head);
+
+    var rows = document.createElement("div");
+    rows.className = "detail-rows";
+
+    var linkWrap = document.createElement("div");
+    var linkInput = document.createElement("input");
+    linkInput.type = "url";
+    linkInput.className = "room-link-input";
+    linkInput.placeholder = "https://yourteam.daily.co/level-3";
+    linkInput.value = room.roomUrl || "";
+    linkInput.setAttribute("dir", "ltr");
+    linkWrap.appendChild(linkInput);
+    var linkHint = document.createElement("p");
+    linkHint.className = "room-field-hint";
+    linkHint.textContent = t("room.linkHint");
+    linkWrap.appendChild(linkHint);
+    var linkError = document.createElement("p");
+    linkError.className = "room-field-error";
+    linkError.hidden = true;
+    linkError.textContent = t("room.linkInvalid");
+    linkWrap.appendChild(linkError);
+    var linkRow = fieldRow(t("room.linkLabel"), linkWrap);
+    linkRow.querySelector(".k").id = "room-link-label";
+    linkInput.setAttribute("aria-labelledby", "room-link-label");
+    rows.appendChild(linkRow);
+
+    var students = [];
+    var members = null;
+    if (admin) {
+        members = document.createElement("div");
+        members.className = "room-members";
+        for (var i = 0; i < 3; i++) {
+            var sk = document.createElement("span");
+            sk.className = "skeleton skeleton-line";
+            sk.style.height = "34px";
+            members.appendChild(sk);
+        }
+        var membersWrap = document.createElement("div");
+        var membersHint = document.createElement("p");
+        membersHint.className = "room-field-hint";
+        membersHint.textContent = t("room.membersHint");
+        membersWrap.appendChild(members);
+        membersWrap.appendChild(membersHint);
+        rows.appendChild(fieldRow(t("room.membersLabel"), membersWrap));
+    }
+    detailCard.appendChild(rows);
+
+    var actions = document.createElement("div");
+    actions.className = "detail-actions";
+    var saveBtn = document.createElement("button");
+    saveBtn.type = "button";
+    saveBtn.className = "btn btn-jade";
+    saveBtn.textContent = t("detail.save");
+    actions.appendChild(saveBtn);
+    detailCard.appendChild(actions);
+    detailOverlay.hidden = false;
+    linkInput.focus();
+
+    if (admin) {
+        /* Saving before the roster arrives would read an empty list as "no one
+           is in this class" — so Save waits for it. */
+        saveBtn.disabled = true;
+        students = await loadStudents();
+        saveBtn.disabled = false;
+        members.innerHTML = "";
+        if (!students.length) {
+            var none = document.createElement("p");
+            none.className = "chart-empty";
+            none.textContent = t("room.noStudents");
+            members.appendChild(none);
+        }
+        /* This class's students first, then the class teacher's other
+           students, then everyone else — the likely picks sit at the top. */
+        var teacher = (c.teacherEmail || "").toLowerCase();
+        var rank = function (s) {
+            if (s.classId === c.id) return 0;
+            if ((s.teacherEmail || "").toLowerCase() === teacher) return 1;
+            return 2;
+        };
+        students.slice().sort(function (a, b) {
+            return rank(a) - rank(b) || (a.name || "").localeCompare(b.name || "");
+        }).forEach(function (s) {
+            var label = document.createElement("label");
+            label.className = "room-member";
+            var box = document.createElement("input");
+            box.type = "checkbox";
+            box.value = s.id;
+            box.checked = s.classId === c.id;
+            label.appendChild(box);
+            var name = document.createElement("span");
+            name.textContent = s.name || t("detail.none");
+            label.appendChild(name);
+            var note = "";
+            if (!s.parentEmail && !s.studentEmail) note = t("room.noEmailWarn");
+            else if (s.classId && s.classId !== c.id) note = t("room.inOtherClass");
+            if (note) {
+                var noteEl = document.createElement("span");
+                noteEl.className = "room-member-note";
+                noteEl.textContent = note;
+                label.appendChild(noteEl);
+            }
+            members.appendChild(label);
+        });
+    }
+
+    saveBtn.addEventListener("click", async function () {
+        var url = linkInput.value.trim();
+        if (url && !isDailyUrl(url)) {
+            linkError.hidden = false;
+            linkInput.focus();
+            return;
+        }
+        linkError.hidden = true;
+        saveBtn.disabled = true;
+        var result;
+        if (admin) {
+            var ids = Array.prototype.map.call(members.querySelectorAll("input:checked"), function (b) { return b.value; });
+            result = await saveRoomForClass(c, {
+                roomUrl: url, studentIds: ids,
+                /* Families see the teacher's name, never their email. */
+                teacherName: teacherNameByEmail[(c.teacherEmail || "").toLowerCase()] || "",
+            }, students, updateStudent);
+        } else {
+            result = await setRoomLink(c.id, url);
+        }
+        saveBtn.disabled = false;
+        if (result.ok) {
+            toast(t("admin.savedToast"));
+            closeDetail();
+            renderCalendarPanel();
+        } else {
+            toast(t("admin.savingFailedToast"));
+        }
+    });
 }
