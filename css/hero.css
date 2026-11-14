@@ -1,20 +1,161 @@
 /* ============ Hero ============ */
-.hero { padding-top: 72px; padding-bottom: 72px; position: relative; overflow: hidden; }
+.hero { padding-top: 64px; padding-bottom: 0; position: relative; overflow: hidden; isolation: isolate; }
+
+/* Soft drifting colour behind the hero, plus faint vertical "rods" so the
+   background reads as an abacus frame rather than a plain gradient. Purely
+   decorative; the global reduced-motion rule stops the drift. */
+.hero-bg { position: absolute; inset: 0; z-index: -1; pointer-events: none; }
+.hero-blob {
+  position: absolute; border-radius: 50%; filter: blur(70px); opacity: 0.45;
+  animation: heroBlobDrift 16s ease-in-out infinite alternate;
+}
+.hero-blob.b1 { width: 480px; height: 480px; top: -180px; inset-inline-end: -140px; background: color-mix(in srgb, var(--brass) 60%, transparent); }
+.hero-blob.b2 { width: 420px; height: 420px; bottom: -160px; inset-inline-start: -160px; background: color-mix(in srgb, var(--jade) 65%, transparent); animation-delay: -5s; }
+.hero-blob.b3 { width: 260px; height: 260px; top: 35%; left: 42%; background: color-mix(in srgb, var(--brass) 35%, var(--jade)); opacity: 0.22; animation-delay: -10s; }
+@keyframes heroBlobDrift {
+  from { transform: translate(0, 0) scale(1); }
+  to { transform: translate(28px, 22px) scale(1.08); }
+}
+.hero-rods {
+  position: absolute; inset: 0;
+  background-image: repeating-linear-gradient(90deg, transparent 0 87px, color-mix(in srgb, var(--ink) 7%, transparent) 87px 88px);
+  -webkit-mask-image: linear-gradient(180deg, #000 0%, transparent 80%);
+  mask-image: linear-gradient(180deg, #000 0%, transparent 80%);
+}
+
 .hero-grid {
   max-width: var(--maxw); margin-inline: auto; padding-inline: 24px;
-  display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 56px; align-items: center;
+  display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 64px; align-items: center;
 }
-@media (max-width: 900px) { .hero-grid { grid-template-columns: 1fr; gap: 40px; } }
-.hero-title { font-size: clamp(2.3rem, 1.6rem + 3vw, 3.7rem); line-height: 1.02; letter-spacing: -0.01em; font-weight: 800; }
-.hero-title .accent { color: var(--brass-strong); }
-.hero-sub { font-size: 1.15rem; color: var(--ink-soft); max-width: 46ch; }
-.hero-ctas { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 28px; }
-.hero-meta { display: flex; gap: 28px; margin-top: 40px; flex-wrap: wrap; }
-.hero-meta div { font-family: var(--font-mono); }
-.hero-meta .num { font-size: 1.6rem; font-weight: 600; color: var(--rod); font-variant-numeric: tabular-nums; }
-:root:not([data-theme="light"]) .hero-meta .num { color: var(--ink); }
-:root[data-theme="dark"] .hero-meta .num { color: var(--ink); }
-.hero-meta .lbl { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-faint); }
+@media (max-width: 900px) { .hero-grid { grid-template-columns: 1fr; gap: 48px; } }
+
+.hero-pill {
+  display: inline-flex; align-items: center; gap: 9px; margin: 0 0 20px;
+  padding: 7px 15px 7px 11px; border-radius: 999px;
+  background: color-mix(in srgb, var(--brass) 13%, transparent);
+  border: 1px solid color-mix(in srgb, var(--brass) 38%, transparent);
+  color: var(--brass-strong); font-weight: 700; font-size: 0.86rem;
+}
+.hero-pill .dot {
+  width: 8px; height: 8px; border-radius: 50%; background: var(--ok); flex-shrink: 0;
+  animation: heroPillPulse 2s ease-out infinite;
+}
+@keyframes heroPillPulse {
+  0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--ok) 55%, transparent); }
+  100% { box-shadow: 0 0 0 9px transparent; }
+}
+
+.hero-title { font-size: clamp(2.5rem, 1.6rem + 3.6vw, 4.2rem); line-height: 1; letter-spacing: -0.01em; font-weight: 800; }
+.hero-title .accent {
+  background: linear-gradient(100deg, var(--brass) 10%, var(--brass-strong) 55%, var(--brass) 90%);
+  background-size: 200% 100%;
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  animation: heroAccentSheen 6s ease-in-out infinite;
+}
+@keyframes heroAccentSheen { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+html[data-lang="ar"] .hero-title { line-height: 1.25; }
+
+.hero-sub { font-size: 1.15rem; color: var(--ink-soft); max-width: 46ch; margin-top: 18px; }
+.hero-ctas { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 30px; }
+.btn-lg { padding: 1em 1.75em; font-size: 1.02rem; }
+
+/* A light sweep across the main call to action on hover, so the one button
+   that matters most feels alive under the cursor. */
+.btn-shine { position: relative; overflow: hidden; isolation: isolate; }
+.btn-shine::after {
+  content: ""; position: absolute; inset: 0; z-index: -1;
+  background: linear-gradient(110deg, transparent 30%, rgba(255, 255, 255, 0.45) 50%, transparent 70%);
+  transform: translateX(-120%); transition: transform 0.4s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.btn-shine:hover::after { transform: translateX(120%); }
+
+.hero-meta { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-top: 36px; max-width: 460px; }
+.hero-meta > div {
+  padding: 14px 16px; border-radius: var(--radius-md);
+  background: color-mix(in srgb, var(--paper-raised) 70%, transparent);
+  border: 1px solid var(--line); backdrop-filter: blur(8px);
+  transition: transform 0.25s cubic-bezier(0.2, 0.7, 0.2, 1), border-color 0.25s ease;
+}
+.hero-meta > div:hover { transform: translateY(-3px); border-color: color-mix(in srgb, var(--brass) 45%, var(--line)); }
+.hero-meta .num { font-family: var(--font-display); font-size: 1.9rem; font-weight: 800; line-height: 1; color: var(--ink); font-variant-numeric: tabular-nums; }
+.hero-meta .lbl { margin-top: 6px; font-size: 0.74rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-faint); }
+
+/* ---------- Photo side: carousel on a tilted colour card, two floating badges ---------- */
+.hero-visual { position: relative; }
+.hero-visual::before {
+  content: ""; position: absolute; inset: 22px -16px -16px 22px; z-index: -1;
+  border-radius: var(--radius-lg); transform: rotate(3deg);
+  background: linear-gradient(135deg, var(--brass), var(--jade));
+  opacity: 0.85;
+}
+[dir="rtl"] .hero-visual::before { inset: 22px 22px -16px -16px; transform: rotate(-3deg); }
+
+.hero-badge {
+  position: absolute; z-index: 3; display: flex; align-items: center; gap: 12px;
+  max-width: 250px; padding: 11px 15px; border-radius: 18px;
+  background: color-mix(in srgb, var(--paper-raised) 90%, transparent);
+  border: 1px solid var(--line); box-shadow: var(--shadow-2); backdrop-filter: blur(10px);
+  animation: heroBadgeFloat 5s ease-in-out infinite;
+}
+.hero-badge b { display: block; font-family: var(--font-display); font-size: 1.55rem; line-height: 1; color: var(--ink); }
+.hero-badge span:not(.hero-badge-ico) { display: block; font-size: 0.76rem; line-height: 1.3; color: var(--ink-soft); margin-top: 3px; }
+.hero-badge-ico { font-size: 1.6rem; line-height: 1; }
+.hero-badge-top { top: -20px; inset-inline-start: -22px; }
+.hero-badge-bottom { bottom: -24px; inset-inline-end: -18px; animation-delay: -2.5s; }
+@keyframes heroBadgeFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+@media (max-width: 900px) {
+  .hero-badge { max-width: 210px; padding: 9px 12px; }
+  .hero-badge-top { top: -16px; inset-inline-start: 10px; }
+  .hero-badge-bottom { bottom: -20px; inset-inline-end: 10px; }
+}
+
+/* The little abacus in the bottom badge: each rod's beads slide in turn. */
+.mini-abacus { flex-shrink: 0; }
+.mini-abacus-frame rect, .mini-abacus-frame line { fill: none; stroke: var(--ink-faint); stroke-width: 1.6; }
+.mini-abacus .mb { fill: var(--brass); animation: miniBeadE 3.6s cubic-bezier(0.2, 0.7, 0.2, 1) infinite; }
+.mini-abacus .mb-h { fill: var(--jade); animation-name: miniBeadH; }
+.mini-abacus .mb-r1 { animation-delay: 0.45s; }
+.mini-abacus .mb-r2 { animation-delay: 0.9s; }
+.mini-abacus .mb-r3 { animation-delay: 1.35s; }
+@keyframes miniBeadE { 0%, 12% { transform: translateY(0); } 22%, 62% { transform: translateY(-7px); } 72%, 100% { transform: translateY(0); } }
+@keyframes miniBeadH { 0%, 12% { transform: translateY(0); } 22%, 62% { transform: translateY(3px); } 72%, 100% { transform: translateY(0); } }
+
+/* ---------- Highlights strip along the bottom of the hero ----------
+   marquee.js appends a second copy of the list so the loop is seamless; the
+   track slides by exactly one copy's width. */
+.hero-marquee {
+  margin-top: 72px; padding-block: 16px; overflow: hidden;
+  border-block: 1px solid var(--line);
+  background: color-mix(in srgb, var(--paper-raised) 55%, transparent);
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+.marquee-track { display: flex; width: max-content; animation: heroMarquee 38s linear infinite; }
+.hero-marquee:hover .marquee-track { animation-play-state: paused; }
+[dir="rtl"] .marquee-track { animation-name: heroMarqueeRtl; }
+.marquee-group { display: flex; align-items: center; gap: 44px; margin: 0; padding: 0; padding-inline-end: 44px; list-style: none; }
+.marquee-group li {
+  display: flex; align-items: center; gap: 44px; white-space: nowrap;
+  font-family: var(--font-display); font-weight: 700; font-size: 1.15rem; color: var(--ink-soft);
+  text-transform: uppercase; letter-spacing: 0.04em;
+}
+.marquee-group li::after { content: "◆"; font-size: 0.6rem; color: var(--brass); }
+@keyframes heroMarquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+@keyframes heroMarqueeRtl { from { transform: translateX(0); } to { transform: translateX(50%); } }
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track { animation: none; width: auto; justify-content: center; }
+  .marquee-group { flex-wrap: wrap; justify-content: center; row-gap: 8px; padding-inline: 16px; }
+  .marquee-group[aria-hidden="true"] { display: none; }
+  .hero-marquee { -webkit-mask-image: none; mask-image: none; }
+}
+@media (max-width: 720px) {
+  .hero { padding-top: 40px; }
+  .hero-meta { gap: 8px; }
+  .hero-meta > div { padding: 12px; }
+  .hero-meta .num { font-size: 1.6rem; }
+  .hero-ctas .btn { flex: 1 1 100%; }
+  .hero-marquee { margin-top: 64px; }
+}
 
 /* ============ Carousel (shared: hero + wapr) ============ */
 .carousel {
@@ -47,4 +188,4 @@
 .carousel-arrow.next { inset-inline-end: 12px; }
 [dir="rtl"] .carousel-arrow.prev { transform: translateY(-50%) scaleX(-1); }
 [dir="rtl"] .carousel-arrow.next { transform: translateY(-50%) scaleX(-1); }
-@media (max-width: 900px) { .hero-carousel { aspect-ratio: 16/10; } }
+@media (max-width: 900px) { .hero-carousel { aspect-ratio: 16/11; } }

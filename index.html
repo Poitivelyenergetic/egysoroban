@@ -23,6 +23,7 @@
     <link rel="stylesheet" href="css/base.css?v=1787994508">
     <link rel="stylesheet" href="css/header.css?v=1787994508">
     <link rel="stylesheet" href="css/hero.css?v=1787994508">
+    <link rel="stylesheet" href="css/book.css?v=1787994508">
     <link rel="stylesheet" href="css/about.css?v=1787994508">
     <link rel="stylesheet" href="css/mv.css?v=1787994508">
     <link rel="stylesheet" href="css/news.css?v=1787994508">
@@ -82,19 +83,23 @@
 
         <!-- ============ HERO ============ -->
         <section class="hero" id="top">
+            <div class="hero-bg" aria-hidden="true">
+                <span class="hero-blob b1"></span>
+                <span class="hero-blob b2"></span>
+                <span class="hero-blob b3"></span>
+                <div class="hero-rods"></div>
+            </div>
             <div class="hero-grid">
-                <div>
-                    <p class="eyebrow hero-intro" data-i18n="hero.eyebrow">Soroban mental-math academy · Al-Mansoura, Egypt</p>
+                <div class="hero-copy">
+                    <p class="hero-pill hero-intro"><span class="dot" aria-hidden="true"></span><span data-i18n="hero.pill">Free trial class · Ages 4–12</span></p>
                     <h1 class="hero-title hero-intro">
                         <span data-i18n="hero.titleA">Unlock your child's potential</span>
                         <span class="accent" data-i18n="hero.titleAccent">with EgySoroban</span>
                     </h1>
-                    <p class="hero-sub hero-intro" data-i18n="hero.sub">Turn your child into a champion.</p>
+                    <p class="hero-sub hero-intro" data-i18n="hero.sub2">Soroban mental math for kids in Al-Mansoura: sharper focus, faster thinking and real confidence, one class a week.</p>
                     <div class="hero-ctas hero-intro">
-                        <a href="apply.html" class="btn btn-primary" data-i18n="hero.ctaApply">Apply for a free trial
-                            class</a>
-                        <a href="programs.html" class="btn btn-secondary" data-i18n="hero.ctaPrograms">See programs</a>
-                        <a href="try-it.html" class="btn btn-secondary" data-i18n="hero.ctaTryIt">Try the abacus</a>
+                        <a href="#book" class="btn btn-primary btn-lg btn-shine" data-i18n="hero.ctaBook">Book a free trial class</a>
+                        <a href="try-it.html" class="btn btn-secondary btn-lg" data-i18n="hero.ctaTryIt">Try the abacus</a>
                     </div>
                     <div class="hero-meta hero-intro">
                         <div>
@@ -111,28 +116,116 @@
                         </div>
                     </div>
                 </div>
-                <div class="carousel hero-carousel hero-intro">
-                    <div class="carousel-track">
-                        <figure class="carousel-slide active">
-                            <img src="assets/family/family-04-studio-trophies.webp" alt="EGY Soroban champion team with trophies and the Egyptian flag">
-                        </figure>
-                        <figure class="carousel-slide">
-                            <img src="assets/family/family-02-ceremony-team.webp" alt="EGY Soroban Academy team at an AIAMA award ceremony" loading="lazy">
-                        </figure>
-                        <figure class="carousel-slide">
-                            <img src="assets/family/family-01-mascot-party.webp" alt="EGY Soroban Academy students at a school event" loading="lazy">
-                        </figure>
-                        <figure class="carousel-slide">
-                            <img src="assets/family/family-03-studio-medals.webp" alt="EGY Soroban Academy team with championship medals" loading="lazy">
-                        </figure>
-                        <figure class="carousel-slide">
-                            <img src="assets/honor-ceremony.webp" alt="EGY Soroban champion honored on stage" loading="lazy">
-                        </figure>
+                <div class="hero-visual hero-intro">
+                    <div class="carousel hero-carousel">
+                        <div class="carousel-track">
+                            <figure class="carousel-slide active">
+                                <img src="assets/family/family-04-studio-trophies.webp" alt="EGY Soroban champion team with trophies and the Egyptian flag">
+                            </figure>
+                            <figure class="carousel-slide">
+                                <img src="assets/family/family-02-ceremony-team.webp" alt="EGY Soroban Academy team at an AIAMA award ceremony" loading="lazy">
+                            </figure>
+                            <figure class="carousel-slide">
+                                <img src="assets/family/family-01-mascot-party.webp" alt="EGY Soroban Academy students at a school event" loading="lazy">
+                            </figure>
+                            <figure class="carousel-slide">
+                                <img src="assets/family/family-03-studio-medals.webp" alt="EGY Soroban Academy team with championship medals" loading="lazy">
+                            </figure>
+                            <figure class="carousel-slide">
+                                <img src="assets/honor-ceremony.webp" alt="EGY Soroban champion honored on stage" loading="lazy">
+                            </figure>
+                        </div>
+                        <div class="carousel-dots"></div>
+                        <button type="button" class="carousel-arrow prev" aria-label="Previous photo">‹</button>
+                        <button type="button" class="carousel-arrow next" aria-label="Next photo">›</button>
                     </div>
-                    <div class="carousel-dots"></div>
-                    <button type="button" class="carousel-arrow prev" aria-label="Previous photo">‹</button>
-                    <button type="button" class="carousel-arrow next" aria-label="Next photo">›</button>
+                    <div class="hero-badge hero-badge-top">
+                        <span class="hero-badge-ico" aria-hidden="true">🏆</span>
+                        <div><b data-count="100">100+</b><span data-i18n="hero.badgeWins">first-place championship wins</span></div>
+                    </div>
+                    <div class="hero-badge hero-badge-bottom">
+                        <svg class="mini-abacus" viewBox="0 0 64 44" width="64" height="44" aria-hidden="true"><g class="mini-abacus-frame"><rect x="1" y="1" width="62" height="42" rx="6" /><line x1="2" y1="15" x2="62" y2="15" /><line x1="14" y1="3" x2="14" y2="41" /><line x1="26" y1="3" x2="26" y2="41" /><line x1="38" y1="3" x2="38" y2="41" /><line x1="50" y1="3" x2="50" y2="41" /></g><rect class="mb mb-h mb-r0" x="9" y="4" width="10" height="7" rx="3.5" /><rect class="mb mb-h mb-r1" x="21" y="4" width="10" height="7" rx="3.5" /><rect class="mb mb-h mb-r2" x="33" y="4" width="10" height="7" rx="3.5" /><rect class="mb mb-h mb-r3" x="45" y="4" width="10" height="7" rx="3.5" /><rect class="mb mb-e mb-r0" x="9" y="25" width="10" height="7" rx="3.5" /><rect class="mb mb-e mb-r0" x="9" y="33" width="10" height="7" rx="3.5" /><rect class="mb mb-e mb-r1" x="21" y="25" width="10" height="7" rx="3.5" /><rect class="mb mb-e mb-r1" x="21" y="33" width="10" height="7" rx="3.5" /><rect class="mb mb-e mb-r2" x="33" y="25" width="10" height="7" rx="3.5" /><rect class="mb mb-e mb-r2" x="33" y="33" width="10" height="7" rx="3.5" /><rect class="mb mb-e mb-r3" x="45" y="25" width="10" height="7" rx="3.5" /><rect class="mb mb-e mb-r3" x="45" y="33" width="10" height="7" rx="3.5" /></svg>
+                        <div><b>11</b><span data-i18n="hero.badgeLevels">levels, each closed by a certified exam</span></div>
+                    </div>
                 </div>
+            </div>
+            <div class="hero-marquee" role="region" data-i18n-aria-label="strip.label" aria-label="Academy highlights">
+                <div class="marquee-track">
+                    <ul class="marquee-group">
+                        <li data-i18n="strip.1">100+ first-place championship wins</li>
+                        <li data-i18n="strip.2">4 world titles</li>
+                        <li data-i18n="strip.3">Champion of Arab Champions, 2025</li>
+                        <li data-i18n="strip.4">AIAMA-certified level exams</li>
+                        <li data-i18n="strip.5">Teaching since 2013</li>
+                        <li data-i18n="strip.6">Ages 4 to 12</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============ FREE TRIAL BOOKING ============ -->
+        <section class="book" id="book">
+            <div class="container book-grid">
+                <div class="book-intro">
+                    <p class="eyebrow" data-i18n="book.eyebrow">Free trial class</p>
+                    <h2 class="section-title" data-i18n="book.title">Book your child's free trial in 30 seconds</h2>
+                    <p class="section-lede" data-i18n="book.lede">Answer two quick questions, then send them to us on WhatsApp. We reply to confirm the day and time.</p>
+                    <ol class="book-how">
+                        <li><span class="n" aria-hidden="true">1</span><span data-i18n="book.how1">Tell us your child's age</span></li>
+                        <li><span class="n" aria-hidden="true">2</span><span data-i18n="book.how2">Pick the nearest branch and a good time</span></li>
+                        <li><span class="n" aria-hidden="true">3</span><span data-i18n="book.how3">Send on WhatsApp, and we confirm your seat</span></li>
+                    </ol>
+                    <p class="book-full"><span data-i18n="book.fullForm">Prefer the full application form?</span> <a href="apply.html" data-i18n="book.fullFormLink">Apply online</a></p>
+                </div>
+                <form class="book-card" id="book-form" novalidate>
+                    <div class="book-progress" aria-hidden="true"><span class="book-progress-bar"></span></div>
+                    <p class="book-stepnum"><span data-i18n="book.step">Step</span> <span id="book-step-n">1</span>/2</p>
+
+                    <fieldset class="book-step" data-step="1">
+                        <legend data-i18n="book.q1">How old is your child?</legend>
+                        <div class="chip-row chip-row-ages">
+                            <label class="chip"><input type="radio" name="book-age" value="4"><span>4</span></label>
+                            <label class="chip"><input type="radio" name="book-age" value="5"><span>5</span></label>
+                            <label class="chip"><input type="radio" name="book-age" value="6"><span>6</span></label>
+                            <label class="chip"><input type="radio" name="book-age" value="7"><span>7</span></label>
+                            <label class="chip"><input type="radio" name="book-age" value="8"><span>8</span></label>
+                            <label class="chip"><input type="radio" name="book-age" value="9"><span>9</span></label>
+                            <label class="chip"><input type="radio" name="book-age" value="10"><span>10</span></label>
+                            <label class="chip"><input type="radio" name="book-age" value="11"><span>11</span></label>
+                            <label class="chip"><input type="radio" name="book-age" value="12"><span>12</span></label>
+                        </div>
+                        <label class="book-label" for="book-name"><span data-i18n="book.childName">Child's first name</span> <span class="muted" data-i18n="apply.optional">(optional)</span></label>
+                        <input class="book-input" id="book-name" name="book-name" type="text" maxlength="40" autocomplete="off" data-i18n-placeholder="book.childNamePh" placeholder="e.g. Malak">
+                        <button type="button" class="btn btn-primary btn-block" data-book-next data-i18n="book.next">Next</button>
+                    </fieldset>
+
+                    <fieldset class="book-step" data-step="2" hidden>
+                        <legend data-i18n="book.q2">Where and when?</legend>
+                        <p class="book-label" id="book-branch-label" data-i18n="book.branch">Nearest branch</p>
+                        <div class="chip-row" id="book-branches" role="radiogroup" aria-labelledby="book-branch-label"></div>
+                        <p class="book-label" id="book-time-label" data-i18n="book.time">Best time</p>
+                        <div class="chip-row" role="radiogroup" aria-labelledby="book-time-label">
+                            <label class="chip"><input type="radio" name="book-time" value="any" checked><span data-i18n="book.timeAny">Any time</span></label>
+                            <label class="chip"><input type="radio" name="book-time" value="morning"><span data-i18n="book.timeMorning">Morning</span></label>
+                            <label class="chip"><input type="radio" name="book-time" value="afternoon"><span data-i18n="book.timeAfternoon">Afternoon</span></label>
+                            <label class="chip"><input type="radio" name="book-time" value="evening"><span data-i18n="book.timeEvening">Evening</span></label>
+                        </div>
+                        <div class="book-actions">
+                            <button type="button" class="btn btn-secondary" data-book-back data-i18n="book.back">Back</button>
+                            <button type="submit" class="btn btn-wa"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.39 1.26 4.81L2 22l5.42-1.42c1.36.74 2.92 1.17 4.58 1.17h.01c5.46 0 9.9-4.45 9.9-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2zm5.72 14.02c-.24.68-1.19 1.25-1.95 1.41-.52.11-1.2.2-3.48-.75-2.92-1.21-4.8-4.17-4.95-4.36-.14-.19-1.18-1.57-1.18-3 0-1.43.75-2.13 1.02-2.42.27-.29.58-.36.78-.36.2 0 .39 0 .56.01.18.01.42-.07.65.5.24.58.81 2 .88 2.14.07.14.12.31.02.5-.09.19-.14.31-.28.48-.14.16-.29.36-.42.49-.14.14-.28.28-.12.55.16.27.72 1.19 1.55 1.93 1.06.95 1.96 1.24 2.23 1.38.27.14.43.12.59-.07.16-.19.68-.79.86-1.06.18-.27.36-.22.6-.13.24.09 1.55.73 1.81.86.27.13.45.2.51.31.07.12.07.68-.17 1.36z"></path></svg><span data-i18n="book.send">Send on WhatsApp</span></button>
+                        </div>
+                        <p class="book-note" data-i18n="book.note">Nothing is saved on this site. The message goes straight to the academy's WhatsApp, and you can read it before sending.</p>
+                    </fieldset>
+
+                    <div class="book-done" hidden>
+                        <svg class="book-check" viewBox="0 0 52 52" width="64" height="64" aria-hidden="true"><circle cx="26" cy="26" r="24" /><path d="M15 27l7 7 15-16" /></svg>
+                        <h3 data-i18n="book.doneTitle">WhatsApp is open, just press send</h3>
+                        <p data-i18n="book.doneBody">We'll reply to confirm the day and time of the trial class.</p>
+                        <p><a id="book-wa-fallback" href="https://wa.me/201557794946" target="_blank" rel="noopener" data-i18n="book.doneFallback">WhatsApp didn't open? Tap here</a></p>
+                        <button type="button" class="btn btn-secondary" data-book-again data-i18n="book.again">Book for another child</button>
+                    </div>
+                    <p class="book-error" role="alert"></p>
+                </form>
             </div>
         </section>
 
@@ -1740,6 +1833,7 @@
 
 
 
+    <a class="book-sticky" href="#book" tabindex="-1" aria-hidden="true"><span data-i18n="book.sticky">Book a free trial</span></a>
     <a class="wa-float" href="https://wa.me/201557794946" target="_blank" rel="noopener" aria-label="WhatsApp">
         <span class="wa-float-label" data-i18n="wa.chat">Chat with us</span>
         <span class="wa-float-icon" aria-hidden="true">

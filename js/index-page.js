@@ -8,6 +8,8 @@ import "./faq-accordion.js";
 import "./soroban-widget.js";
 import "./flash-game.js";
 import "./carousel.js";
+import "./marquee.js";
+import "./trial-booking.js";
 import "./lightbox.js";
 import "./scroll-reveal.js";
 import "./count-up.js";

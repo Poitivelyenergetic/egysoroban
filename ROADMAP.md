@@ -39,9 +39,17 @@ House rules
       in more than one class (today one `classId` per student), and refresh a
       room's family list automatically when an admin links a new parent email
       (today the admin re-saves the class's Online room).
-- [ ] **Free trial class as the main call to action.** Book a free trial in two
-      steps (child's age + slot + phone), no account, WhatsApp confirmation link
-      with a pre-filled message. Live site has none; competitors lead with it.
+- [x] **Free trial class as the main call to action** (done 2026-11-14).
+      Homepage card right under the hero: age → branch + time → pre-filled
+      WhatsApp message to the academy. Nothing is stored. Phone-only sticky
+      "Book a free trial" bar.
+- [ ] **Trial booking, part 2:** show the real open trial slots (from the
+      admin Slots panel) in the card, and count bookings so the academy can see
+      how many families came from the site.
+- [ ] **Rest of the homepage redesign.** Round 1 redid the hero (new layout,
+      floating badges, animated abacus, highlights strip). Next: tighten the
+      long homepage (16 sections), give programs/journey/achievements the same
+      card style, and a real photo of a class in action if the academy has one.
 - [ ] **"Find your child's level" quiz** built on the try-it flash challenge,
       ending in the trial booking.
 - [x] Privacy policy + consent checkbox (done 2026-09-02).
@@ -131,3 +139,7 @@ House rules
   Go live / End class and room links in the staff calendar, video room opens
   in the page. New classRooms rules + 31 emulator tests. Owner: needs a
   daily.co account and room links before families can use it.
+- 2026-11-14 — Homepage hero redesign (drifting colour background, tilted
+  photo card, floating 100+ wins and animated-abacus badges, stat cards,
+  scrolling highlights strip) and the free-trial booking card with a
+  pre-filled WhatsApp message. Phone sticky "Book a free trial" bar.

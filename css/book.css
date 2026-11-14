@@ -1,0 +1,115 @@
+/* ============ Free trial booking (homepage) ============ */
+.book { scroll-margin-top: 64px; }
+.book-grid { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: 56px; align-items: center; }
+@media (max-width: 900px) { .book-grid { grid-template-columns: 1fr; gap: 32px; } }
+
+.book-how { list-style: none; margin: 28px 0 0; padding: 0; display: grid; gap: 14px; }
+.book-how li { display: flex; align-items: center; gap: 14px; font-weight: 600; color: var(--ink); }
+.book-how .n {
+  display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
+  width: 34px; height: 34px; border-radius: 50%;
+  background: var(--brass-tint); color: var(--brass-strong);
+  font-family: var(--font-display); font-weight: 800; font-size: 1.05rem;
+}
+.book-full { margin-top: 26px; color: var(--ink-soft); font-size: 0.95rem; }
+.book-full a { color: var(--brass-strong); font-weight: 700; }
+
+.book-card {
+  position: relative; overflow: hidden;
+  padding: 30px 28px 26px; border-radius: var(--radius-lg);
+  background: var(--paper-raised); border: 1px solid var(--line); box-shadow: var(--shadow-2);
+}
+@media (max-width: 720px) { .book-card { padding: 26px 18px 22px; } }
+
+.book-progress { position: absolute; top: 0; inset-inline: 0; height: 4px; background: var(--paper-sunken); }
+.book-progress-bar {
+  display: block; height: 100%; width: 50%;
+  background: linear-gradient(90deg, var(--brass), var(--brass-strong));
+  transition: width 0.35s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.book-card[data-step="2"] .book-progress-bar, .book-card[data-step="done"] .book-progress-bar { width: 100%; }
+
+.book-stepnum { margin: 0 0 6px; font-family: var(--font-mono); font-size: 0.78rem; color: var(--ink-faint); text-transform: uppercase; letter-spacing: 0.08em; }
+.book-card[data-step="done"] .book-stepnum { visibility: hidden; }
+
+.book-step { border: 0; margin: 0; padding: 0; min-width: 0; }
+.book-step legend { padding: 0; font-family: var(--font-display); font-weight: 800; font-size: 1.6rem; line-height: 1.15; color: var(--ink); margin-bottom: 18px; }
+
+/* Each step slides in from the reading direction when it appears. */
+.book-step.is-entering, .book-done.is-entering { animation: bookStepIn 0.32s cubic-bezier(0.2, 0.7, 0.2, 1); }
+.book-step.is-entering.from-back { --book-from: -16px; }
+@keyframes bookStepIn { from { opacity: 0; transform: translateX(var(--book-from, 16px)); } to { opacity: 1; transform: none; } }
+[dir="rtl"] .book-step.is-entering { --book-from: -16px; }
+[dir="rtl"] .book-step.is-entering.from-back { --book-from: 16px; }
+
+.book-label { display: block; margin: 20px 0 10px; font-weight: 700; font-size: 0.92rem; color: var(--ink); }
+.book-label .muted { font-weight: 500; color: var(--ink-faint); }
+.book-input {
+  width: 100%; padding: 0.8em 1em; border-radius: var(--radius-sm);
+  border: 1px solid var(--line); background: var(--paper); color: var(--ink);
+  font: inherit; transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.book-input:focus { outline: none; border-color: var(--brass-strong); box-shadow: 0 0 0 3px color-mix(in srgb, var(--brass) 25%, transparent); }
+.book-step .btn-block { margin-top: 22px; }
+
+/* ---------- Choice chips (radio buttons that look like pills) ---------- */
+.chip-row { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { position: relative; display: inline-flex; }
+.chip input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
+.chip span {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 46px; min-height: 44px; padding: 0 16px; border-radius: 999px;
+  border: 1px solid var(--line); background: var(--paper); color: var(--ink);
+  font-weight: 700; font-size: 0.94rem; pointer-events: none;
+  transition: transform 0.18s cubic-bezier(0.2, 0.7, 0.2, 1), background 0.18s ease, border-color 0.18s ease, color 0.18s ease, box-shadow 0.18s ease;
+}
+.chip-row-ages .chip span { min-width: 50px; padding: 0 12px; font-family: var(--font-display); font-size: 1.15rem; }
+.chip:hover span { border-color: var(--ink-faint); transform: translateY(-1px); }
+.chip input:active + span { transform: scale(0.95); }
+.chip input:checked + span {
+  background: var(--brass); border-color: var(--brass); color: #1b1304;
+  box-shadow: 0 6px 16px color-mix(in srgb, var(--brass) 38%, transparent);
+  animation: chipPop 0.26s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.chip input:focus-visible + span { outline: 3px solid var(--jade); outline-offset: 2px; }
+@keyframes chipPop { 0% { transform: scale(0.92); } 60% { transform: scale(1.06); } 100% { transform: scale(1); } }
+
+.book-actions { display: flex; gap: 10px; margin-top: 24px; flex-wrap: wrap; }
+.book-actions .btn-wa { flex: 1 1 220px; }
+.btn-wa { background: #25D366; color: #06301a; }
+.btn-wa:hover { background: #1fbd59; transform: translateY(-2px); box-shadow: 0 10px 26px rgba(37, 211, 102, 0.4); }
+.book-note { margin: 14px 0 0; font-size: 0.8rem; color: var(--ink-faint); line-height: 1.5; }
+
+.book-error { margin: 12px 0 0; min-height: 1.2em; color: var(--danger); font-weight: 600; font-size: 0.9rem; }
+.book-error:empty { margin: 0; min-height: 0; }
+.book-card.shake { animation: bookShake 0.32s cubic-bezier(0.36, 0.07, 0.19, 0.97); }
+@keyframes bookShake { 20%, 60% { transform: translateX(-5px); } 40%, 80% { transform: translateX(5px); } }
+
+/* ---------- Done state: a check mark that draws itself ---------- */
+.book-done { text-align: center; padding: 10px 0 4px; }
+.book-done h3 { font-family: var(--font-display); font-size: 1.6rem; margin: 14px 0 6px; }
+.book-done p { color: var(--ink-soft); margin: 0 0 10px; }
+.book-done a { color: var(--brass-strong); font-weight: 700; }
+.book-done .btn { margin-top: 10px; }
+.book-check { display: block; margin: 0 auto; }
+.book-check circle { fill: none; stroke: var(--ok); stroke-width: 3; stroke-dasharray: 151; stroke-dashoffset: 151; }
+.book-check path { fill: none; stroke: var(--ok); stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 40; stroke-dashoffset: 40; }
+.book-done:not([hidden]) .book-check circle { animation: bookDraw 0.4s cubic-bezier(0.2, 0.7, 0.2, 1) forwards; }
+.book-done:not([hidden]) .book-check path { animation: bookDraw 0.3s cubic-bezier(0.2, 0.7, 0.2, 1) 0.3s forwards; }
+@keyframes bookDraw { to { stroke-dashoffset: 0; } }
+
+/* ---------- Phone-only sticky "Book a free trial" bar ----------
+   trial-booking.js shows it once the hero has scrolled away, and hides it
+   again while the booking card itself is on screen. It sits beside the
+   WhatsApp bubble, never on top of it. */
+.book-sticky {
+  position: fixed; z-index: 89; bottom: 16px; inset-inline-start: 16px; inset-inline-end: 82px;
+  display: none; align-items: center; justify-content: center; min-height: 50px;
+  border-radius: 999px; background: var(--brass); color: #1b1304; text-decoration: none;
+  font-weight: 800; box-shadow: 0 10px 28px color-mix(in srgb, var(--brass) 45%, transparent), var(--shadow-1);
+  opacity: 0; transform: translateY(16px); visibility: hidden;
+  transition: opacity 0.25s ease, transform 0.3s cubic-bezier(0.2, 0.7, 0.2, 1), visibility 0s linear 0.3s;
+}
+.book-sticky.is-shown { opacity: 1; transform: none; visibility: visible; transition-delay: 0s; }
+.book-sticky:active { transform: scale(0.97); }
+@media (max-width: 720px) { .book-sticky { display: flex; } }
