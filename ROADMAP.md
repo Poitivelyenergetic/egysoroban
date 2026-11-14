@@ -19,13 +19,26 @@ House rules
 
 ## Now (next few runs)
 
-- [ ] **Online classroom (owner's idea).** "Attend from home" live classes inside
-      the portal: class schedule, a Join button that opens the video room in
-      the page, teacher controls, automatic attendance. Plan: Daily.co Prebuilt
-      embed (free tier ≈ 10k participant-minutes/month — confirm on daily.co).
-      v1 can use room links the teacher pastes; v2 creates rooms per class from
-      a Cloud Function (needs the Blaze plan and a Daily API key the owner adds
-      with `firebase functions:secrets:set DAILY_API_KEY`).
+- [x] **Online classroom, part 1** (done 2026-11-14). Staff calendar: "Online
+      room" per class (Daily link; admin ticks which students are in it), "Go
+      live" / "End class". Portal: "Online class" box per child with schedule,
+      live/next status and a Join button (opens 10 min early, or when live) that
+      opens the Daily room full-screen in the page. New `classRooms/{classId}`
+      with 31 rules tests: only the class's families (salted email hash) can
+      open it, teachers only touch their own class's link/live, only
+      `https://<team>.daily.co/<room>` links are accepted.
+- [ ] **Online classroom, part 2 — private rooms.** Today a Daily room link is
+      a "anyone with the link" room, protected only by being hidden behind the
+      rules. Next: a Cloud Function creates a private room per class and hands
+      out short-lived meeting tokens (owner token for the teacher = mute/remove
+      controls). Needs the Blaze plan and a Daily API key the owner adds with
+      `firebase functions:secrets:set DAILY_API_KEY`.
+- [ ] **Online classroom, part 3 — automatic attendance.** When a child joins
+      the room, mark them present for that session (Daily webhooks or the
+      daily-js `participant-joined` event → teacher confirms). Also: a student
+      in more than one class (today one `classId` per student), and refresh a
+      room's family list automatically when an admin links a new parent email
+      (today the admin re-saves the class's Online room).
 - [ ] **Free trial class as the main call to action.** Book a free trial in two
       steps (child's age + slot + phone), no account, WhatsApp confirmation link
       with a pre-filled message. Live site has none; competitors lead with it.
@@ -77,6 +90,12 @@ House rules
 
 ## Questions for the academy (only the owner can answer)
 
+- **To turn on online classes:** make a free account at daily.co, create one
+  room per class (Rooms → Create room), and paste each room's link into the
+  staff console: Calendar → the class → "Online room". Then tick the students
+  in that class. Try one class with a teacher and a parent before announcing.
+  Check Daily's current free allowance on their pricing page.
+
 - Fees / price range, class sizes, branch address and hours.
 - Proof for AIAMA membership, 2013 Mansoura University accreditation, and
   championship tallies before the site states them as fact.
@@ -89,7 +108,9 @@ House rules
   what Firebase Hosting serves. A new page needs a matching `js/<page>-page.js`.
 - Rules tests: `cd tests && npm test` (Firestore emulator; needs Java). On
   Windows the emulator can be left running after a run — if the port is
-  taken, point a scratch firebase.json at another port.
+  taken, point a scratch firebase.json at another port. If the emulator dies
+  with "Unable to establish loopback connection", set
+  `JAVA_TOOL_OPTIONS=-Djdk.net.unixdomain.tmpdir=<short folder>` first.
 - Work happens in THIS folder only. The "- Copy" folder was where the
   2026-09-01/02 work happened; it is now merged here and should be retired.
 
@@ -106,3 +127,7 @@ House rules
   longer deletes "(optional)" markers. Motion sped up to 0.3–0.6 s, button
   press feedback, dashboard skeletons, count-ups and chart entrances. Years
   counter now computed from 2013.
+- 2026-11-14 — Online classroom part 1: Join button in the parent portal,
+  Go live / End class and room links in the staff calendar, video room opens
+  in the page. New classRooms rules + 31 emulator tests. Owner: needs a
+  daily.co account and room links before families can use it.
