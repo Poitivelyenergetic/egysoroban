@@ -46,10 +46,13 @@ House rules
 - [ ] **Trial booking, part 2:** show the real open trial slots (from the
       admin Slots panel) in the card, and count bookings so the academy can see
       how many families came from the site.
-- [ ] **Rest of the homepage redesign.** Round 1 redid the hero (new layout,
-      floating badges, animated abacus, highlights strip). Next: tighten the
-      long homepage (16 sections), give programs/journey/achievements the same
-      card style, and a real photo of a class in action if the academy has one.
+- [x] **Rest of the homepage redesign** (done 2026-11-15). Homepage no longer
+      repeats Vision, WAPR and the full achievement lists (they live on
+      vision.html and stories.html); 7-photo gallery preview; one card style
+      site-wide; journey is a timeline that draws itself in.
+- [ ] **Photos the academy should send:** a real class in progress and the
+      branches, for the hero and the booking card. News cards are stale
+      ("Summer 2026", "June 2026"): ask the academy for current news.
 - [ ] **"Find your child's level" quiz** built on the try-it flash challenge,
       ending in the trial booking.
 - [x] Privacy policy + consent checkbox (done 2026-09-02).
@@ -143,3 +146,6 @@ House rules
   photo card, floating 100+ wins and animated-abacus badges, stat cards,
   scrolling highlights strip) and the free-trial booking card with a
   pre-filled WhatsApp message. Phone sticky "Book a free trial" bar.
+- 2026-11-15 — Homepage trimmed (Vision, WAPR and long achievement lists
+  moved off it, links to Stories instead), one card style across all pages,
+  journey timeline, trial nudge under the levels, gallery preview.

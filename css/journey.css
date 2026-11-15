@@ -1,25 +1,41 @@
-/* ============ Journey ============ */
-.journey-list { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; margin-top: 48px; counter-reset: step; }
+/* ============ Journey ============
+   A timeline: each step is a card with a numbered bead sitting on its top
+   edge, and on wide screens a line runs from each bead to the next one. The
+   line draws itself in as scroll-reveal brings the step into view; with
+   reduced motion (no reveal at all) it is simply there. */
+#journey { background: var(--paper-sunken); }
+.journey-list { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; margin-top: 64px; row-gap: 44px; }
 @media (max-width: 980px) { .journey-list { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 560px) { .journey-list { grid-template-columns: 1fr; } }
 .journey-step {
-  position: relative; background: var(--paper-raised); border-radius: var(--radius-md);
-  padding: 20px 18px;
+  border-radius: var(--radius-md);
+  padding: 34px 18px 20px;
 }
 .journey-step .n {
-  font-family: var(--font-mono); font-size: 0.8rem; font-weight: 700;
-  display: block; margin-bottom: 10px;
+  position: absolute; top: -21px; inset-inline-start: 18px; z-index: 1;
+  display: flex; align-items: center; justify-content: center;
+  width: 42px; height: 42px; border-radius: 50%;
+  background: var(--card-accent); color: #fff;
+  font-family: var(--font-display); font-size: 1.05rem; font-weight: 800;
+  box-shadow: 0 0 0 6px var(--paper-sunken), 0 6px 16px color-mix(in srgb, var(--card-accent) 40%, transparent);
+  transition: transform 0.25s cubic-bezier(0.2, 0.7, 0.2, 1);
 }
-.journey-step h3 { font-size: 1rem; margin-bottom: 0.35em; }
+.journey-step:hover .n { transform: scale(1.08); }
+.journey-step h3 { font-size: 1.02rem; margin-bottom: 0.35em; }
 .journey-step p { color: var(--ink-soft); font-size: 0.88rem; margin: 0; }
 
-.journey-step:nth-child(1) { background: var(--brass-tint); }
-.journey-step:nth-child(1) .n { color: var(--brass-strong); }
-.journey-step:nth-child(2) { background: var(--jade-tint); }
-.journey-step:nth-child(2) .n { color: var(--jade); }
-.journey-step:nth-child(3) { background: var(--ok-tint); }
-.journey-step:nth-child(3) .n { color: var(--ok); }
-.journey-step:nth-child(4) { background: var(--warn-tint); }
-.journey-step:nth-child(4) .n { color: var(--warn); }
-.journey-step:nth-child(5) { background: var(--danger-tint); }
-.journey-step:nth-child(5) .n { color: var(--danger); }
+@media (min-width: 981px) {
+  .journey-step:not(:last-child)::after {
+    content: ""; position: absolute; z-index: 1; top: -1px; height: 3px; border-radius: 2px;
+    /* from this bead's edge to the next card's bead: card width + gap - bead inset - bead width + next bead inset */
+    inset-inline-start: 66px; width: calc(100% + 16px - 66px + 18px);
+    background: linear-gradient(90deg, var(--card-accent), color-mix(in srgb, var(--card-accent) 30%, var(--line)));
+    transform-origin: left center;
+    transition: transform 0.5s cubic-bezier(0.2, 0.7, 0.2, 1) 0.15s;
+  }
+  [dir="rtl"] .journey-step:not(:last-child)::after {
+    transform-origin: right center;
+    background: linear-gradient(270deg, var(--card-accent), color-mix(in srgb, var(--card-accent) 30%, var(--line)));
+  }
+  .journey-step.reveal-target:not(.in-view)::after { transform: scaleX(0); }
+}

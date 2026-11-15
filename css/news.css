@@ -2,8 +2,8 @@
 .news-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; margin-top: 36px; }
 @media (max-width: 760px) { .news-grid { grid-template-columns: 1fr; } }
 .news-card {
-  position: relative; background: var(--paper-raised); border-radius: var(--radius-md);
-  padding: 20px 20px 22px;
+  border-radius: var(--radius-lg);
+  padding: 26px 22px 22px;
 }
 .news-badge {
   display: inline-block; font-family: var(--font-mono); font-size: 0.68rem; font-weight: 700;

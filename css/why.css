@@ -4,13 +4,15 @@
 @media (max-width: 900px) { .why-grid { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 560px) { .why-grid { grid-template-columns: 1fr; } }
 .benefit-card {
-  background: var(--paper-raised); border-radius: var(--radius-md);
-  padding: 26px 22px;
+  border-radius: var(--radius-lg);
+  padding: 28px 22px 24px;
 }
 .benefit-card .glyph {
   width: 40px; height: 40px; border-radius: 10px;
   display: flex; align-items: center; justify-content: center; margin-bottom: 16px;
+  transition: transform 0.3s cubic-bezier(0.2, 0.7, 0.2, 1);
 }
+.benefit-card:hover .glyph { transform: rotate(-8deg) scale(1.08); }
 .benefit-card:nth-child(1) .glyph { background: var(--brass-tint); color: var(--brass-strong); }
 .benefit-card:nth-child(2) .glyph { background: var(--jade-tint); color: var(--jade); }
 .benefit-card:nth-child(3) .glyph { background: var(--ok-tint); color: var(--ok); }

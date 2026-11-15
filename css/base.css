@@ -54,18 +54,43 @@ html[data-lang="ar"] * { letter-spacing: normal !important; }
 [dir="rtl"] .reveal-target.reveal-right { --reveal-x: -14px; }
 .reveal-target.in-view { opacity: 1; transform: none; }
 
-/* flat, minimal cards — no border/shadow at rest, lift + shadow only on hover;
-   shared across programs/journey/testimonials/instructors/about/why/mv/news cards */
+/* One card look for every content section, matching the hero and booking
+   cards: raised surface, hairline border, a short accent bar along the top
+   edge, and a lift on hover. Each card picks its colour with --card-accent
+   (set per position below). Quote cards live on the dark achievements band
+   and keep their own tinted backgrounds. */
 .benefit-card, .level-card, .journey-step, .instructor-card,
 .quote-card, .mv-card, .news-card {
-  border: none; box-shadow: none;
-  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  --card-accent: var(--brass);
+  position: relative;
+  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.28s ease;
 }
+.benefit-card, .level-card, .journey-step, .instructor-card, .mv-card, .news-card {
+  background: var(--paper-raised); border: 1px solid var(--line); box-shadow: var(--shadow-1);
+}
+.benefit-card::before, .level-card::before, .instructor-card::before, .mv-card::before, .news-card::before {
+  content: ""; position: absolute; top: -1px; inset-inline-start: 22px; width: 44px; height: 4px;
+  border-radius: 0 0 4px 4px; background: var(--card-accent);
+  transition: width 0.3s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.benefit-card:hover::before, .level-card:hover::before, .instructor-card:hover::before,
+.mv-card:hover::before, .news-card:hover::before { width: 88px; }
 .benefit-card:hover, .level-card:hover, .journey-step:hover, .instructor-card:hover,
 .quote-card:hover, .mv-card:hover, .news-card:hover {
-  transform: translateY(-6px);
+  transform: translateY(-5px);
   box-shadow: var(--shadow-2);
+  border-color: color-mix(in srgb, var(--card-accent) 40%, var(--line));
 }
+:is(.benefit-card, .level-card, .journey-step, .instructor-card, .mv-card, .news-card):nth-child(2) { --card-accent: var(--jade); }
+:is(.benefit-card, .level-card, .journey-step, .instructor-card, .mv-card, .news-card):nth-child(3) { --card-accent: var(--ok); }
+:is(.benefit-card, .level-card, .journey-step, .instructor-card, .mv-card, .news-card):nth-child(4) { --card-accent: var(--warn); }
+:is(.benefit-card, .level-card, .journey-step, .instructor-card, .mv-card, .news-card):nth-child(5) { --card-accent: var(--pie-3); }
+
+/* "See more" links that close a shortened homepage section. */
+.section-more { margin: 32px 0 0; text-align: center; }
+.btn-on-dark { color: #fff; border-color: rgba(255, 255, 255, 0.28); }
+.btn-on-dark:hover { color: #fff; background: rgba(255, 255, 255, 0.08); border-color: rgba(255, 255, 255, 0.5); }
 
 /* hero load-in: short staggered fade-up on page load — 0.4s each, last one
    starts at 0.2s, so the whole entrance is done in about 0.6s */
